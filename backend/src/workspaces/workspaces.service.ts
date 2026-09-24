@@ -26,7 +26,6 @@ export class WorkspacesService {
       accessCode = this.generateAccessCode(createWorkspaceDto.type);
     }
 
-    // Verificar si el código ya existe
     const existing = await this.workspaceRepository.findOne({
       where: { accessCode },
     });
@@ -42,6 +41,7 @@ export class WorkspacesService {
       description: createWorkspaceDto.description?.trim() || null,
       type: createWorkspaceDto.type,
       accessCode,
+      inductionVideoUrl: createWorkspaceDto.inductionVideoUrl?.trim() || null,
       isActive: true,
     });
 
@@ -93,7 +93,6 @@ export class WorkspacesService {
       throw new BadRequestException('Este espacio de trabajo no se encuentra activo actualmente.');
     }
 
-    // Comprobar si ya existe inscripción previa
     let enrollment = await this.enrollmentRepository.findOne({
       where: {
         userId,
@@ -123,6 +122,33 @@ export class WorkspacesService {
     };
   }
 
+  async completeInduction(workspaceId: string, userId: string): Promise<WorkspaceEnrollment> {
+    const enrollment = await this.enrollmentRepository.findOne({
+      where: { workspaceId, userId },
+      relations: { workspace: true },
+    });
+
+    if (!enrollment) {
+      throw new NotFoundException('No te encuentras inscrito en este espacio de trabajo.');
+    }
+
+    enrollment.inductionVideoWatched = true;
+    return this.enrollmentRepository.save(enrollment);
+  }
+
+  async getInductionStatus(workspaceId: string, userId: string): Promise<WorkspaceEnrollment> {
+    const enrollment = await this.enrollmentRepository.findOne({
+      where: { workspaceId, userId },
+      relations: { workspace: true },
+    });
+
+    if (!enrollment) {
+      throw new NotFoundException('No te encuentras inscrito en este espacio de trabajo.');
+    }
+
+    return enrollment;
+  }
+
   async getUserEnrollments(userId: string): Promise<WorkspaceEnrollment[]> {
     return this.enrollmentRepository.find({
       where: { userId },
@@ -141,6 +167,9 @@ export class WorkspacesService {
     }
     if (updateWorkspaceDto.description !== undefined) {
       workspace.description = updateWorkspaceDto.description?.trim() || null;
+    }
+    if (updateWorkspaceDto.inductionVideoUrl !== undefined) {
+      workspace.inductionVideoUrl = updateWorkspaceDto.inductionVideoUrl?.trim() || null;
     }
     if (updateWorkspaceDto.isActive !== undefined) {
       workspace.isActive = updateWorkspaceDto.isActive;

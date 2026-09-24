@@ -41,6 +41,9 @@ export class Workspace {
   @Column({ unique: true })
   accessCode!: string;
 
+  @Column({ type: 'text', nullable: true })
+  inductionVideoUrl!: string | null;
+
   @CreateDateColumn()
   createdAt!: Date;
 

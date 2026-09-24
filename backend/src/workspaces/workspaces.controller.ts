@@ -73,6 +73,24 @@ export class WorkspacesController {
     return this.workspacesService.joinByAccessCode(code, req.user.id);
   }
 
+  @Post(':workspaceId/induction/complete')
+  @HttpCode(HttpStatus.OK)
+  async completeInduction(
+    @Param('workspaceId') workspaceId: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.workspacesService.completeInduction(workspaceId, req.user.id);
+  }
+
+  @Get(':workspaceId/induction/status')
+  @HttpCode(HttpStatus.OK)
+  async getInductionStatus(
+    @Param('workspaceId') workspaceId: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.workspacesService.getInductionStatus(workspaceId, req.user.id);
+  }
+
   @Patch(':id')
   @RequirePermissions(Permission.WORKSPACE_UPDATE)
   @HttpCode(HttpStatus.OK)

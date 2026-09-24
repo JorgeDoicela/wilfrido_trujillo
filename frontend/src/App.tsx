@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Plus,
   FolderOpen,
+  Video,
 } from 'lucide-react';
 import { useAuth } from '@/modules/auth/context/AuthContext';
 import { Can } from '@/shared/components/Can';
@@ -18,6 +19,7 @@ import { usePermission } from '@/shared/hooks/usePermission';
 import { JoinWorkspaceCard } from '@/shared/components/JoinWorkspaceCard';
 import { WorkspaceCard } from '@/modules/admin/components/WorkspaceCard';
 import { CreateWorkspaceModal } from '@/modules/admin/components/CreateWorkspaceModal';
+import { InductionVideoPlayer } from '@/modules/practicas/components/InductionVideoPlayer';
 import { workspacesApi } from '@/modules/admin/api/workspaces.api';
 import type { Workspace } from '@/shared/types/workspace.types';
 
@@ -25,6 +27,8 @@ export default function App() {
   const { user, setUserDirectlyForDemo, logout } = useAuth();
   const canReview = usePermission('document:review');
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
+  const [inductionWatched, setInductionWatched] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false);
 
@@ -33,10 +37,12 @@ export default function App() {
       setIsLoadingWorkspaces(true);
       const data = await workspacesApi.getAll();
       setWorkspaces(data);
+      if (data.length > 0 && !selectedWorkspace) {
+        setSelectedWorkspace(data[0]);
+      }
     } catch {
-      // Si el servidor está apagado o en mock, mantenemos lista local inicial
       if (workspaces.length === 0) {
-        setWorkspaces([
+        const defaultWorkspaces: Workspace[] = [
           {
             id: 'ws-demo-1',
             title: 'Prácticas Preprofesionales 2026-I',
@@ -57,7 +63,9 @@ export default function App() {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           },
-        ]);
+        ];
+        setWorkspaces(defaultWorkspaces);
+        setSelectedWorkspace(defaultWorkspaces[0]);
       }
     } finally {
       setIsLoadingWorkspaces(false);
@@ -113,6 +121,7 @@ export default function App() {
 
   const handleWorkspaceCreated = (newWs: Workspace) => {
     setWorkspaces((prev) => [newWs, ...prev]);
+    setSelectedWorkspace(newWs);
   };
 
   return (
@@ -161,11 +170,11 @@ export default function App() {
             Ecosistema de Coordinación y Control
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
-            Gestión Centralizada de Espacios (Workspaces)
+            Flujo Guiado de Inducción y Gestión
           </h2>
           <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-            Organización soberana de Prácticas, Vinculación y Eventos con control de acceso por código
-            y arquitectura de permisos desacoplada.
+            Mecanismo secuencial verificado: Inducción en video con tracking de reproducción al 100%,
+            evaluación de directrices y entrega oficial de evidencias.
           </p>
         </div>
 
@@ -254,6 +263,37 @@ export default function App() {
           </div>
         </section>
 
+        {/* Sección de Inducción con Reproductor y Tracking (Paso 11) */}
+        <section className="max-w-5xl mx-auto w-full flex flex-col gap-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <Video className="w-5 h-5 text-blue-400" />
+              <h3 className="text-lg font-bold text-white">
+                Módulo de Inducción con Reproductor y Tracking
+              </h3>
+            </div>
+            {selectedWorkspace && (
+              <span className="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-lg border border-slate-800">
+                Espacio activo: <strong className="text-white">{selectedWorkspace.title}</strong>
+              </span>
+            )}
+          </div>
+
+          <InductionVideoPlayer
+            workspaceId={selectedWorkspace?.id || 'ws-demo-1'}
+            videoTitle={
+              selectedWorkspace
+                ? `Inducción Oficial: ${selectedWorkspace.title}`
+                : 'Inducción Oficial y Normativa del RRA'
+            }
+            initialWatched={inductionWatched}
+            onInductionComplete={() => setInductionWatched(true)}
+            onProceedToTest={() => {
+              alert('¡Siguiente paso desbloqueado! Listo para el Paso 12: Motor de Evaluaciones Dinámicas.');
+            }}
+          />
+        </section>
+
         {/* Sección de Workspaces (Paso 10) */}
         <section className="max-w-5xl mx-auto w-full flex flex-col gap-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -268,6 +308,7 @@ export default function App() {
                       }
                       return prev;
                     });
+                    setSelectedWorkspace(res.workspace);
                   }
                 }}
               />
@@ -283,7 +324,6 @@ export default function App() {
                   </h3>
                 </div>
 
-                {/* Botón protegido con <Can do="workspace:create"> */}
                 <Can do="workspace:create">
                   <button
                     type="button"
@@ -306,7 +346,11 @@ export default function App() {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {workspaces.map((ws) => (
-                    <WorkspaceCard key={ws.id} workspace={ws} />
+                    <WorkspaceCard
+                      key={ws.id}
+                      workspace={ws}
+                      onEnter={(w) => setSelectedWorkspace(w)}
+                    />
                   ))}
                 </div>
               )}

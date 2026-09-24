@@ -31,4 +31,18 @@ export const workspacesApi = {
     }>(`/workspaces/join/${code.trim().toUpperCase()}`);
     return response.data;
   },
+
+  async completeInduction(workspaceId: string): Promise<WorkspaceEnrollment> {
+    const response = await api.post<WorkspaceEnrollment>(
+      `/workspaces/${workspaceId}/induction/complete`,
+    );
+    return response.data;
+  },
+
+  async getInductionStatus(workspaceId: string): Promise<WorkspaceEnrollment> {
+    const response = await api.get<WorkspaceEnrollment>(
+      `/workspaces/${workspaceId}/induction/status`,
+    );
+    return response.data;
+  },
 };

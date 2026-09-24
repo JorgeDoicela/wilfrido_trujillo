@@ -25,6 +25,10 @@ export class CreateWorkspaceDto {
   @IsString()
   @MinLength(4, { message: 'El código de acceso debe tener al menos 4 caracteres.' })
   accessCode?: string;
+
+  @IsOptional()
+  @IsString()
+  inductionVideoUrl?: string;
 }
 
 export class UpdateWorkspaceDto {
@@ -36,6 +40,10 @@ export class UpdateWorkspaceDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsOptional()
+  @IsString()
+  inductionVideoUrl?: string;
 
   @IsOptional()
   @IsBoolean()
