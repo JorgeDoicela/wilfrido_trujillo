@@ -18,7 +18,7 @@ import { PermissionsGuard } from './guards/permissions.guard.js';
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET', 'super_secret_jwt_key_wilfrido_2026'),
         signOptions: {
-          expiresIn: (configService.get<string>('JWT_EXPIRES_IN', '7d') as any),
+          expiresIn: (configService.get<string>('JWT_EXPIRES_IN', '7d') as `${number}d`),
         },
       }),
     }),
