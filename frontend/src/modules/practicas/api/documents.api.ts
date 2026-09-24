@@ -52,4 +52,18 @@ export const documentsApi = {
     link.remove();
     window.URL.revokeObjectURL(url);
   },
+
+  async audit(id: string): Promise<{ submission: DocumentSubmission; auditResult: import('@/shared/types/document.types').DocumentAuditResult }> {
+    const response = await api.post<{ submission: DocumentSubmission; auditResult: import('@/shared/types/document.types').DocumentAuditResult }>(`/submissions/${id}/audit`);
+    return response.data;
+  },
+
+  async auditPreview(formData: FormData): Promise<import('@/shared/types/document.types').DocumentAuditResult> {
+    const response = await api.post<import('@/shared/types/document.types').DocumentAuditResult>('/submissions/audit-preview', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
 };

@@ -1,4 +1,23 @@
 export type SubmissionStatus = 'submitted' | 'observed' | 'approved';
+export type AuditStatus = 'passed' | 'warning' | 'rejected';
+
+export interface DocumentAuditResult {
+  isValid: boolean;
+  score: number;
+  status: AuditStatus;
+  numPages: number;
+  characterCount: number;
+  missingFields: string[];
+  observations: string[];
+  metadata?: {
+    title?: string;
+    author?: string;
+    creator?: string;
+    producer?: string;
+    creationDate?: string;
+  };
+  rawAnalysis?: Record<string, unknown>;
+}
 
 export interface DocumentSubmission {
   id: string;
@@ -8,6 +27,8 @@ export interface DocumentSubmission {
   status: SubmissionStatus;
   feedbackNotes: string | null;
   auditedAt: string | null;
+  auditScore?: number | null;
+  auditResult?: DocumentAuditResult | null;
   approvedAt: string | null;
   createdAt: string;
   updatedAt: string;

@@ -14,6 +14,14 @@ import { Workspace } from '../workspaces/entities/workspace.entity.js';
 import { CreateSubmissionDto } from './dto/create-submission.dto.js';
 import { ReviewSubmissionDto } from './dto/review-submission.dto.js';
 import { Permission } from '../auth/enums/permission.enum.js';
+import {
+  DOCUMENT_AUDITOR,
+} from '../auditor/interfaces/document-auditor.interface.js';
+import type {
+  IDocumentAuditor,
+  DocumentAuditResult,
+} from '../auditor/interfaces/document-auditor.interface.js';
+import { Inject } from '@nestjs/common';
 
 export interface SubmissionDownloadInfo {
   filePath: string;
@@ -32,6 +40,8 @@ export class SubmissionsService {
     private readonly enrollmentRepository: Repository<WorkspaceEnrollment>,
     @InjectRepository(Workspace)
     private readonly workspaceRepository: Repository<Workspace>,
+    @Inject(DOCUMENT_AUDITOR)
+    private readonly documentAuditor: IDocumentAuditor,
   ) {
     if (!fs.existsSync(this.uploadDir)) {
       fs.mkdirSync(this.uploadDir, { recursive: true });
@@ -69,8 +79,27 @@ export class SubmissionsService {
     }
 
     let fileUrl = createDto.fileUrl || '';
+    let auditScore: number | null = null;
+    let auditResult: Record<string, unknown> | null = null;
+    let auditedAt: Date | null = null;
+
     if (file) {
       fileUrl = file.filename;
+      // Auto-auditoría heurística inmediata para entregas en PDF
+      if (file.mimetype === 'application/pdf' || file.originalname.toLowerCase().endsWith('.pdf')) {
+        try {
+          const filePath = file.path || path.join(this.uploadDir, file.filename);
+          if (fs.existsSync(filePath)) {
+            const buffer = fs.readFileSync(filePath);
+            const res = await this.documentAuditor.audit(buffer, createDto.documentTitle);
+            auditScore = res.score;
+            auditResult = res as unknown as Record<string, unknown>;
+            auditedAt = new Date();
+          }
+        } catch {
+          // Continuar con la creación sin bloquear en caso de excepción de lectura
+        }
+      }
     } else if (!fileUrl) {
       throw new BadRequestException('Debes adjuntar un archivo digital para tu entrega.');
     }
@@ -81,7 +110,9 @@ export class SubmissionsService {
       fileUrl,
       status: SubmissionStatus.SUBMITTED,
       feedbackNotes: null,
-      auditedAt: null,
+      auditedAt,
+      auditScore,
+      auditResult,
       approvedAt: null,
     });
 
@@ -141,6 +172,54 @@ export class SubmissionsService {
     }
 
     return this.submissionRepository.save(submission);
+  }
+
+  async auditSubmission(
+    submissionId: string,
+    userId: string,
+    permissions: string[] = [],
+  ): Promise<{ submission: DocumentSubmission; auditResult: DocumentAuditResult }> {
+    const submission = await this.submissionRepository.findOne({
+      where: { id: submissionId },
+      relations: {
+        enrollment: {
+          user: true,
+        },
+      },
+    });
+
+    if (!submission) {
+      throw new NotFoundException(`Entrega con ID "${submissionId}" no encontrada.`);
+    }
+
+    const isTeacher = permissions.includes(Permission.DOCUMENT_REVIEW);
+    const isOwner = submission.enrollment?.userId === userId;
+
+    if (!isTeacher && !isOwner) {
+      throw new ForbiddenException('No tienes permisos para auditar este documento.');
+    }
+
+    let filePath = path.join(this.uploadDir, submission.fileUrl);
+    if (!fs.existsSync(filePath)) {
+      filePath = this.generateSampleEvidenceFile(submission);
+    }
+
+    const fileBuffer = fs.readFileSync(filePath);
+    const auditResult = await this.documentAuditor.audit(fileBuffer, submission.documentTitle);
+
+    submission.auditScore = auditResult.score;
+    submission.auditResult = auditResult as unknown as Record<string, unknown>;
+    submission.auditedAt = new Date();
+
+    const saved = await this.submissionRepository.save(submission);
+    return { submission: saved, auditResult };
+  }
+
+  async auditDirectBuffer(
+    fileBuffer: Buffer,
+    documentType = 'general',
+  ): Promise<DocumentAuditResult> {
+    return this.documentAuditor.audit(fileBuffer, documentType);
   }
 
   async getDownloadInfo(

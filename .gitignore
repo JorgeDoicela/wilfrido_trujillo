@@ -5,6 +5,7 @@ node_modules/
 # Builds y compilación
 dist/
 build/
+*.tsbuildinfo
 
 # Variables de entorno
 .env

@@ -8,6 +8,7 @@ import { ResourcesModule } from './resources/resources.module.js';
 import { SubmissionsModule } from './submissions/submissions.module.js';
 import { EventsModule } from './events/events.module.js';
 import { CertificatesModule } from './certificates/certificates.module.js';
+import { AuditorModule } from './auditor/auditor.module.js';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CertificatesModule } from './certificates/certificates.module.js';
     SubmissionsModule,
     EventsModule,
     CertificatesModule,
+    AuditorModule,
   ],
   controllers: [],
   providers: [],

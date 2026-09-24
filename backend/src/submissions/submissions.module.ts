@@ -5,6 +5,7 @@ import { WorkspaceEnrollment } from '../workspaces/entities/workspace-enrollment
 import { Workspace } from '../workspaces/entities/workspace.entity.js';
 import { SubmissionsController } from './submissions.controller.js';
 import { SubmissionsService } from './submissions.service.js';
+import { AuditorModule } from '../auditor/auditor.module.js';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { SubmissionsService } from './submissions.service.js';
       WorkspaceEnrollment,
       Workspace,
     ]),
+    AuditorModule,
   ],
   controllers: [SubmissionsController],
   providers: [SubmissionsService],

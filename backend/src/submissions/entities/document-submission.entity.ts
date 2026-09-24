@@ -43,6 +43,12 @@ export class DocumentSubmission {
   @Column({ type: 'datetime', nullable: true })
   auditedAt!: Date | null;
 
+  @Column({ type: 'integer', nullable: true })
+  auditScore!: number | null;
+
+  @Column({ type: 'simple-json', nullable: true })
+  auditResult!: Record<string, unknown> | null;
+
   @Column({ type: 'datetime', nullable: true })
   approvedAt!: Date | null;
 

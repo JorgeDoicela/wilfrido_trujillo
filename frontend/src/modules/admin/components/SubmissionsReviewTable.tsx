@@ -118,6 +118,7 @@ export function SubmissionsReviewTable({
                 <th className="py-3 px-3">Estudiante</th>
                 <th className="py-3 px-3">Documento Entregado</th>
                 <th className="py-3 px-3">Fecha de Carga</th>
+                <th className="py-3 px-3">Auditoría Heurística</th>
                 <th className="py-3 px-3">Estado Actual</th>
                 <th className="py-3 px-3 text-right">Acciones</th>
               </tr>
@@ -155,6 +156,34 @@ export function SubmissionsReviewTable({
                             minute: '2-digit',
                           })
                         : 'Reciente'}
+                    </td>
+                    <td className="py-3.5 px-3 whitespace-nowrap">
+                      {sub.auditScore != null ? (
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className={`inline-block w-2 h-2 rounded-full ${
+                              sub.auditScore >= 80
+                                ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50'
+                                : sub.auditScore >= 50
+                                ? 'bg-amber-400 shadow-sm shadow-amber-400/50'
+                                : 'bg-rose-400 shadow-sm shadow-rose-400/50'
+                            }`}
+                          />
+                          <span
+                            className={`px-2 py-0.5 rounded-md font-mono text-[11px] font-bold ${
+                              sub.auditScore >= 80
+                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                : sub.auditScore >= 50
+                                ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20'
+                                : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                            }`}
+                          >
+                            {sub.auditScore}/100 pts
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-[10px] text-slate-500 italic">Pendiente</span>
+                      )}
                     </td>
                     <td className="py-3.5 px-3 whitespace-nowrap">
                       {getStatusBadge(sub.status)}

@@ -100,6 +100,42 @@ export class SubmissionsController {
     return this.submissionsService.review(id, reviewDto);
   }
 
+  @Post(':id/audit')
+  @HttpCode(HttpStatus.OK)
+  async auditSubmission(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.submissionsService.auditSubmission(
+      id,
+      req.user.id,
+      req.user.permissions,
+    );
+  }
+
+  @Post('audit-preview')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        fileSize: 30 * 1024 * 1024,
+      },
+    }),
+  )
+  @HttpCode(HttpStatus.OK)
+  async auditPreview(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('documentType') documentType?: string,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Debes adjuntar un archivo PDF para la pre-auditoría.');
+    }
+    const buffer = file.buffer || (file.path ? (await import('node:fs')).readFileSync(file.path) : null);
+    if (!buffer) {
+      throw new BadRequestException('No se pudo acceder al contenido del archivo para auditoría.');
+    }
+    return this.submissionsService.auditDirectBuffer(buffer, documentType || 'general');
+  }
+
   @Get(':id/download')
   async downloadSubmission(
     @Param('id') id: string,
