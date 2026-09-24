@@ -4,11 +4,13 @@
   "private": true,
   "description": "Plataforma de gestión académica y eventos para el Ing. Wilfrido Trujillo",
   "scripts": {
-    "dev": "echo \"El script orquestado dev se configurará en el Paso 4\"",
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"pnpm --filter backend start:dev\" \"pnpm --filter frontend dev\"",
     "build": "pnpm -r run build",
     "lint": "pnpm -r run lint"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "better-sqlite3"
