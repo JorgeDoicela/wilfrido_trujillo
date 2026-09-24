@@ -8,6 +8,8 @@ import { ResourceFile } from '../resources/entities/resource-file.entity.js';
 import { Test } from '../tests/entities/test.entity.js';
 import { TestAttempt } from '../tests/entities/test-attempt.entity.js';
 import { DocumentSubmission } from '../submissions/entities/document-submission.entity.js';
+import { Certificate } from '../certificates/entities/certificate.entity.js';
+import { EventFeedback } from '../events/entities/event-feedback.entity.js';
 
 const logger = new Logger('DatabaseModule');
 
@@ -19,6 +21,8 @@ export const ENTITIES = [
   Test,
   TestAttempt,
   DocumentSubmission,
+  Certificate,
+  EventFeedback,
 ];
 
 @Module({

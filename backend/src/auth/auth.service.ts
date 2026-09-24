@@ -3,6 +3,8 @@ import {
   ConflictException,
   UnauthorizedException,
   NotFoundException,
+  OnApplicationBootstrap,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,12 +15,66 @@ import { RegisterDto, LoginDto } from './dto/auth.dto.js';
 import { Permission } from './enums/permission.enum.js';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
+
+  async onApplicationBootstrap() {
+    await this.seedInitialUsers();
+  }
+
+  private async seedInitialUsers() {
+    const adminEmail = 'wilfrido.trujillo@unach.edu.ec';
+    const existingAdmin = await this.userRepository.findOne({
+      where: [{ email: adminEmail }, { identification: '0600000001' }],
+    });
+
+    if (!existingAdmin) {
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash('Admin123*', salt);
+      const admin = this.userRepository.create({
+        email: adminEmail,
+        identification: '0600000001',
+        fullName: 'Ing. Wilfrido Trujillo',
+        roleKey: 'INGENIERO',
+        permissionsJson: Object.values(Permission),
+        passwordHash,
+      });
+      await this.userRepository.save(admin);
+      this.logger.log('✅ Usuario Administrador Creado: wilfrido.trujillo@unach.edu.ec / 0600000001 (Clave: Admin123*)');
+    }
+
+    const studentEmail = 'estudiante@unach.edu.ec';
+    const existingStudent = await this.userRepository.findOne({
+      where: [{ email: studentEmail }, { identification: '0600000002' }],
+    });
+
+    if (!existingStudent) {
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash('Estudiante123*', salt);
+      const student = this.userRepository.create({
+        email: studentEmail,
+        identification: '0600000002',
+        fullName: 'Juan Pérez (Estudiante)',
+        roleKey: 'ESTUDIANTE',
+        permissionsJson: [
+          Permission.WORKSPACE_READ,
+          Permission.RESOURCE_DOWNLOAD,
+          Permission.TEST_TAKE,
+          Permission.DOCUMENT_SUBMIT,
+          Permission.CERTIFICATE_CLAIM,
+        ],
+        passwordHash,
+      });
+      await this.userRepository.save(student);
+      this.logger.log('✅ Usuario Estudiante Creado: estudiante@unach.edu.ec / 0600000002 (Clave: Estudiante123*)');
+    }
+  }
 
   async register(registerDto: RegisterDto) {
     const existingUser = await this.userRepository.findOne({

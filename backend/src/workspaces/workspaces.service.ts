@@ -3,6 +3,8 @@ import {
   NotFoundException,
   ConflictException,
   BadRequestException,
+  OnApplicationBootstrap,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,13 +13,57 @@ import { WorkspaceEnrollment, EnrollmentStatus } from './entities/workspace-enro
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from './dto/workspace.dto.js';
 
 @Injectable()
-export class WorkspacesService {
+export class WorkspacesService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(WorkspacesService.name);
+
   constructor(
     @InjectRepository(Workspace)
     private readonly workspaceRepository: Repository<Workspace>,
     @InjectRepository(WorkspaceEnrollment)
     private readonly enrollmentRepository: Repository<WorkspaceEnrollment>,
   ) {}
+
+  async onApplicationBootstrap() {
+    await this.seedInitialWorkspaces();
+  }
+
+  private async seedInitialWorkspaces() {
+    const count = await this.workspaceRepository.count();
+    if (count === 0) {
+      const initialWorkspaces = [
+        {
+          title: 'Prácticas Preprofesionales 2026',
+          description: 'Espacio oficial para seguimiento, inducción obligatoria, bitácoras semanales e informe final de prácticas.',
+          type: WorkspaceType.PRACTICAS,
+          accessCode: 'PRAC-2026',
+          inductionVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          isActive: true,
+        },
+        {
+          title: 'Vinculación con la Sociedad 2026',
+          description: 'Gestión y control de proyectos comunitarios, bitácoras de campo y acreditación de horas de servicio.',
+          type: WorkspaceType.VINCULACION,
+          accessCode: 'VINC-2026',
+          inductionVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          isActive: true,
+        },
+        {
+          title: 'Conferencia: Inteligencia Artificial y Soberanía',
+          description: 'Taller magistral sobre soberanía tecnológica, agentes de IA locales y desarrollo de software moderno.',
+          type: WorkspaceType.EVENTO,
+          accessCode: 'CONF-IA',
+          inductionVideoUrl: null,
+          isActive: true,
+        },
+      ];
+
+      for (const data of initialWorkspaces) {
+        const ws = this.workspaceRepository.create(data);
+        await this.workspaceRepository.save(ws);
+      }
+      this.logger.log('✅ Espacios de trabajo iniciales sembrados (PRAC-2026, VINC-2026, CONF-IA)');
+    }
+  }
 
   async create(createWorkspaceDto: CreateWorkspaceDto): Promise<Workspace> {
     let accessCode = createWorkspaceDto.accessCode?.trim().toUpperCase();
