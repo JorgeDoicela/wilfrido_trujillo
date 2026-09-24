@@ -13,6 +13,7 @@ import {
   FolderOpen,
   Video,
   HelpCircle,
+  FolderArchive,
 } from 'lucide-react';
 import { useAuth } from '@/modules/auth/context/AuthContext';
 import { Can } from '@/shared/components/Can';
@@ -23,10 +24,14 @@ import { CreateWorkspaceModal } from '@/modules/admin/components/CreateWorkspace
 import { InductionVideoPlayer } from '@/modules/practicas/components/InductionVideoPlayer';
 import { workspacesApi } from '@/modules/admin/api/workspaces.api';
 import { testsApi } from '@/modules/practicas/api/tests.api';
+import { resourcesApi } from '@/modules/practicas/api/resources.api';
 import { QuestionnaireTest } from '@/modules/practicas/components/QuestionnaireTest';
+import { ResourceCard } from '@/modules/practicas/components/ResourceCard';
 import { CreateTestModal } from '@/modules/admin/components/CreateTestModal';
+import { UploadResourceModal } from '@/modules/admin/components/UploadResourceModal';
 import type { Workspace } from '@/shared/types/workspace.types';
 import type { Test, TestResult } from '@/shared/types/test.types';
+import type { ResourceFile } from '@/shared/types/resource.types';
 
 export default function App() {
   const { user, setUserDirectlyForDemo, logout } = useAuth();
@@ -36,10 +41,13 @@ export default function App() {
   const [inductionWatched, setInductionWatched] = useState(false);
   const [activeTest, setActiveTest] = useState<Test | null>(null);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
+  const [resources, setResources] = useState<ResourceFile[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCreateTestModalOpen, setIsCreateTestModalOpen] = useState(false);
+  const [isUploadResourceModalOpen, setIsUploadResourceModalOpen] = useState(false);
   const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false);
   const [isLoadingTest, setIsLoadingTest] = useState(false);
+  const [isLoadingResources, setIsLoadingResources] = useState(false);
 
   const fetchWorkspaces = async () => {
     try {
@@ -149,6 +157,49 @@ export default function App() {
     }
   };
 
+  const fetchResources = async (workspaceId: string) => {
+    try {
+      setIsLoadingResources(true);
+      const data = await resourcesApi.getByWorkspace(workspaceId);
+      setResources(data);
+    } catch {
+      setResources([
+        {
+          id: 'res-demo-1',
+          workspaceId,
+          title: 'Guía Oficial de Prácticas Preprofesionales y RRA',
+          fileUrl: 'guia_oficial_practicas.pdf',
+          fileType: 'pdf',
+          isLockedUntilTestPass: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+        {
+          id: 'res-demo-2',
+          workspaceId,
+          title: 'Plan de Aprendizaje y Convenio Empresarial (Formato A1)',
+          fileUrl: 'formato_a1_convenio_plan.docx',
+          fileType: 'word',
+          isLockedUntilTestPass: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+        {
+          id: 'res-demo-3',
+          workspaceId,
+          title: 'Bitácora Semanal de Horas y Control de Actividades (Formato B2)',
+          fileUrl: 'formato_b2_bitacora_semanal.xlsx',
+          fileType: 'excel',
+          isLockedUntilTestPass: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      ]);
+    } finally {
+      setIsLoadingResources(false);
+    }
+  };
+
   useEffect(() => {
     fetchWorkspaces();
   }, []);
@@ -156,6 +207,7 @@ export default function App() {
   useEffect(() => {
     if (selectedWorkspace) {
       fetchTest(selectedWorkspace.id);
+      fetchResources(selectedWorkspace.id);
     }
   }, [selectedWorkspace]);
 
@@ -419,12 +471,66 @@ export default function App() {
                 setTestResult(res);
               }}
               onProceedToResources={() => {
-                alert('¡Evaluación aprobada con éxito! Siguiente paso desbloqueado: Descarga de Recursos y Plantillas Oficiales (Paso 13).');
+                const el = document.getElementById('recursos-section');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
+                }
               }}
             />
           ) : (
             <div className="p-6 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
               No hay evaluaciones configuradas para este espacio de trabajo.
+            </div>
+          )}
+        </section>
+
+        {/* Sección de Repositorio de Recursos y Desbloqueo Condicional (Paso 13) */}
+        <section id="recursos-section" className="max-w-5xl mx-auto w-full flex flex-col gap-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <div className="flex items-center gap-2">
+                <FolderArchive className="w-5 h-5 text-emerald-400" />
+                <h3 className="text-lg font-bold text-white">
+                  Repositorio de Recursos y Desbloqueo Condicional
+                </h3>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Plantillas y formatos institucionales oficiales. Los formatos con candado requieren haber aprobado la evaluación.
+              </p>
+            </div>
+
+            <Can do="resource:manage">
+              <button
+                type="button"
+                onClick={() => setIsUploadResourceModalOpen(true)}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1.5 transition-all shadow-md shadow-emerald-600/20 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" /> Subir Nueva Plantilla
+              </button>
+            </Can>
+          </div>
+
+          {isLoadingResources ? (
+            <div className="p-8 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
+              Cargando repositorio de recursos...
+            </div>
+          ) : resources.length === 0 ? (
+            <div className="p-6 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
+              No hay plantillas registradas en este espacio de trabajo.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {resources.map((res) => (
+                <ResourceCard
+                  key={res.id}
+                  resource={res}
+                  testPassed={testResult?.passed ?? false}
+                  canManage={user?.roleKey === 'INGENIERO' || user?.roleKey === 'SUPERADMIN'}
+                  onDeleteSuccess={(deletedId) => {
+                    setResources((prev) => prev.filter((r) => r.id !== deletedId));
+                  }}
+                />
+              ))}
             </div>
           )}
         </section>
@@ -543,6 +649,19 @@ export default function App() {
           onClose={() => setIsCreateTestModalOpen(false)}
           onSuccess={(created) => {
             setActiveTest(created);
+          }}
+        />
+      )}
+
+      {/* Modal de Subida de Plantilla Oficial */}
+      {selectedWorkspace && (
+        <UploadResourceModal
+          isOpen={isUploadResourceModalOpen}
+          workspaceId={selectedWorkspace.id}
+          workspaceTitle={selectedWorkspace.title}
+          onClose={() => setIsUploadResourceModalOpen(false)}
+          onSuccess={(created) => {
+            setResources((prev) => [created, ...prev]);
           }}
         />
       )}
