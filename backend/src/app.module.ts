@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { WorkspacesModule } from './workspaces/workspaces.module.js';
 import { TestsModule } from './tests/tests.module.js';
 import { ResourcesModule } from './resources/resources.module.js';
+import { SubmissionsModule } from './submissions/submissions.module.js';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ResourcesModule } from './resources/resources.module.js';
     WorkspacesModule,
     TestsModule,
     ResourcesModule,
+    SubmissionsModule,
   ],
   controllers: [],
   providers: [],

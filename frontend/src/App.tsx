@@ -25,13 +25,19 @@ import { InductionVideoPlayer } from '@/modules/practicas/components/InductionVi
 import { workspacesApi } from '@/modules/admin/api/workspaces.api';
 import { testsApi } from '@/modules/practicas/api/tests.api';
 import { resourcesApi } from '@/modules/practicas/api/resources.api';
+import { documentsApi } from '@/modules/practicas/api/documents.api';
 import { QuestionnaireTest } from '@/modules/practicas/components/QuestionnaireTest';
 import { ResourceCard } from '@/modules/practicas/components/ResourceCard';
+import { DocumentDropzone } from '@/modules/practicas/components/DocumentDropzone';
+import { MySubmissionsList } from '@/modules/practicas/components/MySubmissionsList';
+import { SubmissionsReviewTable } from '@/modules/admin/components/SubmissionsReviewTable';
 import { CreateTestModal } from '@/modules/admin/components/CreateTestModal';
 import { UploadResourceModal } from '@/modules/admin/components/UploadResourceModal';
+import { ReviewDocumentModal } from '@/modules/admin/components/ReviewDocumentModal';
 import type { Workspace } from '@/shared/types/workspace.types';
 import type { Test, TestResult } from '@/shared/types/test.types';
 import type { ResourceFile } from '@/shared/types/resource.types';
+import type { DocumentSubmission } from '@/shared/types/document.types';
 
 export default function App() {
   const { user, setUserDirectlyForDemo, logout } = useAuth();
@@ -42,12 +48,17 @@ export default function App() {
   const [activeTest, setActiveTest] = useState<Test | null>(null);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [resources, setResources] = useState<ResourceFile[]>([]);
+  const [submissions, setSubmissions] = useState<DocumentSubmission[]>([]);
+  const [mySubmissions, setMySubmissions] = useState<DocumentSubmission[]>([]);
+  const [selectedSubmissionForReview, setSelectedSubmissionForReview] = useState<DocumentSubmission | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCreateTestModalOpen, setIsCreateTestModalOpen] = useState(false);
   const [isUploadResourceModalOpen, setIsUploadResourceModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false);
   const [isLoadingTest, setIsLoadingTest] = useState(false);
   const [isLoadingResources, setIsLoadingResources] = useState(false);
+  const [isLoadingSubmissions, setIsLoadingSubmissions] = useState(false);
 
   const fetchWorkspaces = async () => {
     try {
@@ -200,6 +211,73 @@ export default function App() {
     }
   };
 
+  const fetchSubmissions = async (workspaceId: string) => {
+    try {
+      setIsLoadingSubmissions(true);
+      const [allSubs, mySubs] = await Promise.allSettled([
+        documentsApi.getWorkspaceSubmissions(workspaceId),
+        documentsApi.getMySubmissions(workspaceId),
+      ]);
+
+      if (allSubs.status === 'fulfilled' && allSubs.value.length > 0) {
+        setSubmissions(allSubs.value);
+      } else {
+        setSubmissions([
+          {
+            id: 'sub-sample-1',
+            enrollmentId: 'enr-1',
+            documentTitle: 'Bitácora Semanal 1 y 2 - Convenio Activo',
+            fileUrl: 'bitacora_semanal_1.pdf',
+            status: 'submitted',
+            feedbackNotes: null,
+            auditedAt: null,
+            approvedAt: null,
+            createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+            updatedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+            enrollment: {
+              id: 'enr-1',
+              user: {
+                id: 'u-1',
+                fullName: 'Carlos Alberto Estudiante',
+                email: 'alumno@instituto.edu.ec',
+                identification: '1723456789',
+              },
+            },
+          },
+          {
+            id: 'sub-sample-2',
+            enrollmentId: 'enr-2',
+            documentTitle: 'Plan de Aprendizaje Firmado por Tutor Empresarial',
+            fileUrl: 'plan_aprendizaje_firmado.pdf',
+            status: 'approved',
+            feedbackNotes: 'Documento legalizado conforme a las directrices del RRA.',
+            auditedAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+            approvedAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+            createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
+            updatedAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+            enrollment: {
+              id: 'enr-2',
+              user: {
+                id: 'u-2',
+                fullName: 'María Fernanda Gómez',
+                email: 'mgomez@instituto.edu.ec',
+                identification: '1719876543',
+              },
+            },
+          },
+        ]);
+      }
+
+      if (mySubs.status === 'fulfilled') {
+        setMySubmissions(mySubs.value);
+      }
+    } catch {
+      // Demo fallback
+    } finally {
+      setIsLoadingSubmissions(false);
+    }
+  };
+
   useEffect(() => {
     fetchWorkspaces();
   }, []);
@@ -208,6 +286,7 @@ export default function App() {
     if (selectedWorkspace) {
       fetchTest(selectedWorkspace.id);
       fetchResources(selectedWorkspace.id);
+      fetchSubmissions(selectedWorkspace.id);
     }
   }, [selectedWorkspace]);
 
@@ -535,6 +614,50 @@ export default function App() {
           )}
         </section>
 
+        {/* Sección de Sistema Documental y Bandeja de Entregas (Paso 14) */}
+        <section id="documentos-section" className="max-w-5xl mx-auto w-full flex flex-col gap-6">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <div className="flex items-center gap-2">
+                <FileCheck className="w-5 h-5 text-blue-400" />
+                <h3 className="text-lg font-bold text-white">
+                  Sistema Documental y Bandeja de Entregas
+                </h3>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Carga de bitácoras de actividades, convenios legalizados y revisión institucional con retroalimentación.
+              </p>
+            </div>
+          </div>
+
+          <Can
+            do="document:review"
+            fallback={
+              <div className="space-y-8">
+                <DocumentDropzone
+                  workspaceId={selectedWorkspace?.id || 'ws-demo-1'}
+                  testPassed={testResult?.passed ?? false}
+                  onUploadSuccess={(sub) => {
+                    setMySubmissions((prev) => [sub, ...prev]);
+                    setSubmissions((prev) => [sub, ...prev]);
+                  }}
+                />
+
+                <MySubmissionsList submissions={mySubmissions} />
+              </div>
+            }
+          >
+            <SubmissionsReviewTable
+              submissions={submissions}
+              isLoading={isLoadingSubmissions}
+              onOpenReview={(sub) => {
+                setSelectedSubmissionForReview(sub);
+                setIsReviewModalOpen(true);
+              }}
+            />
+          </Can>
+        </section>
+
         {/* Sección de Workspaces (Paso 10) */}
         <section className="max-w-5xl mx-auto w-full flex flex-col gap-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -665,6 +788,24 @@ export default function App() {
           }}
         />
       )}
+
+      {/* Modal de Revisión Documental */}
+      <ReviewDocumentModal
+        isOpen={isReviewModalOpen}
+        submission={selectedSubmissionForReview}
+        onClose={() => {
+          setIsReviewModalOpen(false);
+          setSelectedSubmissionForReview(null);
+        }}
+        onSuccess={(updated) => {
+          setSubmissions((prev) =>
+            prev.map((s) => (s.id === updated.id ? { ...s, ...updated } : s)),
+          );
+          setMySubmissions((prev) =>
+            prev.map((s) => (s.id === updated.id ? { ...s, ...updated } : s)),
+          );
+        }}
+      />
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 bg-slate-900/30 px-6 py-4 text-center text-xs text-slate-500">
