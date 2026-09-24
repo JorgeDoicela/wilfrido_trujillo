@@ -1,0 +1,17 @@
+{
+  "name": "wilfrido-trujillo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma de gestión académica y eventos para el Ing. Wilfrido Trujillo",
+  "scripts": {
+    "dev": "echo \"El script orquestado dev se configurará en el Paso 4\"",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint"
+  },
+  "devDependencies": {},
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
+  }
+}

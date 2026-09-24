@@ -1,0 +1,33 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Builds y compilación
+dist/
+build/
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Base de datos SQLite y WAL
+backend/data/*.sqlite
+backend/data/*.sqlite-wal
+backend/data/*.sqlite-shm
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# Archivos subidos y temporales
+uploads/
+backend/uploads/
+temp/
+*.log
+
+# Editor y sistema operativo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
