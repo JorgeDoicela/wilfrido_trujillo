@@ -14,6 +14,7 @@ import {
   Video,
   HelpCircle,
   FolderArchive,
+  QrCode,
 } from 'lucide-react';
 import { useAuth } from '@/modules/auth/context/AuthContext';
 import { Can } from '@/shared/components/Can';
@@ -34,6 +35,8 @@ import { SubmissionsReviewTable } from '@/modules/admin/components/SubmissionsRe
 import { CreateTestModal } from '@/modules/admin/components/CreateTestModal';
 import { UploadResourceModal } from '@/modules/admin/components/UploadResourceModal';
 import { ReviewDocumentModal } from '@/modules/admin/components/ReviewDocumentModal';
+import { PublicEventPortal } from '@/modules/eventos/pages/PublicEventPortal';
+import { EventQrShareModal } from '@/modules/eventos/components/EventQrShareModal';
 import type { Workspace } from '@/shared/types/workspace.types';
 import type { Test, TestResult } from '@/shared/types/test.types';
 import type { ResourceFile } from '@/shared/types/resource.types';
@@ -51,10 +54,12 @@ export default function App() {
   const [submissions, setSubmissions] = useState<DocumentSubmission[]>([]);
   const [mySubmissions, setMySubmissions] = useState<DocumentSubmission[]>([]);
   const [selectedSubmissionForReview, setSelectedSubmissionForReview] = useState<DocumentSubmission | null>(null);
+  const [publicEventCode, setPublicEventCode] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCreateTestModalOpen, setIsCreateTestModalOpen] = useState(false);
   const [isUploadResourceModalOpen, setIsUploadResourceModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false);
   const [isLoadingTest, setIsLoadingTest] = useState(false);
   const [isLoadingResources, setIsLoadingResources] = useState(false);
@@ -88,6 +93,16 @@ export default function App() {
             type: 'VINCULACION',
             isActive: true,
             accessCode: 'VINC-8821',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          {
+            id: 'ws-demo-3',
+            title: 'Conferencia Magistral: Inteligencia Artificial en Educación Superior',
+            description: 'Ponencia y taller sobre adopción ética de IA generativa y normativa RRA.',
+            type: 'EVENTO',
+            isActive: true,
+            accessCode: 'CONF-2026',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           },
@@ -279,6 +294,24 @@ export default function App() {
   };
 
   useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#/eventos/')) {
+        const code = hash.replace('#/eventos/', '').trim();
+        if (code) {
+          setPublicEventCode(code);
+        }
+      } else if (publicEventCode) {
+        setPublicEventCode(null);
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [publicEventCode]);
+
+  useEffect(() => {
     fetchWorkspaces();
   }, []);
 
@@ -332,6 +365,18 @@ export default function App() {
       ],
     });
   };
+
+  if (publicEventCode) {
+    return (
+      <PublicEventPortal
+        accessCode={publicEventCode}
+        onBackToApp={() => {
+          setPublicEventCode(null);
+          window.location.hash = '';
+        }}
+      />
+    );
+  }
 
   const handleWorkspaceCreated = (newWs: Workspace) => {
     setWorkspaces((prev) => [newWs, ...prev]);
@@ -487,9 +532,19 @@ export default function App() {
               </h3>
             </div>
             {selectedWorkspace && (
-              <span className="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-lg border border-slate-800">
-                Espacio activo: <strong className="text-white">{selectedWorkspace.title}</strong>
-              </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs text-slate-400 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+                  Espacio activo: <strong className="text-white">{selectedWorkspace.title}</strong>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsQrModalOpen(true)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-600/20 border border-purple-500/30 text-purple-300 hover:bg-purple-600/30 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  title="Abrir portal público y código QR para asistentes móviles"
+                >
+                  <QrCode className="w-3.5 h-3.5" /> Portal QR & Asistentes
+                </button>
+              </div>
             )}
           </div>
 
@@ -806,6 +861,21 @@ export default function App() {
           );
         }}
       />
+
+      {/* Modal de Portal QR y Asistentes */}
+      {selectedWorkspace && (
+        <EventQrShareModal
+          isOpen={isQrModalOpen}
+          workspaceId={selectedWorkspace.id}
+          workspaceTitle={selectedWorkspace.title}
+          accessCode={selectedWorkspace.accessCode}
+          onClose={() => setIsQrModalOpen(false)}
+          onOpenPublicPortal={(code) => {
+            setPublicEventCode(code);
+            window.location.hash = `#/eventos/${code}`;
+          }}
+        />
+      )}
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 bg-slate-900/30 px-6 py-4 text-center text-xs text-slate-500">
