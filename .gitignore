@@ -21,9 +21,11 @@ backend/data/*.sqlite-shm
 *.sqlite-wal
 *.sqlite-shm
 
-# Archivos subidos y temporales
-uploads/
-backend/uploads/
+# Archivos subidos y temporales (preservar estructura de directorios con .gitkeep)
+uploads/*
+!uploads/**/.gitkeep
+backend/uploads/*
+!backend/uploads/**/.gitkeep
 temp/
 *.log
 
