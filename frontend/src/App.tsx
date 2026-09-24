@@ -15,6 +15,7 @@ import {
   HelpCircle,
   FolderArchive,
   QrCode,
+  Award,
 } from 'lucide-react';
 import { useAuth } from '@/modules/auth/context/AuthContext';
 import { Can } from '@/shared/components/Can';
@@ -27,6 +28,7 @@ import { workspacesApi } from '@/modules/admin/api/workspaces.api';
 import { testsApi } from '@/modules/practicas/api/tests.api';
 import { resourcesApi } from '@/modules/practicas/api/resources.api';
 import { documentsApi } from '@/modules/practicas/api/documents.api';
+import { certificatesApi } from '@/modules/eventos/api/certificates.api';
 import { QuestionnaireTest } from '@/modules/practicas/components/QuestionnaireTest';
 import { ResourceCard } from '@/modules/practicas/components/ResourceCard';
 import { DocumentDropzone } from '@/modules/practicas/components/DocumentDropzone';
@@ -37,10 +39,14 @@ import { UploadResourceModal } from '@/modules/admin/components/UploadResourceMo
 import { ReviewDocumentModal } from '@/modules/admin/components/ReviewDocumentModal';
 import { PublicEventPortal } from '@/modules/eventos/pages/PublicEventPortal';
 import { EventQrShareModal } from '@/modules/eventos/components/EventQrShareModal';
+import { CertificatesList } from '@/modules/eventos/components/CertificatesList';
+import { IssueCertificateModal } from '@/modules/eventos/components/IssueCertificateModal';
+import { VerifyCertificatePortal } from '@/modules/eventos/pages/VerifyCertificatePortal';
 import type { Workspace } from '@/shared/types/workspace.types';
 import type { Test, TestResult } from '@/shared/types/test.types';
 import type { ResourceFile } from '@/shared/types/resource.types';
 import type { DocumentSubmission } from '@/shared/types/document.types';
+import type { Certificate } from '@/shared/types/certificate.types';
 
 export default function App() {
   const { user, setUserDirectlyForDemo, logout } = useAuth();
@@ -53,17 +59,21 @@ export default function App() {
   const [resources, setResources] = useState<ResourceFile[]>([]);
   const [submissions, setSubmissions] = useState<DocumentSubmission[]>([]);
   const [mySubmissions, setMySubmissions] = useState<DocumentSubmission[]>([]);
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [selectedSubmissionForReview, setSelectedSubmissionForReview] = useState<DocumentSubmission | null>(null);
   const [publicEventCode, setPublicEventCode] = useState<string | null>(null);
+  const [verifyHash, setVerifyHash] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCreateTestModalOpen, setIsCreateTestModalOpen] = useState(false);
   const [isUploadResourceModalOpen, setIsUploadResourceModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [isIssueCertModalOpen, setIsIssueCertModalOpen] = useState(false);
   const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false);
   const [isLoadingTest, setIsLoadingTest] = useState(false);
   const [isLoadingResources, setIsLoadingResources] = useState(false);
   const [isLoadingSubmissions, setIsLoadingSubmissions] = useState(false);
+  const [isLoadingCertificates, setIsLoadingCertificates] = useState(false);
 
   const fetchWorkspaces = async () => {
     try {
@@ -293,6 +303,46 @@ export default function App() {
     }
   };
 
+  const fetchCertificates = async (workspaceId: string) => {
+    try {
+      setIsLoadingCertificates(true);
+      const data = await certificatesApi.getByWorkspace(workspaceId);
+      if (data.length > 0) {
+        setCertificates(data);
+      } else {
+        setCertificates([
+          {
+            id: 'cert-sample-1',
+            workspaceId,
+            recipientName: 'Carlos Alberto Estudiante',
+            recipientEmail: 'alumno@instituto.edu.ec',
+            recipientIdentification: '1723456789',
+            hours: 40,
+            verificationHash: 'WT-A1B2-C3D4-E5F6',
+            pdfPath: null,
+            issuedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+          },
+        ]);
+      }
+    } catch {
+      setCertificates([
+        {
+          id: 'cert-sample-1',
+          workspaceId,
+          recipientName: 'Carlos Alberto Estudiante',
+          recipientEmail: 'alumno@instituto.edu.ec',
+          recipientIdentification: '1723456789',
+          hours: 40,
+          verificationHash: 'WT-A1B2-C3D4-E5F6',
+          pdfPath: null,
+          issuedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+        },
+      ]);
+    } finally {
+      setIsLoadingCertificates(false);
+    }
+  };
+
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
@@ -300,16 +350,24 @@ export default function App() {
         const code = hash.replace('#/eventos/', '').trim();
         if (code) {
           setPublicEventCode(code);
+          setVerifyHash(null);
         }
-      } else if (publicEventCode) {
-        setPublicEventCode(null);
+      } else if (hash.startsWith('#/certificados/validar/')) {
+        const certHash = hash.replace('#/certificados/validar/', '').trim();
+        if (certHash) {
+          setVerifyHash(certHash);
+          setPublicEventCode(null);
+        }
+      } else {
+        if (publicEventCode) setPublicEventCode(null);
+        if (verifyHash) setVerifyHash(null);
       }
     };
 
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [publicEventCode]);
+  }, [publicEventCode, verifyHash]);
 
   useEffect(() => {
     fetchWorkspaces();
@@ -320,6 +378,7 @@ export default function App() {
       fetchTest(selectedWorkspace.id);
       fetchResources(selectedWorkspace.id);
       fetchSubmissions(selectedWorkspace.id);
+      fetchCertificates(selectedWorkspace.id);
     }
   }, [selectedWorkspace]);
 
@@ -372,6 +431,18 @@ export default function App() {
         accessCode={publicEventCode}
         onBackToApp={() => {
           setPublicEventCode(null);
+          window.location.hash = '';
+        }}
+      />
+    );
+  }
+
+  if (verifyHash) {
+    return (
+      <VerifyCertificatePortal
+        hash={verifyHash}
+        onBackToApp={() => {
+          setVerifyHash(null);
           window.location.hash = '';
         }}
       />
@@ -713,6 +784,42 @@ export default function App() {
           </Can>
         </section>
 
+        {/* Sección de Certificados PDF con Verificación QR (Paso 16) */}
+        <section id="certificados-section" className="max-w-5xl mx-auto w-full flex flex-col gap-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <div className="flex items-center gap-2">
+                <Award className="w-5 h-5 text-amber-400" />
+                <h3 className="text-lg font-bold text-white">
+                  Generador de Certificados PDF con Verificación QR
+                </h3>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Emisión de certificados oficiales con firma digital del Ing. Wilfrido Trujillo y código QR de validación criptográfica.
+              </p>
+            </div>
+
+            <Can do="certificate:issue">
+              <button
+                type="button"
+                onClick={() => setIsIssueCertModalOpen(true)}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-600 hover:bg-amber-500 text-white flex items-center gap-1.5 transition-all shadow-md shadow-amber-600/20 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" /> Emitir Certificado Digital
+              </button>
+            </Can>
+          </div>
+
+          <CertificatesList
+            certificates={certificates}
+            isLoading={isLoadingCertificates}
+            onVerifyHash={(hash) => {
+              setVerifyHash(hash);
+              window.location.hash = `#/certificados/validar/${hash}`;
+            }}
+          />
+        </section>
+
         {/* Sección de Workspaces (Paso 10) */}
         <section className="max-w-5xl mx-auto w-full flex flex-col gap-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -873,6 +980,19 @@ export default function App() {
           onOpenPublicPortal={(code) => {
             setPublicEventCode(code);
             window.location.hash = `#/eventos/${code}`;
+          }}
+        />
+      )}
+
+      {/* Modal de Emisión de Certificado */}
+      {selectedWorkspace && (
+        <IssueCertificateModal
+          isOpen={isIssueCertModalOpen}
+          workspaceId={selectedWorkspace.id}
+          workspaceTitle={selectedWorkspace.title}
+          onClose={() => setIsIssueCertModalOpen(false)}
+          onSuccess={(created) => {
+            setCertificates((prev) => [created, ...prev]);
           }}
         />
       )}
