@@ -12,6 +12,7 @@ import {
   Plus,
   FolderOpen,
   Video,
+  HelpCircle,
 } from 'lucide-react';
 import { useAuth } from '@/modules/auth/context/AuthContext';
 import { Can } from '@/shared/components/Can';
@@ -21,7 +22,11 @@ import { WorkspaceCard } from '@/modules/admin/components/WorkspaceCard';
 import { CreateWorkspaceModal } from '@/modules/admin/components/CreateWorkspaceModal';
 import { InductionVideoPlayer } from '@/modules/practicas/components/InductionVideoPlayer';
 import { workspacesApi } from '@/modules/admin/api/workspaces.api';
+import { testsApi } from '@/modules/practicas/api/tests.api';
+import { QuestionnaireTest } from '@/modules/practicas/components/QuestionnaireTest';
+import { CreateTestModal } from '@/modules/admin/components/CreateTestModal';
 import type { Workspace } from '@/shared/types/workspace.types';
+import type { Test, TestResult } from '@/shared/types/test.types';
 
 export default function App() {
   const { user, setUserDirectlyForDemo, logout } = useAuth();
@@ -29,8 +34,12 @@ export default function App() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
   const [inductionWatched, setInductionWatched] = useState(false);
+  const [activeTest, setActiveTest] = useState<Test | null>(null);
+  const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCreateTestModalOpen, setIsCreateTestModalOpen] = useState(false);
   const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false);
+  const [isLoadingTest, setIsLoadingTest] = useState(false);
 
   const fetchWorkspaces = async () => {
     try {
@@ -72,9 +81,83 @@ export default function App() {
     }
   };
 
+  const fetchTest = async (workspaceId: string) => {
+    try {
+      setIsLoadingTest(true);
+      const test = await testsApi.getByWorkspace(workspaceId);
+      if (test) {
+        setActiveTest(test);
+      } else {
+        setActiveTest({
+          id: `test-${workspaceId}`,
+          workspaceId,
+          title: 'Evaluación de Normativa y Procedimiento de Prácticas',
+          passingScore: 7,
+          timeLimitMinutes: 15,
+          questions: [
+            {
+              id: 'q1',
+              question: '¿Cuál es el porcentaje mínimo obligatorio de visualización del video de inducción?',
+              options: ['50% de la duración', '75% con salto rápido', '100% de reproducción completa sin omisiones', '80% de avance'],
+              correctOptionIndex: 2,
+            },
+            {
+              id: 'q2',
+              question: '¿Qué documento debe estar debidamente legalizado antes de iniciar las horas operativas en la empresa?',
+              options: ['Carta de compromiso / Convenio y Plan de Aprendizaje', 'Solo carné estudiantil', 'Factura de servicios básicos', 'Comprobante de matrícula simple'],
+              correctOptionIndex: 0,
+            },
+            {
+              id: 'q3',
+              question: '¿Bajo qué formato oficial se deben consolidar y subir las bitácoras semanales?',
+              options: ['Formato PDF oficial con firmas digitales o manuscritas del tutor empresarial', 'Capturas de pantalla sueltas', 'Documento de texto sin membrete', 'Mensaje por correo personal'],
+              correctOptionIndex: 0,
+            },
+          ],
+        });
+      }
+    } catch {
+      setActiveTest({
+        id: `test-${workspaceId}`,
+        workspaceId,
+        title: 'Evaluación de Normativa y Procedimiento de Prácticas',
+        passingScore: 7,
+        timeLimitMinutes: 15,
+        questions: [
+          {
+            id: 'q1',
+            question: '¿Cuál es el porcentaje mínimo obligatorio de visualización del video de inducción?',
+            options: ['50% de la duración', '75% con salto rápido', '100% de reproducción completa sin omisiones', '80% de avance'],
+            correctOptionIndex: 2,
+          },
+          {
+            id: 'q2',
+            question: '¿Qué documento debe estar debidamente legalizado antes de iniciar las horas operativas en la empresa?',
+            options: ['Carta de compromiso / Convenio y Plan de Aprendizaje', 'Solo carné estudiantil', 'Factura de servicios básicos', 'Comprobante de matrícula simple'],
+            correctOptionIndex: 0,
+          },
+          {
+            id: 'q3',
+            question: '¿Bajo qué formato oficial se deben consolidar y subir las bitácoras semanales?',
+            options: ['Formato PDF oficial con firmas digitales o manuscritas del tutor empresarial', 'Capturas de pantalla sueltas', 'Documento de texto sin membrete', 'Mensaje por correo personal'],
+            correctOptionIndex: 0,
+          },
+        ],
+      });
+    } finally {
+      setIsLoadingTest(false);
+    }
+  };
+
   useEffect(() => {
     fetchWorkspaces();
   }, []);
+
+  useEffect(() => {
+    if (selectedWorkspace) {
+      fetchTest(selectedWorkspace.id);
+    }
+  }, [selectedWorkspace]);
 
   const simulateStudent = () => {
     setUserDirectlyForDemo({
@@ -289,9 +372,61 @@ export default function App() {
             initialWatched={inductionWatched}
             onInductionComplete={() => setInductionWatched(true)}
             onProceedToTest={() => {
-              alert('¡Siguiente paso desbloqueado! Listo para el Paso 12: Motor de Evaluaciones Dinámicas.');
+              const el = document.getElementById('evaluacion-section');
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+              }
             }}
           />
+        </section>
+
+        {/* Sección de Motor de Evaluaciones Dinámicas (Paso 12) */}
+        <section id="evaluacion-section" className="max-w-5xl mx-auto w-full flex flex-col gap-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <HelpCircle className="w-5 h-5 text-purple-400" />
+              <h3 className="text-lg font-bold text-white">
+                Motor de Evaluaciones Dinámicas
+              </h3>
+            </div>
+            <div className="flex items-center gap-2">
+              {testResult?.passed && (
+                <span className="text-xs px-2.5 py-1 rounded-full font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Aprobado ({testResult.scoreObtained}/10)
+                </span>
+              )}
+              <Can do="test:manage">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateTestModalOpen(true)}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-purple-600 hover:bg-purple-500 text-white flex items-center gap-1.5 transition-all shadow-md shadow-purple-600/20 cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" /> Configurar Nuevo Examen
+                </button>
+              </Can>
+            </div>
+          </div>
+
+          {isLoadingTest ? (
+            <div className="p-8 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
+              Cargando cuestionario de evaluación...
+            </div>
+          ) : activeTest ? (
+            <QuestionnaireTest
+              test={activeTest}
+              inductionWatched={inductionWatched}
+              onTestPassed={(res) => {
+                setTestResult(res);
+              }}
+              onProceedToResources={() => {
+                alert('¡Evaluación aprobada con éxito! Siguiente paso desbloqueado: Descarga de Recursos y Plantillas Oficiales (Paso 13).');
+              }}
+            />
+          ) : (
+            <div className="p-6 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
+              No hay evaluaciones configuradas para este espacio de trabajo.
+            </div>
+          )}
         </section>
 
         {/* Sección de Workspaces (Paso 10) */}
@@ -398,6 +533,19 @@ export default function App() {
         onClose={() => setIsCreateModalOpen(false)}
         onSuccess={handleWorkspaceCreated}
       />
+
+      {/* Modal de Creación de Examen */}
+      {selectedWorkspace && (
+        <CreateTestModal
+          isOpen={isCreateTestModalOpen}
+          workspaceId={selectedWorkspace.id}
+          workspaceTitle={selectedWorkspace.title}
+          onClose={() => setIsCreateTestModalOpen(false)}
+          onSuccess={(created) => {
+            setActiveTest(created);
+          }}
+        />
+      )}
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 bg-slate-900/30 px-6 py-4 text-center text-xs text-slate-500">
