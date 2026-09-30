@@ -19,17 +19,17 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
   onVerifyHash,
 }) => {
   return (
-    <section id="certificados-section" className="max-w-5xl mx-auto w-full flex flex-col gap-4">
-      <div className="flex items-center justify-between flex-wrap gap-2">
+    <section id="certificados-section" className="bg-white border border-[rgba(0,0,0,0.08)] rounded-[4px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col gap-4">
+      <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-[#e5e7eb]">
         <div>
           <div className="flex items-center gap-2">
-            <Award className="w-5 h-5 text-amber-400" />
-            <h3 className="text-lg font-bold text-white tracking-tight">
-              Generador de Certificados PDF con Verificación QR
+            <Award className="w-4 h-4 text-[#0078d4]" />
+            <h3 className="text-sm font-bold text-[#1a1a1a]">
+              Generador de Certificados PDF con Verificación Criptográfica QR
             </h3>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Emisión de certificados oficiales con firma digital del Ing. Wilfrido Trujillo y código QR de validación criptográfica.
+          <p className="text-xs text-[#605e5c] mt-0.5">
+            Emisión de certificados oficiales con firma digital del Ing. Wilfrido Trujillo y código QR de validación matemática en cadena.
           </p>
         </div>
 
@@ -38,9 +38,9 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
             variant="primary"
             size="sm"
             onClick={onOpenIssueModal}
-            className="gap-1.5 bg-amber-600 hover:bg-amber-500 shadow-amber-600/20"
+            className="gap-1 text-xs py-1"
           >
-            <Plus className="w-4 h-4" /> Emitir Certificado Digital
+            <Plus className="w-3.5 h-3.5" /> Emitir Certificado
           </Button>
         </Can>
       </div>

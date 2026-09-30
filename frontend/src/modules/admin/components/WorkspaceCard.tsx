@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Copy, Check, GraduationCap, BookOpen, Calendar, ArrowRight } from 'lucide-react';
 import { Card } from '@/shared/components/ui/Card';
-import { Badge } from '@/shared/components/ui/Badge';
-import { Button } from '@/shared/components/ui/Button';
 import type { Workspace } from '@/shared/types/workspace.types';
 
 interface WorkspaceCardProps {
@@ -25,19 +23,19 @@ export function WorkspaceCard({ workspace, onEnter }: WorkspaceCardProps) {
         return {
           icon: <GraduationCap className="w-3.5 h-3.5" />,
           label: 'Prácticas',
-          variant: 'info' as const,
+          className: 'fluent-badge--info',
         };
       case 'VINCULACION':
         return {
           icon: <BookOpen className="w-3.5 h-3.5" />,
           label: 'Vinculación',
-          variant: 'purple' as const,
+          className: 'fluent-badge--warning',
         };
       case 'EVENTO':
         return {
           icon: <Calendar className="w-3.5 h-3.5" />,
           label: 'Conferencia / Evento',
-          variant: 'success' as const,
+          className: 'fluent-badge--success',
         };
     }
   };
@@ -45,54 +43,51 @@ export function WorkspaceCard({ workspace, onEnter }: WorkspaceCardProps) {
   const badge = getBadgeConfig();
 
   return (
-    <Card className="p-5 hover:border-slate-700 transition-all flex flex-col justify-between group shadow-lg">
+    <Card className="hover:border-[#c8c6c4] flex flex-col justify-between group">
       <div>
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <Badge variant={badge.variant}>
+        <div className="flex items-center justify-between gap-2 mb-2.5">
+          <span className={`fluent-badge ${badge.className}`}>
             {badge.icon} {badge.label}
-          </Badge>
-          <Badge variant={workspace.isActive ? 'success' : 'neutral'}>
+          </span>
+          <span className={`fluent-badge ${workspace.isActive ? 'fluent-badge--success' : 'fluent-badge--neutral'}`}>
             {workspace.isActive ? 'Activo' : 'Inactivo'}
-          </Badge>
+          </span>
         </div>
 
-        <h4 className="text-base font-semibold text-white tracking-tight mb-1 group-hover:text-blue-400 transition-colors">
+        <h4 className="text-sm font-bold text-[#1a1a1a] tracking-tight mb-1 group-hover:text-[#1b2a4a] transition-colors">
           {workspace.title}
         </h4>
-        <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
+        <p className="text-xs text-[#605e5c] line-clamp-2 leading-relaxed mb-3">
           {workspace.description || 'Sin descripción adicional.'}
         </p>
       </div>
 
-      <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+      <div className="pt-2.5 border-t border-[#e5e7eb] flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
-          <span className="text-[11px] text-slate-500">Código:</span>
-          <code className="text-xs font-mono font-bold text-slate-200 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
-            {workspace.accessCode}
-          </code>
+          <span className="text-[11px] text-[#605e5c]">Código:</span>
+          <code>{workspace.accessCode}</code>
           <button
             type="button"
             onClick={copyCode}
             title="Copiar código de acceso"
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-1 rounded-[2px] text-[#605e5c] hover:text-[#1a1a1a] hover:bg-[#faf9f8] transition-colors cursor-pointer"
           >
             {copied ? (
-              <Check className="w-3.5 h-3.5 text-emerald-400" />
+              <Check className="w-3 h-3 text-[#107c10]" />
             ) : (
-              <Copy className="w-3.5 h-3.5" />
+              <Copy className="w-3 h-3" />
             )}
           </button>
         </div>
 
         {onEnter && (
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
+            type="button"
             onClick={() => onEnter(workspace)}
-            className="text-xs text-blue-400 hover:text-blue-300 p-0 h-auto hover:bg-transparent"
+            className="text-xs text-[#0078d4] hover:text-[#106ebe] font-medium flex items-center gap-1 cursor-pointer"
           >
-            Ver espacio <ArrowRight className="w-3.5 h-3.5 ml-1" />
-          </Button>
+            Abrir <ArrowRight className="w-3 h-3" />
+          </button>
         )}
       </div>
     </Card>

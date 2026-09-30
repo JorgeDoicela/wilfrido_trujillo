@@ -48,11 +48,11 @@ export const Modal: React.FC<ModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
       onClick={onClose}
     >
       <div
-        className={`relative w-full ${maxWidthMap[maxWidth]} bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl flex flex-col gap-4 text-slate-100 ${className}`}
+        className={`relative w-full ${maxWidthMap[maxWidth]} bg-[var(--bg-surface)] border border-[var(--border-strong)] rounded-[var(--radius-panel)] p-5 shadow-[var(--fluent-shadow-hover)] flex flex-col gap-4 text-[var(--text-primary)] ${className}`}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
@@ -73,16 +73,16 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`flex items-center justify-between border-b border-slate-800 pb-4 ${className}`}>
-      <div className="flex items-center gap-2 text-white font-semibold">{children}</div>
+    <div className={`flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 ${className}`}>
+      <div className="flex items-center gap-2 text-[var(--text-primary)] font-semibold text-sm">{children}</div>
       {onClose && (
         <button
           type="button"
           onClick={onClose}
           aria-label="Cerrar modal"
-          className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+          className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-[var(--radius-input)] hover:bg-[var(--bg-surface-elevated)] transition-colors cursor-pointer"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
       )}
     </div>
@@ -93,14 +93,14 @@ export const ModalTitle: React.FC<{ children: React.ReactNode; className?: strin
   children,
   className = '',
 }) => {
-  return <h3 className={`text-base font-semibold text-white tracking-tight ${className}`}>{children}</h3>;
+  return <h3 className={`text-base font-semibold text-[var(--text-primary)] tracking-tight ${className}`}>{children}</h3>;
 };
 
 export const ModalContent: React.FC<{ children: React.ReactNode; className?: string }> = ({
   children,
   className = '',
 }) => {
-  return <div className={`flex flex-col gap-4 ${className}`}>{children}</div>;
+  return <div className={`flex flex-col gap-3 ${className}`}>{children}</div>;
 };
 
 export const ModalFooter: React.FC<{ children: React.ReactNode; className?: string }> = ({
@@ -108,7 +108,7 @@ export const ModalFooter: React.FC<{ children: React.ReactNode; className?: stri
   className = '',
 }) => {
   return (
-    <div className={`flex items-center justify-end gap-3 pt-3 border-t border-slate-800 ${className}`}>
+    <div className={`flex items-center justify-end gap-2 pt-3 border-t border-[var(--border-subtle)] ${className}`}>
       {children}
     </div>
   );

@@ -1,7 +1,6 @@
 import React from 'react';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, LogOut } from 'lucide-react';
 import { useAuth } from '@/modules/auth/context/AuthContext';
-import { Button } from '@/shared/components/ui/Button';
 
 export interface NavbarProps {
   onSimulateStudent?: () => void;
@@ -15,59 +14,62 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { user, logout } = useAuth();
 
   return (
-    <header className="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur px-6 py-4 sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
+    <header className="h-[var(--topbar-height)] bg-[var(--fluent-navy)] border-b border-[var(--border-strong)] px-4 flex items-center sticky top-0 z-40 text-white shadow-xs">
+      <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-4">
+        {/* Identidad Institucional Oficial Fluent */}
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold tracking-wider">
+          <div className="h-7 w-7 rounded-[var(--radius-input)] bg-white/10 border border-white/20 flex items-center justify-center text-xs font-bold font-mono tracking-wider text-white">
             WT
           </div>
-          <div>
-            <h1 className="text-lg font-semibold text-white tracking-tight">Ing. Wilfrido Trujillo</h1>
-            <p className="text-xs text-slate-400">Gestión Académica & Eventos</p>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold text-white tracking-tight">Ing. Wilfrido Trujillo</span>
+            <span className="text-white/40 text-xs hidden sm:inline">|</span>
+            <span className="text-xs text-white/70 hidden sm:inline">Gestión de Prácticas & Eventos</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <ShieldCheck className="w-3.5 h-3.5" /> PBAC Activo
+        {/* Acciones y Estado PBAC */}
+        <div className="flex items-center gap-2.5">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--radius-badge)] text-[11px] font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            <ShieldCheck className="w-3 h-3" /> PBAC
           </span>
 
           {onSimulateStudent && onSimulateIngeniero && (
-            <div className="hidden sm:flex items-center gap-1.5 bg-slate-950/60 p-1 rounded-xl border border-slate-800">
-              <Button
-                variant="ghost"
-                size="sm"
+            <div className="hidden sm:flex items-center gap-1 bg-black/25 p-0.5 rounded-[var(--radius-input)] border border-white/10">
+              <button
+                type="button"
                 onClick={onSimulateStudent}
-                className="text-xs py-1 px-2.5 h-auto"
+                className="text-xs py-1 px-2 rounded-[var(--radius-input)] text-white/80 hover:text-white hover:bg-white/10 transition-colors"
               >
-                Simular Alumno
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
+                Estudiante
+              </button>
+              <button
+                type="button"
                 onClick={onSimulateIngeniero}
-                className="text-xs py-1 px-2.5 h-auto"
+                className="text-xs py-1 px-2 rounded-[var(--radius-input)] bg-[var(--fluent-blue)] text-white font-medium hover:bg-[var(--fluent-blue-hover)] transition-colors"
               >
-                Simular Ingeniero
-              </Button>
+                Ingeniero
+              </button>
             </div>
           )}
 
-          {user ? (
-            <div className="flex items-center gap-2">
-              <span className="text-xs px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300">
-                {user.fullName} ({user.roleKey})
+          {user && (
+            <div className="flex items-center gap-2 pl-2 border-l border-white/15">
+              <span className="text-xs text-white/90 font-medium hidden md:inline">
+                {user.fullName}
+              </span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-[var(--radius-input)] bg-white/10 text-white/80 border border-white/10">
+                {user.roleKey}
               </span>
               <button
                 type="button"
                 onClick={logout}
-                className="text-xs text-rose-400 hover:text-rose-300 underline transition-colors cursor-pointer"
+                title="Cerrar sesión"
+                className="text-white/60 hover:text-white p-1 rounded-[var(--radius-input)] transition-colors"
               >
-                Salir
+                <LogOut className="w-3.5 h-3.5" />
               </button>
             </div>
-          ) : (
-            <span className="text-xs text-slate-400">Sin sesión activa</span>
           )}
         </div>
       </div>

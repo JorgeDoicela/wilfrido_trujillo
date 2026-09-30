@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/modules/auth/context/AuthContext';
-import { Navbar } from '@/shared/components/Navbar';
 import { PbacSimulatorCard } from '@/shared/components/PbacSimulatorCard';
 import { WorkspaceSelectorSection } from '@/modules/admin/components/WorkspaceSelectorSection';
 import { PracticasOverviewPage } from '@/modules/practicas/pages/PracticasOverviewPage';
@@ -24,9 +23,11 @@ import type { Test, TestResult } from '@/shared/types/test.types';
 import type { ResourceFile } from '@/shared/types/resource.types';
 import type { DocumentSubmission } from '@/shared/types/document.types';
 import type { Certificate } from '@/shared/types/certificate.types';
+import { FluentShell } from '@/shared/components/FluentShell';
 
 export default function App() {
   const { setUserDirectlyForDemo } = useAuth();
+  const [activeNavTab, setActiveNavTab] = useState('practicas');
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
   const [inductionWatched, setInductionWatched] = useState(false);
@@ -442,68 +443,55 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between">
-      {/* Header global */}
-      <Navbar
+    <FluentShell
+      workspaces={workspaces}
+      selectedWorkspace={selectedWorkspace}
+      onSelectWorkspace={(ws) => setSelectedWorkspace(ws)}
+      activeNavTab={activeNavTab}
+      onSelectNavTab={(tab) => setActiveNavTab(tab)}
+      onSimulateStudent={simulateStudent}
+      onSimulateIngeniero={simulateIngeniero}
+    >
+      {/* Simulador Interactivo PBAC */}
+      <PbacSimulatorCard
         onSimulateStudent={simulateStudent}
         onSimulateIngeniero={simulateIngeniero}
       />
 
-      {/* Contenedor Principal */}
-      <main className="max-w-7xl mx-auto px-6 py-10 flex-1 flex flex-col gap-10 w-full">
-        {/* Hero Section */}
-        <div className="text-center max-w-3xl mx-auto">
-          <span className="inline-block px-3 py-1 mb-3 text-xs font-semibold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-full">
-            Ecosistema de Coordinación y Control
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
-            Flujo Guiado de Inducción y Gestión
-          </h2>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-            Mecanismo secuencial verificado: Inducción en video con tracking de reproducción al 100%,
-            evaluación de directrices y entrega oficial de evidencias.
-          </p>
-        </div>
-
-        {/* Simulador Interactivo PBAC */}
-        <PbacSimulatorCard
-          onSimulateStudent={simulateStudent}
-          onSimulateIngeniero={simulateIngeniero}
+      {/* Vista de Prácticas Preprofesionales */}
+      {activeNavTab === 'practicas' && selectedWorkspace && (
+        <PracticasOverviewPage
+          workspace={selectedWorkspace}
+          inductionWatched={inductionWatched}
+          onInductionComplete={() => setInductionWatched(true)}
+          activeTest={activeTest}
+          isLoadingTest={isLoadingTest}
+          testResult={testResult}
+          onTestPassed={(res) => setTestResult(res)}
+          onOpenCreateTestModal={() => setIsCreateTestModalOpen(true)}
+          resources={resources}
+          isLoadingResources={isLoadingResources}
+          onOpenUploadResourceModal={() => setIsUploadResourceModalOpen(true)}
+          onDeleteResourceSuccess={(id) => {
+            setResources((prev) => prev.filter((r) => r.id !== id));
+          }}
+          mySubmissions={mySubmissions}
+          allSubmissions={submissions}
+          isLoadingSubmissions={isLoadingSubmissions}
+          onUploadSuccess={(sub) => {
+            setMySubmissions((prev) => [sub, ...prev]);
+            setSubmissions((prev) => [sub, ...prev]);
+          }}
+          onOpenReviewSubmission={(sub) => {
+            setSelectedSubmissionForReview(sub);
+            setIsReviewModalOpen(true);
+          }}
+          onOpenQrModal={() => setIsQrModalOpen(true)}
         />
+      )}
 
-        {/* Módulo de Prácticas Preprofesionales: Flujo de 4 pasos */}
-        {selectedWorkspace && (
-          <PracticasOverviewPage
-            workspace={selectedWorkspace}
-            inductionWatched={inductionWatched}
-            onInductionComplete={() => setInductionWatched(true)}
-            activeTest={activeTest}
-            isLoadingTest={isLoadingTest}
-            testResult={testResult}
-            onTestPassed={(res) => setTestResult(res)}
-            onOpenCreateTestModal={() => setIsCreateTestModalOpen(true)}
-            resources={resources}
-            isLoadingResources={isLoadingResources}
-            onOpenUploadResourceModal={() => setIsUploadResourceModalOpen(true)}
-            onDeleteResourceSuccess={(id) => {
-              setResources((prev) => prev.filter((r) => r.id !== id));
-            }}
-            mySubmissions={mySubmissions}
-            allSubmissions={submissions}
-            isLoadingSubmissions={isLoadingSubmissions}
-            onUploadSuccess={(sub) => {
-              setMySubmissions((prev) => [sub, ...prev]);
-              setSubmissions((prev) => [sub, ...prev]);
-            }}
-            onOpenReviewSubmission={(sub) => {
-              setSelectedSubmissionForReview(sub);
-              setIsReviewModalOpen(true);
-            }}
-            onOpenQrModal={() => setIsQrModalOpen(true)}
-          />
-        )}
-
-        {/* Sección de Certificados PDF con Verificación QR */}
+      {/* Vista de Certificados y Registro QR */}
+      {(activeNavTab === 'certificados' || activeNavTab === 'eventos') && (
         <CertificatesSection
           certificates={certificates}
           isLoading={isLoadingCertificates}
@@ -513,29 +501,29 @@ export default function App() {
             window.location.hash = `#/certificados/validar/${hash}`;
           }}
         />
+      )}
 
-        {/* Sección de Selección y Creación de Espacios */}
-        <WorkspaceSelectorSection
-          workspaces={workspaces}
-          isLoading={isLoadingWorkspaces}
-          onSelectWorkspace={(ws) => setSelectedWorkspace(ws)}
-          onOpenCreateModal={() => setIsCreateModalOpen(true)}
-          onJoinSuccess={(res) => {
-            if (res.workspace) {
-              setWorkspaces((prev) => {
-                if (!prev.some((w) => w.id === res.workspace.id)) {
-                  return [res.workspace, ...prev];
-                }
-                return prev;
-              });
-              setSelectedWorkspace(res.workspace);
-            }
-          }}
-        />
+      {/* Catálogo de Espacios y Unirse con Código */}
+      <WorkspaceSelectorSection
+        workspaces={workspaces}
+        isLoading={isLoadingWorkspaces}
+        onSelectWorkspace={(ws) => setSelectedWorkspace(ws)}
+        onOpenCreateModal={() => setIsCreateModalOpen(true)}
+        onJoinSuccess={(res) => {
+          if (res.workspace) {
+            setWorkspaces((prev) => {
+              if (!prev.some((w) => w.id === res.workspace.id)) {
+                return [res.workspace, ...prev];
+              }
+              return prev;
+            });
+            setSelectedWorkspace(res.workspace);
+          }
+        }}
+      />
 
-        {/* Pilares Funcionales */}
-        <FeaturePillars />
-      </main>
+      {/* Pilares Institucionales de Acreditación */}
+      <FeaturePillars />
 
       {/* Modales de la aplicación */}
       <CreateWorkspaceModal
@@ -603,11 +591,6 @@ export default function App() {
           );
         }}
       />
-
-      {/* Footer soberano */}
-      <footer className="border-t border-slate-800/80 bg-slate-900/30 px-6 py-4 text-center text-xs text-slate-500">
-        Plataforma Privada y Soberana &copy; {new Date().getFullYear()} Ing. Wilfrido Trujillo. Todos los derechos reservados.
-      </footer>
-    </div>
+    </FluentShell>
   );
 }

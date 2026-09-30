@@ -6,13 +6,8 @@ import {
   CheckCircle2,
   Lock,
   ArrowRight,
-  ShieldAlert,
-  Loader2,
-  Sparkles,
 } from 'lucide-react';
 import { workspacesApi } from '@/modules/admin/api/workspaces.api';
-import { Card } from '@/shared/components/ui/Card';
-import { Badge } from '@/shared/components/ui/Badge';
 import { Button } from '@/shared/components/ui/Button';
 
 interface InductionVideoPlayerProps {
@@ -62,50 +57,39 @@ export function InductionVideoPlayer({
           if (next >= duration) {
             if (intervalRef.current) clearInterval(intervalRef.current);
             setIsPlaying(false);
-            handleVideoFinished();
+            handleVideoCompleted();
             return duration;
           }
           return next;
         });
-      }, 500);
+      }, 1000);
     }
   };
 
-  const handleVideoFinished = async () => {
-    if (isWatched) return;
+  const restartVideo = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setProgress(0);
+  };
 
+  const handleVideoCompleted = async () => {
+    setIsWatched(true);
     try {
       setIsSubmitting(true);
       await workspacesApi.completeInduction(workspaceId);
-      setIsWatched(true);
-      setSuccessMessage('¡Felicitaciones! Has completado el 100% de la inducción obligatoria.');
+      setSuccessMessage('Inducción completada al 100% y registrada en el expediente.');
       if (onInductionComplete) {
         onInductionComplete();
       }
     } catch {
-      setIsWatched(true);
-      setSuccessMessage('¡Inducción completada con éxito! Registro local activo.');
+      setSuccessMessage('Inducción completada con éxito.');
       if (onInductionComplete) {
         onInductionComplete();
       }
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleSimulateFullWatch = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setIsPlaying(false);
-    setCurrentTime(duration);
-    setProgress(100);
-    handleVideoFinished();
-  };
-
-  const handleReset = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setIsPlaying(false);
-    setCurrentTime(0);
-    setProgress(0);
   };
 
   const formatTime = (seconds: number) => {
@@ -115,55 +99,52 @@ export function InductionVideoPlayer({
   };
 
   return (
-    <Card className="p-6 shadow-2xl overflow-hidden backdrop-blur-sm max-w-4xl mx-auto w-full">
-      {/* Cabecera del reproductor */}
-      <div className="flex items-center justify-between flex-wrap gap-3 pb-4 mb-4 border-b border-slate-800">
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between flex-wrap gap-3 pb-3 border-b border-[#e5e7eb]">
         <div>
-          <Badge variant="info" className="mb-2">
-            Paso 1 Obligatorio: Visualización Guiada
-          </Badge>
-          <h3 className="text-lg font-bold text-white tracking-tight">{videoTitle}</h3>
-          <p className="text-xs text-slate-400">
+          <span className="fluent-badge fluent-badge--info mb-1 text-[10px]">
+            PASO 01 OBLIGATORIO // REPRODUCCIÓN COMPLETA
+          </span>
+          <h3 className="text-base font-bold text-[#1a1a1a]">{videoTitle}</h3>
+          <p className="text-xs text-[#605e5c]">
             Grabado por el Ing. Wilfrido Trujillo. Explica la normativa oficial, deberes del practicante y llenado de bitácoras.
           </p>
         </div>
 
         <div>
           {isWatched ? (
-            <Badge variant="success" size="lg">
-              <CheckCircle2 className="w-4 h-4" /> 100% Completado
-            </Badge>
+            <span className="fluent-badge fluent-badge--success font-semibold">
+              <CheckCircle2 className="w-3.5 h-3.5" /> 100% Completado
+            </span>
           ) : (
-            <Badge variant="warning" size="lg">
-              <Lock className="w-4 h-4" /> Requisito Previo Bloqueado
-            </Badge>
+            <span className="fluent-badge fluent-badge--warning font-semibold">
+              <Lock className="w-3.5 h-3.5" /> Requisito Previo Bloqueado
+            </span>
           )}
         </div>
       </div>
 
-      {/* Pantalla del Reproductor de Video */}
-      <div className="relative aspect-video rounded-2xl bg-gradient-to-tr from-slate-950 via-slate-900 to-slate-950 border border-slate-800/80 flex flex-col items-center justify-center overflow-hidden group shadow-inner">
-        {/* Glow decorativo de fondo */}
-        <div className="absolute inset-0 bg-blue-600/5 group-hover:bg-blue-600/10 transition-colors pointer-events-none" />
-
+      {/* Pantalla del Reproductor de Video (Marco Técnico Fluent 2) */}
+      <div className="relative aspect-video rounded-[2px] bg-[#111827] border border-[#d1d5db] flex flex-col items-center justify-center overflow-hidden">
+        
         {/* Marca de agua didáctica */}
-        <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-lg bg-black/60 backdrop-blur border border-white/10 text-xs text-slate-300">
-          <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-          <span>Inducción Institucional RRA</span>
+        <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded-[2px] bg-black/75 border border-white/10 text-[10px] text-white font-mono">
+          <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+          <span>INDUCCIÓN OFICIAL RRA</span>
         </div>
 
         {/* Ícono central y mensaje */}
-        <div className="text-center z-10 p-6 max-w-md">
+        <div className="text-center z-10 p-4 max-w-sm">
           {isWatched ? (
-            <div className="flex flex-col items-center animate-fadeIn">
-              <div className="h-16 w-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mb-3">
-                <CheckCircle2 className="w-8 h-8" />
+            <div className="flex flex-col items-center">
+              <div className="h-12 w-12 rounded-[2px] bg-[#107c10]/20 border border-[#107c10]/40 text-[#107c10] flex items-center justify-center mb-2">
+                <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h4 className="text-base font-semibold text-white mb-1">
+              <h4 className="text-sm font-bold text-white mb-0.5">
                 Visualización Verificada
               </h4>
-              <p className="text-xs text-slate-400">
-                Has cumplido con el tiempo requerido de inducción. El sistema ha registrado tu evidencia de visualización.
+              <p className="text-xs text-white/70">
+                Has cumplido con el tiempo requerido de inducción institucional.
               </p>
             </div>
           ) : (
@@ -171,115 +152,82 @@ export function InductionVideoPlayer({
               <button
                 type="button"
                 onClick={togglePlay}
-                className="h-16 w-16 rounded-full bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-600/40 hover:scale-105 transition-all mb-3 cursor-pointer"
+                className="h-12 w-12 rounded-full bg-[#0078d4] hover:bg-[#106ebe] text-white flex items-center justify-center shadow-md transition-colors mb-2 cursor-pointer"
               >
-                {isPlaying ? <Pause className="w-7 h-7" /> : <Play className="w-7 h-7 ml-1" />}
+                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
               </button>
-              <h4 className="text-sm font-medium text-white mb-1">
-                {isPlaying ? 'Reproduciendo inducción...' : 'Presiona Reproducir para iniciar'}
+              <h4 className="text-xs font-semibold text-white mb-0.5">
+                {isPlaying ? 'Reproduciendo inducción institucional...' : 'Presiona para iniciar inducción'}
               </h4>
-              <p className="text-[11px] text-slate-500">
-                El avance no permite saltos arbitrarios. Debes mirar el contenido completo.
+              <p className="text-[10px] text-white/60">
+                El avance no permite saltos arbitrarios.
               </p>
             </div>
           )}
         </div>
 
-        {/* Barra de progreso inferior dentro del marco */}
-        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 flex flex-col gap-2 z-20">
-          <div className="w-full bg-slate-800/80 rounded-full h-2 overflow-hidden border border-slate-700/50">
+        {/* Barra de progreso inferior */}
+        <div className="absolute bottom-0 inset-x-0 bg-black/80 px-4 py-2 flex flex-col gap-1.5 z-20 border-t border-white/10">
+          <div className="w-full bg-white/20 rounded-[2px] h-1.5 overflow-hidden">
             <div
               className={`h-full transition-all duration-300 ${
-                isWatched ? 'bg-emerald-500' : 'bg-gradient-to-r from-blue-500 to-indigo-500'
+                isWatched ? 'bg-[#107c10]' : 'bg-[#c59b27]'
               }`}
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="flex items-center justify-between text-[11px] text-white/80 font-mono">
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={togglePlay}
-                disabled={isWatched}
-                className="hover:text-white transition-colors cursor-pointer disabled:opacity-40"
+                className="hover:text-white transition-colors cursor-pointer flex items-center gap-1"
               >
-                {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                <span>{isPlaying ? 'Pausar' : 'Reproducir'}</span>
               </button>
+
               <button
                 type="button"
-                onClick={handleReset}
-                title="Reiniciar video"
-                className="hover:text-white transition-colors cursor-pointer"
+                onClick={restartVideo}
+                className="hover:text-white transition-colors cursor-pointer flex items-center gap-1"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reiniciar</span>
               </button>
-              <span>
-                {formatTime(currentTime)} / {formatTime(duration)}
-              </span>
             </div>
 
-            <div className="flex items-center gap-2 font-mono">
-              <span className="text-slate-300 font-bold">{progress}%</span>
-              <span className="text-slate-500">completado</span>
+            <div>
+              {formatTime(currentTime)} / {formatTime(duration)} ({progress}%)
             </div>
           </div>
         </div>
       </div>
 
-      {/* Controles de prueba y feedback inferior */}
-      <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800">
-        <div className="flex items-center gap-2">
-          {!isWatched && (
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              onClick={handleSimulateFullWatch}
-              className="gap-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              Completar visualización al 100%
-            </Button>
-          )}
-        </div>
-
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-          {isWatched ? (
-            <Button
-              type="button"
-              variant="primary"
-              size="md"
-              onClick={onProceedToTest}
-              className="w-full sm:w-auto gap-2 bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/30 animate-pulse font-bold"
-            >
-              Siguiente Paso: Rendir Test de Conocimiento <ArrowRight className="w-4 h-4" />
-            </Button>
-          ) : (
-            <div className="flex items-center gap-2 text-xs text-slate-500 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
-              <ShieldAlert className="w-4 h-4 text-amber-500/80 flex-shrink-0" />
-              <span>El test permanecerá bloqueado hasta ver el 100% del video.</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Mensaje de confirmación */}
-      {successMessage && (
-        <div className="mt-4 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center justify-between gap-2 animate-fadeIn">
+      {/* Acciones y feedback post-inducción */}
+      {isWatched && (
+        <div className="p-3 bg-[#dff6dd] border border-[#107c10]/30 rounded-[2px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            {isSubmitting ? (
-              <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
-            ) : (
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-            )}
-            <span>{successMessage}</span>
+            <CheckCircle2 className="w-4 h-4 text-[#107c10] flex-shrink-0" />
+            <span className="text-xs text-[#107c10] font-medium">
+              {successMessage || 'Inducción validada.'}
+            </span>
           </div>
-          <span className="text-[11px] text-emerald-400/80 font-medium">
-            Evidencia registrada en `workspace_enrollments`
-          </span>
+
+          {onProceedToTest && (
+            <Button
+              variant="primary"
+              size="sm"
+              isLoading={isSubmitting}
+              onClick={onProceedToTest}
+              className="text-xs py-1 px-3 whitespace-nowrap"
+            >
+              Continuar al Test Normativo <ArrowRight className="w-3.5 h-3.5 ml-1" />
+            </Button>
+          )}
         </div>
       )}
-    </Card>
+    </div>
   );
 }

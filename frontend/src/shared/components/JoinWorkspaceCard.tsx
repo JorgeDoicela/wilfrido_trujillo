@@ -41,8 +41,8 @@ export function JoinWorkspaceCard({ onJoinSuccess }: JoinWorkspaceCardProps) {
       setFeedback({
         type: 'success',
         message: result.isNew
-          ? `¡Inscripción exitosa en "${result.workspace.title}"!`
-          : `Ya estabas inscrito en "${result.workspace.title}". Redirigiendo...`,
+          ? `Inscripción exitosa en "${result.workspace.title}".`
+          : `Ya estás inscrito en "${result.workspace.title}".`,
       });
       setAccessCode('');
       if (onJoinSuccess) {
@@ -61,51 +61,51 @@ export function JoinWorkspaceCard({ onJoinSuccess }: JoinWorkspaceCardProps) {
   };
 
   return (
-    <Card className="relative overflow-hidden shadow-xl">
-      <CardHeader className="flex items-center gap-3 mb-4">
-        <div className="h-10 w-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0">
-          <KeyRound className="w-5 h-5" />
+    <Card className="relative overflow-hidden">
+      <CardHeader className="flex items-center gap-2.5 pb-2.5 mb-2.5 border-b border-[#e5e7eb]">
+        <div className="h-8 w-8 rounded-[2px] bg-[#e6f2fb] text-[#0078d4] flex items-center justify-center flex-shrink-0">
+          <KeyRound className="w-4 h-4" />
         </div>
         <div>
-          <CardTitle className="text-sm">Unirse a un Espacio de Trabajo</CardTitle>
-          <CardDescription className="text-xs">
-            Ingresa el código proporcionado por el Ing. Wilfrido Trujillo (ej. PRAC-2026)
+          <CardTitle className="text-xs font-bold text-[#1a1a1a]">Unirse a un Espacio</CardTitle>
+          <CardDescription className="text-[11px] text-[#605e5c]">
+            Ingresa el código proporcionado (ej. PRAC-2026)
           </CardDescription>
         </div>
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 items-center">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <Input
             value={accessCode}
             onChange={(e) => setAccessCode(e.target.value)}
             placeholder="CÓDIGO DE ACCESO"
-            className="uppercase font-mono tracking-wider text-center sm:text-left"
+            className="uppercase font-mono text-xs tracking-wider"
           />
           <Button
             type="submit"
             variant="primary"
             isLoading={isLoading}
-            className="w-full sm:w-auto text-xs py-2.5 px-4 whitespace-nowrap"
+            className="w-full text-xs py-1.5"
           >
-            Ingresar <ArrowRight className="w-4 h-4 ml-1" />
+            Validar Código <ArrowRight className="w-3.5 h-3.5 ml-1" />
           </Button>
         </form>
 
         {feedback && (
           <div
-            className={`mt-3 p-3 rounded-xl text-xs flex items-center gap-2 animate-fadeIn border ${
+            className={`mt-2 p-2 rounded-[2px] text-xs flex items-center gap-2 border ${
               feedback.type === 'success'
-                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'
-                : 'bg-rose-500/10 border-rose-500/20 text-rose-300'
+                ? 'bg-[#dff6dd] border-[#107c10]/30 text-[#107c10]'
+                : 'bg-[#fde7e9] border-[#a4262c]/30 text-[#a4262c]'
             }`}
           >
             {feedback.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+              <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
             )}
-            <span>{feedback.message}</span>
+            <span className="text-[11px]">{feedback.message}</span>
           </div>
         )}
       </CardContent>

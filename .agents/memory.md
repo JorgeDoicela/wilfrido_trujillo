@@ -31,16 +31,19 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Inversión de Dependencias formal bajo la interfaz `IDocumentAuditor` y el token de inyección `DOCUMENT_AUDITOR`.
   * Implementación heurística de Fase 1 (`HeuristicDocumentAuditorService`): validación de cabecera `%PDF-`, conteo de páginas, densidad de caracteres legibles (alerta de escaneos sin OCR), verificación de secciones académicas normativas RRA (Datos, Objetivos, Actividades, Conclusiones, Firmas), análisis de metadatos y semáforo tripartito (Verde, Amarillo, Rojo).
   * Endpoints dedicados para auditoría de entregas almacenadas y pre-auditoría en memoria en el buzón estudiantil.
-* **Sistema de Diseño Global y Desacoplamiento de Monolito UI:**
-  * Tokens de diseño y variables CSS centralizadas en `frontend/src/index.css` (`--bg-base`, `--surface-card`, `--border-subtle`, `--accent-blue`, `--accent-purple`, `--accent-emerald`, `--accent-amber`).
-  * Clases semánticas reutilizables en `@layer components` (`.ui-card`, `.ui-card-hover`, `.ui-card-inner`, `.ui-btn`, `.ui-btn-primary`, `.ui-btn-secondary`, `.ui-btn-purple`, `.ui-btn-ghost`, `.ui-input`, `.ui-badge-*`).
-  * Biblioteca de componentes atómicos de presentación en `src/shared/components/ui/` (`Button`, `Card`, `Badge`, `Input`, `Textarea`, `Select`, `Modal`, `ModalHeader`, `ModalTitle`, `ModalContent`, `ModalFooter`) con variantes tipadas, accesibilidad WCAG AA, control de teclado y soporte de estados asíncronos (`isLoading`).
-  * Cobertura del 100% de la interfaz de usuario: todos los componentes de `modules/admin/`, `modules/practicas/`, `modules/eventos/` y `shared/` fueron refactorizados para consumir las primitivas atómicas eliminando botones, inputs, modales y tablas ad-hoc.
-  * Descomposición integral del archivo monolítico `App.tsx` (reducido de 1007 a ~360 líneas), transfiriendo responsabilidades a páginas y secciones de dominio: `PracticasOverviewPage`, `WorkspaceSelectorSection`, `CertificatesSection`, `Navbar`, `PbacSimulatorCard` y `FeaturePillars`.
+* **Sistema de Diseño Microsoft Fluent Design 2 (Referencia ISTPET / M365 Desktop):**
+  * Adopción del estándar formal de **Microsoft Fluent Design 2 Desktop Shell** conforme a la especificación de `titulacion-istpet`.
+  * Layout estructural M365:
+    * Topbar (48px de altura fija) en Navy Institucional `#1b2a4a` con acento Gold `#c59b27`, buscador central sobrio, alternador rápido de simulación PBAC y perfil de usuario.
+    * Left Icon Rail (48px de ancho fijo) en Navy `#12213a` con indicador activo vertical en Gold (`border-left: 3px solid #c59b27`).
+    * Secondary Sidebar (220px de ancho) en blanco puro con navegación por dominios RRA (`practicas`, `vinculacion`, `eventos`, `certificados`), conteos numéricos y selector de espacios activos.
+    * Main Content Workspace sobre fondo Canvas neutro `#e8eaf0`, tarjetas operativas en blanco puro `#ffffff` con borde sutil `rgba(0,0,0,0.08)`.
+  * Radios geométricos estrictos: `--radius-input: 2px;`, `--radius-card: 4px;` (prohibido `> 4px` en tarjetas), `--radius-panel: 8px;`, `--radius-badge: 12px;`, `--radius-pill: 999px;`.
+  * Grilla de datos Fluent Data Grid (`.fluent-table`): alta densidad tipográfica (padding 8px 12px), cabecera gris `#faf9f8`, estados mediante badges planos (`.fluent-badge--success`, `--warning`, `--info`), y botones de acción sólidos Navy (`.fluent-btn-action`).
+  * Biblioteca de componentes atómicos en `src/shared/components/ui/` (`Button`, `Card`, `Badge`, `Input`, `Modal`) y componentes de negocio adaptados para heredar automáticamente estos tokens sin sombras de colores teñidos ni tarjetas flotantes oscuras.
 * **Skill Maestra de Diseño UI/UX (`diseno-wilfrido`):**
   * Especificación en `.agents/skills/diseno-wilfrido/SKILL.md`.
   * Reglas mandatorias: Cero emojis, uso funcional mínimo de SVG (solo donde aporte affordance), prohibición de bloques gigantescos de KPIs superiores (priorizando la densidad de datos y flujos de trabajo) y cero componentes genéricos/plantillas comerciales.
-  * Diseñado para desacoplar el contrato de componentes respecto al estándar visual definitivo que el desarrollador elija a futuro.
 
 
 

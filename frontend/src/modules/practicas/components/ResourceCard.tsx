@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { resourcesApi } from '../api/resources.api';
 import { Card } from '@/shared/components/ui/Card';
-import { Badge } from '@/shared/components/ui/Badge';
 import { Button } from '@/shared/components/ui/Button';
 import type { ResourceFile } from '@/shared/types/resource.types';
 
@@ -59,7 +58,7 @@ export function ResourceCard({
         onDeleteSuccess(resource.id);
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'No se pudo eliminar el recurso.';
+      const msg = err instanceof Error ? err.message : 'Error al eliminar la plantilla.';
       setErrorMsg(msg);
     } finally {
       setIsDeleting(false);
@@ -67,32 +66,28 @@ export function ResourceCard({
   };
 
   const getFileBadge = () => {
-    const type = (resource.fileType || '').toLowerCase();
+    const type = resource.fileType.toLowerCase();
     if (type.includes('pdf')) {
       return {
         label: 'PDF Oficial',
-        icon: <FileText className="w-5 h-5 text-rose-400" />,
-        variant: 'danger' as const,
-      };
-    }
-    if (type.includes('excel') || type.includes('xls')) {
-      return {
-        label: 'Hoja Excel',
-        icon: <FileSpreadsheet className="w-5 h-5 text-emerald-400" />,
-        variant: 'success' as const,
+        icon: <FileText className="w-4 h-4 text-[#a4262c]" />,
       };
     }
     if (type.includes('word') || type.includes('doc')) {
       return {
-        label: 'Formato Word',
-        icon: <FileCode className="w-5 h-5 text-blue-400" />,
-        variant: 'info' as const,
+        label: 'Documento Word',
+        icon: <FileCode className="w-4 h-4 text-[#0078d4]" />,
+      };
+    }
+    if (type.includes('excel') || type.includes('sheet') || type.includes('xls')) {
+      return {
+        label: 'Hoja de Cálculo',
+        icon: <FileSpreadsheet className="w-4 h-4 text-[#107c10]" />,
       };
     }
     return {
       label: 'Documento',
-      icon: <FileText className="w-5 h-5 text-slate-400" />,
-      variant: 'neutral' as const,
+      icon: <FileText className="w-4 h-4 text-[#605e5c]" />,
     };
   };
 
@@ -100,97 +95,97 @@ export function ResourceCard({
 
   return (
     <Card
-      className={`p-5 flex flex-col justify-between transition-all duration-200 ${
+      className={`p-4 flex flex-col justify-between transition-colors ${
         isLocked
-          ? 'bg-slate-900/40 border-slate-800/80 opacity-80'
-          : 'hover:border-blue-500/50 hover:shadow-xl shadow-lg'
+          ? 'bg-[#faf9f8] opacity-75'
+          : 'hover:border-[#c8c6c4]'
       }`}
     >
       <div>
-        {/* Cabecera de la Tarjeta */}
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="flex items-center gap-2.5">
-            <div className="h-10 w-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center">
+        {/* Cabecera */}
+        <div className="flex items-start justify-between gap-2 mb-2.5">
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-[2px] bg-[#faf9f8] border border-[#e5e7eb] flex items-center justify-center">
               {badge.icon}
             </div>
-            <div>
-              <Badge variant={badge.variant} size="sm">
-                {badge.label}
-              </Badge>
-            </div>
+            <span className="text-[11px] font-semibold text-[#1a1a1a]">
+              {badge.label}
+            </span>
           </div>
 
-          {/* Indicador de Candado / Desbloqueo */}
           {resource.isLockedUntilTestPass ? (
             isLocked ? (
-              <Badge variant="warning" title="Bloqueado hasta aprobar el examen">
-                <Lock className="w-3.5 h-3.5" /> Protegido
-              </Badge>
+              <span className="fluent-badge fluent-badge--warning text-[10px]">
+                <Lock className="w-3 h-3" /> Bloqueado
+              </span>
             ) : (
-              <Badge variant="success" title="Desbloqueado tras aprobar el examen">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Desbloqueado
-              </Badge>
+              <span className="fluent-badge fluent-badge--success text-[10px]">
+                <CheckCircle2 className="w-3 h-3" /> Desbloqueado
+              </span>
             )
           ) : (
-            <Badge variant="neutral">Acceso Libre</Badge>
+            <span className="fluent-badge fluent-badge--neutral text-[10px]">Libre</span>
           )}
         </div>
 
-        {/* Título de la Plantilla */}
-        <h4 className="text-sm font-bold text-white leading-snug mb-1 line-clamp-2">
+        {/* Título */}
+        <h4 className="text-xs font-bold text-[#1a1a1a] leading-snug mb-1 line-clamp-2">
           {resource.title}
         </h4>
 
-        {/* Descripción de Condición */}
-        <p className="text-xs text-slate-400 mb-4">
+        {/* Descripción */}
+        <p className="text-[11px] text-[#605e5c] mb-3 leading-relaxed">
           {isLocked
-            ? 'Debes aprobar la evaluación de inducción (Paso 2) para habilitar la descarga de esta plantilla.'
-            : 'Formato oficial listo para descarga y llenado de bitácoras institucionales.'}
+            ? 'Requiere aprobar la evaluación normativa para habilitar la descarga oficial.'
+            : 'Formato listo para descarga y consignación de bitácoras.'}
         </p>
 
         {errorMsg && (
-          <div className="mb-3 p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-[11px] flex items-center gap-1.5">
-            <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+          <div className="mb-2 p-2 rounded-[2px] bg-[#fde7e9] border border-[#a4262c]/30 text-[#a4262c] text-[11px] flex items-center gap-1.5">
+            <AlertCircle className="w-3 h-3 flex-shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
       </div>
 
-      {/* Botones de Acción */}
-      <div className="flex items-center justify-between gap-2 pt-3 border-t border-slate-800/80">
-        <Button
-          type="button"
-          variant={isLocked ? 'secondary' : 'primary'}
-          size="sm"
-          onClick={handleDownload}
-          disabled={isLocked}
-          isLoading={isDownloading}
-          className="flex-1 text-xs"
-        >
-          {isLocked ? (
-            <>
-              <Lock className="w-3.5 h-3.5 mr-1" /> Requiere Examen Aprobado
-            </>
-          ) : (
-            <>
-              <Download className="w-3.5 h-3.5 mr-1" /> Descargar Plantilla
-            </>
-          )}
-        </Button>
+      {/* Botones */}
+      <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-[#e5e7eb]">
+        <span className="text-[10px] text-[#605e5c] font-mono uppercase">
+          {resource.fileType}
+        </span>
 
-        {canManage && (
+        <div className="flex items-center gap-1.5">
+          {canManage && (
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              title="Eliminar plantilla"
+              className="p-1 rounded-[2px] text-[#605e5c] hover:text-[#a4262c] hover:bg-[#faf9f8] transition-colors cursor-pointer"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          )}
+
           <Button
             type="button"
-            variant="ghost"
+            variant="primary"
             size="sm"
-            onClick={handleDelete}
-            isLoading={isDeleting}
-            className="p-2.5 h-auto text-slate-500 hover:text-rose-400 hover:bg-rose-500/10"
-            title="Eliminar plantilla"
+            onClick={handleDownload}
+            disabled={isLocked || isDownloading}
+            className="text-xs py-1 px-2.5 gap-1"
           >
-            <Trash2 className="w-4 h-4" />
+            {isLocked ? (
+              <>
+                <Lock className="w-3 h-3" /> Bloqueado
+              </>
+            ) : (
+              <>
+                <Download className="w-3 h-3" /> Descargar
+              </>
+            )}
           </Button>
-        )}
+        </div>
       </div>
     </Card>
   );

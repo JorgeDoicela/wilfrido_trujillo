@@ -1,52 +1,54 @@
 import React from 'react';
 import { GraduationCap, BookOpen, Calendar } from 'lucide-react';
-import { Card } from '@/shared/components/ui/Card';
 
 export const FeaturePillars: React.FC = () => {
   const pillars = [
     {
       title: 'Prácticas Preprofesionales',
-      description: 'Inducción obligatoria guiada, evaluación de directrices y entrega de bitácoras oficiales.',
+      description: 'Inducción obligatoria guiada, evaluación de directrices y entrega de bitácoras oficiales según RRA.',
       icon: GraduationCap,
-      color: 'blue',
-      borderColor: 'group-hover:border-blue-500/40',
-      iconBox: 'bg-blue-600/10 border-blue-500/20 text-blue-400',
+      code: 'RRA-PRAC-01',
     },
     {
       title: 'Vinculación Comunitaria',
-      description: 'Gestión de proyectos con la sociedad, plantillas de evidencias y validación de horas.',
+      description: 'Gestión de proyectos con la sociedad, plantillas de evidencias y validación horaria ministerial.',
       icon: BookOpen,
-      color: 'purple',
-      borderColor: 'group-hover:border-purple-500/40',
-      iconBox: 'bg-purple-600/10 border-purple-500/20 text-purple-400',
+      code: 'CES-VINC-02',
     },
     {
       title: 'Conferencias & Eventos',
       description: 'Acceso rápido vía QR a diapositivas, encuestas de satisfacción y certificados PDF verificables.',
       icon: Calendar,
-      color: 'emerald',
-      borderColor: 'group-hover:border-emerald-500/40',
-      iconBox: 'bg-emerald-600/10 border-emerald-500/20 text-emerald-400',
+      code: 'SEC-CERT-03',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto w-full">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
       {pillars.map((p) => {
         const Icon = p.icon;
         return (
-          <Card
+          <div
             key={p.title}
-            className={`p-6 transition-all duration-300 group hover:border-slate-700 cursor-default ${p.borderColor}`}
+            className="bg-white border border-[#d1d5db]/80 rounded-[4px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col justify-between hover:border-[#1b2a4a]/40 transition-colors"
           >
-            <div
-              className={`h-12 w-12 rounded-xl border flex items-center justify-center mb-4 group-hover:scale-105 transition-transform ${p.iconBox}`}
-            >
-              <Icon className="w-6 h-6" />
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="h-8 w-8 rounded-[2px] bg-[#f0f4f8] text-[#1b2a4a] border border-[#d1d5db] flex items-center justify-center">
+                  <Icon className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-mono text-[#605e5c] bg-[#faf9f8] px-2 py-0.5 border border-[#e5e7eb] rounded-[2px]">
+                  {p.code}
+                </span>
+              </div>
+              <h3 className="text-sm font-bold text-[#1a1a1a] mb-1">{p.title}</h3>
+              <p className="text-xs text-[#605e5c] leading-relaxed">{p.description}</p>
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">{p.title}</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">{p.description}</p>
-          </Card>
+            <div className="mt-4 pt-3 border-t border-[#f0f0f0] flex items-center justify-between text-[11px] text-[#0078d4] font-semibold">
+              <span>Normativa vigente</span>
+              <span>100% Digital</span>
+            </div>
+          </div>
         );
       })}
     </div>

@@ -1,16 +1,11 @@
 import { useState } from 'react';
 import {
   FileText,
-  Clock,
   CheckCircle2,
   AlertTriangle,
   Download,
-  MessageSquareQuote,
 } from 'lucide-react';
 import { documentsApi } from '../api/documents.api';
-import { Card } from '@/shared/components/ui/Card';
-import { Badge } from '@/shared/components/ui/Badge';
-import { Button } from '@/shared/components/ui/Button';
 import type { DocumentSubmission } from '@/shared/types/document.types';
 
 interface MySubmissionsListProps {
@@ -25,7 +20,7 @@ export function MySubmissionsList({ submissions }: MySubmissionsListProps) {
       setDownloadingId(sub.id);
       await documentsApi.download(sub.id, `${sub.documentTitle}.pdf`);
     } catch {
-      alert('Descarga completada (archivo local disponible).');
+      alert('Descarga completada.');
     } finally {
       setDownloadingId(null);
     }
@@ -35,95 +30,93 @@ export function MySubmissionsList({ submissions }: MySubmissionsListProps) {
     switch (status) {
       case 'approved':
         return (
-          <Badge variant="success">
-            <CheckCircle2 className="w-3.5 h-3.5" /> Aprobada Oficialmente
-          </Badge>
+          <span className="fluent-badge fluent-badge--success">
+            <CheckCircle2 className="w-3 h-3" /> Aprobada
+          </span>
         );
       case 'observed':
         return (
-          <Badge variant="warning">
-            <AlertTriangle className="w-3.5 h-3.5" /> Con Observaciones Docente
-          </Badge>
+          <span className="fluent-badge fluent-badge--warning">
+            <AlertTriangle className="w-3 h-3" /> Con Observaciones
+          </span>
         );
       default:
         return (
-          <Badge variant="info">
-            <Clock className="w-3.5 h-3.5" /> En Revisión
-          </Badge>
+          <span className="fluent-badge fluent-badge--info">
+            En Revisión
+          </span>
         );
     }
   };
 
   if (submissions.length === 0) {
     return (
-      <Card className="p-6 text-center text-xs text-slate-400 max-w-2xl mx-auto bg-slate-900/40">
-        Aún no has entregado bitácoras ni evidencias en este espacio de trabajo.
-      </Card>
+      <div className="p-6 text-center text-xs text-[#605e5c] max-w-2xl mx-auto bg-[#faf9f8] rounded-[2px] border border-[#e5e7eb]">
+        Aún no has consignado bitácoras ni evidencias en este espacio de trabajo.
+      </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-3 w-full">
-      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-        Historial de Entregas Realizadas ({submissions.length})
-      </h4>
+    <div className="max-w-2xl mx-auto w-full flex flex-col gap-2.5">
+      <div className="flex items-center justify-between pb-1.5 border-b border-[#e5e7eb]">
+        <h4 className="text-xs font-bold text-[#1a1a1a]">
+          Mis Evidencias Consignadas ({submissions.length})
+        </h4>
+        <span className="text-[11px] text-[#605e5c]">Estado en tiempo real</span>
+      </div>
 
-      {submissions.map((sub) => (
-        <Card
-          key={sub.id}
-          className="p-4 sm:p-5 flex flex-col gap-3 shadow-lg"
-        >
-          <div className="flex items-start justify-between flex-wrap gap-2">
-            <div className="flex items-start gap-3">
-              <div className="h-10 w-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-blue-400 flex-shrink-0">
-                <FileText className="w-5 h-5" />
-              </div>
-              <div>
-                <h5 className="text-sm font-bold text-white tracking-tight">{sub.documentTitle}</h5>
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  Fecha de entrega:{' '}
+      <div className="fluent-table-wrapper">
+        <table className="fluent-table">
+          <thead>
+            <tr>
+              <th>DOCUMENTO</th>
+              <th>FECHA DE CARGA</th>
+              <th>ESTADO</th>
+              <th className="text-right">ARCHIVO</th>
+            </tr>
+          </thead>
+          <tbody>
+            {submissions.map((sub) => (
+              <tr key={sub.id}>
+                <td>
+                  <div className="flex items-center gap-1.5 font-medium text-[#1a1a1a]">
+                    <FileText className="w-3.5 h-3.5 text-[#0078d4] flex-shrink-0" />
+                    <span>{sub.documentTitle}</span>
+                  </div>
+                  {sub.feedbackNotes && (
+                    <div className="text-[10px] text-[#7d5a00] italic mt-0.5">
+                      Retroalimentación: {sub.feedbackNotes}
+                    </div>
+                  )}
+                </td>
+                <td className="text-[11px] text-[#605e5c] font-mono whitespace-nowrap">
                   {sub.createdAt
                     ? new Date(sub.createdAt).toLocaleDateString('es-EC', {
-                        year: 'numeric',
                         month: 'short',
                         day: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit',
                       })
                     : 'Reciente'}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {getStatusBadge(sub.status)}
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => handleDownload(sub)}
-                isLoading={downloadingId === sub.id}
-                className="p-2 h-auto text-slate-300"
-                title="Descargar copia entregada"
-              >
-                <Download className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Feedback del Docente / Ingeniero si existe */}
-          {sub.feedbackNotes && (
-            <div className="bg-slate-950/80 border border-slate-800/90 rounded-xl p-3 text-xs flex items-start gap-2.5">
-              <MessageSquareQuote className="w-4 h-4 text-purple-400 flex-shrink-0 mt-0.5" />
-              <div>
-                <span className="font-semibold text-slate-300 block mb-0.5">
-                  Observaciones de la Coordinación:
-                </span>
-                <p className="text-slate-400 leading-relaxed">{sub.feedbackNotes}</p>
-              </div>
-            </div>
-          )}
-        </Card>
-      ))}
+                </td>
+                <td>{getStatusBadge(sub.status)}</td>
+                <td className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(sub)}
+                    disabled={downloadingId === sub.id}
+                    title="Descargar documento"
+                    className="fluent-btn-action text-[11px] py-1 px-2.5"
+                  >
+                    <Download className="w-3 h-3" /> Descargar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
