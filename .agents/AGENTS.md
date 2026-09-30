@@ -51,7 +51,17 @@ Este archivo establece las reglas mandatorias e inviolables para cualquier agent
 
 ---
 
-## 4. Gestión del Repositorio y Commits
+## 4. Reglas Mandatorias de Diseño UI/UX (`diseno-wilfrido`)
+
+* **Cero Emojis:** Prohibido el uso de emojis en cualquier capa visual, textos, tooltips, modales o botones.
+* **Íconos SVG Funcionales Mínimos:** Los íconos vectoriales (`lucide-react`) solo se emplean para acciones que requieran affordance interactivo explícito. Queda prohibida la saturación decorativa.
+* **Cero KPIs Enormes Superiores:** Prohibido ubicar tarjetas de métricas infladas que desplacen el contenido operativo hacia abajo. Priorizar la alta densidad de información, tablas limpias y flujos de acción.
+* **Cero Diseños Genéricos:** La interfaz se construye exclusivamente sobre los Design Tokens (`index.css`) y las primitivas atómicas de `@/shared/components/ui/` (`Button`, `Card`, `Badge`, `Input`, `Modal`), lista para adaptarse al estándar formal que defina el desarrollador.
+
+
+---
+
+## 5. Gestión del Repositorio y Commits
 
 * **Commits Semánticos en Español:**
   * Formato: `tipo: descripción concisa` (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`).
@@ -62,7 +72,7 @@ Este archivo establece las reglas mandatorias e inviolables para cualquier agent
 
 ---
 
-## 5. Comandos de Auditoría Forzada
+## 6. Comandos de Auditoría Forzada
 
 Si el usuario envía las palabras `profesional`, `senior`, `sin-parches` o `root-cause`, actúa como una orden estricta de auditoría:
 * Detener cualquier propuesta en curso.

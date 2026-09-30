@@ -37,6 +37,10 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Biblioteca de componentes atómicos de presentación en `src/shared/components/ui/` (`Button`, `Card`, `Badge`, `Input`, `Textarea`, `Select`, `Modal`, `ModalHeader`, `ModalTitle`, `ModalContent`, `ModalFooter`) con variantes tipadas, accesibilidad WCAG AA, control de teclado y soporte de estados asíncronos (`isLoading`).
   * Cobertura del 100% de la interfaz de usuario: todos los componentes de `modules/admin/`, `modules/practicas/`, `modules/eventos/` y `shared/` fueron refactorizados para consumir las primitivas atómicas eliminando botones, inputs, modales y tablas ad-hoc.
   * Descomposición integral del archivo monolítico `App.tsx` (reducido de 1007 a ~360 líneas), transfiriendo responsabilidades a páginas y secciones de dominio: `PracticasOverviewPage`, `WorkspaceSelectorSection`, `CertificatesSection`, `Navbar`, `PbacSimulatorCard` y `FeaturePillars`.
+* **Skill Maestra de Diseño UI/UX (`diseno-wilfrido`):**
+  * Especificación en `.agents/skills/diseno-wilfrido/SKILL.md`.
+  * Reglas mandatorias: Cero emojis, uso funcional mínimo de SVG (solo donde aporte affordance), prohibición de bloques gigantescos de KPIs superiores (priorizando la densidad de datos y flujos de trabajo) y cero componentes genéricos/plantillas comerciales.
+  * Diseñado para desacoplar el contrato de componentes respecto al estándar visual definitivo que el desarrollador elija a futuro.
 
 
 
