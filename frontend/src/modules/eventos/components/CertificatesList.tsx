@@ -1,12 +1,9 @@
 import { useState } from 'react';
-import {
-  Award,
-  Download,
-  ShieldCheck,
-  Clock,
-  Loader2,
-} from 'lucide-react';
+import { Award, Download, ShieldCheck, Clock } from 'lucide-react';
 import { certificatesApi } from '../api/certificates.api';
+import { Card } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
+import { Button } from '@/shared/components/ui/Button';
 import type { Certificate } from '@/shared/types/certificate.types';
 
 interface CertificatesListProps {
@@ -53,10 +50,10 @@ export function CertificatesList({
   }
 
   return (
-    <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 shadow-xl backdrop-blur-sm overflow-hidden">
+    <Card className="p-6 shadow-xl backdrop-blur-sm overflow-hidden">
       <div className="flex items-center gap-2 pb-4 mb-4 border-b border-slate-800">
         <Award className="w-5 h-5 text-amber-400" />
-        <h4 className="text-sm font-bold text-white">
+        <h4 className="text-sm font-bold text-white tracking-tight">
           Registro Oficial de Certificaciones Emitidas ({certificates.length})
         </h4>
       </div>
@@ -82,9 +79,9 @@ export function CertificatesList({
                   </div>
                 </td>
                 <td className="py-3.5 px-3 whitespace-nowrap">
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                  <Badge variant="warning">
                     <Clock className="w-3 h-3" /> {cert.hours} Horas
-                  </span>
+                  </Badge>
                 </td>
                 <td className="py-3.5 px-3 whitespace-nowrap">
                   <span className="font-mono text-emerald-400 font-semibold bg-slate-950 px-2 py-0.5 rounded-lg border border-slate-800 text-[11px]">
@@ -96,28 +93,25 @@ export function CertificatesList({
                 </td>
                 <td className="py-3.5 px-3 text-right whitespace-nowrap">
                   <div className="flex items-center justify-end gap-2">
-                    <button
-                      type="button"
+                    <Button
+                      variant="secondary"
+                      size="sm"
                       onClick={() => onVerifyHash(cert.verificationHash)}
-                      className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
-                      title="Verificar autenticidad vía QR"
+                      className="gap-1.5"
                     >
                       <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                       Validar QR
-                    </button>
-                    <button
-                      type="button"
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="sm"
                       onClick={() => handleDownload(cert)}
-                      disabled={downloadingId === cert.id}
-                      className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm shadow-amber-600/20 transition-all cursor-pointer"
+                      isLoading={downloadingId === cert.id}
+                      className="gap-1.5 bg-amber-600 hover:bg-amber-500 shadow-amber-600/20"
                     >
-                      {downloadingId === cert.id ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <Download className="w-3.5 h-3.5" />
-                      )}
+                      <Download className="w-3.5 h-3.5" />
                       PDF
-                    </button>
+                    </Button>
                   </div>
                 </td>
               </tr>
@@ -125,6 +119,6 @@ export function CertificatesList({
           </tbody>
         </table>
       </div>
-    </div>
+    </Card>
   );
 }

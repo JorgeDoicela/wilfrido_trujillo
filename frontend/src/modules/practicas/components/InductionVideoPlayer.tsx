@@ -11,6 +11,9 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { workspacesApi } from '@/modules/admin/api/workspaces.api';
+import { Card } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
+import { Button } from '@/shared/components/ui/Button';
 
 interface InductionVideoPlayerProps {
   workspaceId: string;
@@ -38,7 +41,6 @@ export function InductionVideoPlayer({
   );
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Limpiar timer al desmontar
   useEffect(() => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -65,7 +67,7 @@ export function InductionVideoPlayer({
           }
           return next;
         });
-      }, 500); // Avanza acelerado para mejor experiencia de demostración
+      }, 500);
     }
   };
 
@@ -81,7 +83,6 @@ export function InductionVideoPlayer({
         onInductionComplete();
       }
     } catch {
-      // Si estamos en modo demostrativo local, marcamos completado
       setIsWatched(true);
       setSuccessMessage('¡Inducción completada con éxito! Registro local activo.');
       if (onInductionComplete) {
@@ -114,13 +115,13 @@ export function InductionVideoPlayer({
   };
 
   return (
-    <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 shadow-2xl overflow-hidden backdrop-blur-sm max-w-4xl mx-auto w-full">
+    <Card className="p-6 shadow-2xl overflow-hidden backdrop-blur-sm max-w-4xl mx-auto w-full">
       {/* Cabecera del reproductor */}
       <div className="flex items-center justify-between flex-wrap gap-3 pb-4 mb-4 border-b border-slate-800">
         <div>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-2">
+          <Badge variant="info" className="mb-2">
             Paso 1 Obligatorio: Visualización Guiada
-          </span>
+          </Badge>
           <h3 className="text-lg font-bold text-white tracking-tight">{videoTitle}</h3>
           <p className="text-xs text-slate-400">
             Grabado por el Ing. Wilfrido Trujillo. Explica la normativa oficial, deberes del practicante y llenado de bitácoras.
@@ -129,13 +130,13 @@ export function InductionVideoPlayer({
 
         <div>
           {isWatched ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-sm">
+            <Badge variant="success" size="lg">
               <CheckCircle2 className="w-4 h-4" /> 100% Completado
-            </span>
+            </Badge>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <Badge variant="warning" size="lg">
               <Lock className="w-4 h-4" /> Requisito Previo Bloqueado
-            </span>
+            </Badge>
           )}
         </div>
       </div>
@@ -186,7 +187,6 @@ export function InductionVideoPlayer({
 
         {/* Barra de progreso inferior dentro del marco */}
         <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 flex flex-col gap-2 z-20">
-          {/* Barra de barra con porcentaje */}
           <div className="w-full bg-slate-800/80 rounded-full h-2 overflow-hidden border border-slate-700/50">
             <div
               className={`h-full transition-all duration-300 ${
@@ -231,26 +231,30 @@ export function InductionVideoPlayer({
       <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800">
         <div className="flex items-center gap-2">
           {!isWatched && (
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              size="sm"
               onClick={handleSimulateFullWatch}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               Completar visualización al 100%
-            </button>
+            </Button>
           )}
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
           {isWatched ? (
-            <button
+            <Button
               type="button"
+              variant="primary"
+              size="md"
               onClick={onProceedToTest}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer animate-pulse"
+              className="w-full sm:w-auto gap-2 bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/30 animate-pulse font-bold"
             >
               Siguiente Paso: Rendir Test de Conocimiento <ArrowRight className="w-4 h-4" />
-            </button>
+            </Button>
           ) : (
             <div className="flex items-center gap-2 text-xs text-slate-500 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
               <ShieldAlert className="w-4 h-4 text-amber-500/80 flex-shrink-0" />
@@ -276,6 +280,6 @@ export function InductionVideoPlayer({
           </span>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

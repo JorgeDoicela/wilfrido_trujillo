@@ -31,6 +31,14 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Inversión de Dependencias formal bajo la interfaz `IDocumentAuditor` y el token de inyección `DOCUMENT_AUDITOR`.
   * Implementación heurística de Fase 1 (`HeuristicDocumentAuditorService`): validación de cabecera `%PDF-`, conteo de páginas, densidad de caracteres legibles (alerta de escaneos sin OCR), verificación de secciones académicas normativas RRA (Datos, Objetivos, Actividades, Conclusiones, Firmas), análisis de metadatos y semáforo tripartito (Verde, Amarillo, Rojo).
   * Endpoints dedicados para auditoría de entregas almacenadas y pre-auditoría en memoria en el buzón estudiantil.
+* **Sistema de Diseño Global y Desacoplamiento de Monolito UI:**
+  * Tokens de diseño y variables CSS centralizadas en `frontend/src/index.css` (`--bg-base`, `--surface-card`, `--border-subtle`, `--accent-blue`, `--accent-purple`, `--accent-emerald`, `--accent-amber`).
+  * Clases semánticas reutilizables en `@layer components` (`.ui-card`, `.ui-card-hover`, `.ui-card-inner`, `.ui-btn`, `.ui-btn-primary`, `.ui-btn-secondary`, `.ui-btn-purple`, `.ui-btn-ghost`, `.ui-input`, `.ui-badge-*`).
+  * Biblioteca de componentes atómicos de presentación en `src/shared/components/ui/` (`Button`, `Card`, `Badge`, `Input`, `Textarea`, `Select`, `Modal`, `ModalHeader`, `ModalTitle`, `ModalContent`, `ModalFooter`) con variantes tipadas, accesibilidad WCAG AA, control de teclado y soporte de estados asíncronos (`isLoading`).
+  * Cobertura del 100% de la interfaz de usuario: todos los componentes de `modules/admin/`, `modules/practicas/`, `modules/eventos/` y `shared/` fueron refactorizados para consumir las primitivas atómicas eliminando botones, inputs, modales y tablas ad-hoc.
+  * Descomposición integral del archivo monolítico `App.tsx` (reducido de 1007 a ~360 líneas), transfiriendo responsabilidades a páginas y secciones de dominio: `PracticasOverviewPage`, `WorkspaceSelectorSection`, `CertificatesSection`, `Navbar`, `PbacSimulatorCard` y `FeaturePillars`.
+
+
 
 ---
 

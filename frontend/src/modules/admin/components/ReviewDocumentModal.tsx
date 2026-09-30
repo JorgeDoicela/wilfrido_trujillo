@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import {
-  X,
   CheckCircle2,
   AlertTriangle,
   MessageSquare,
-  Loader2,
   AlertCircle,
   Cpu,
   FileCheck2,
@@ -12,6 +10,16 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { documentsApi } from '@/modules/practicas/api/documents.api';
+import {
+  Modal,
+  ModalHeader,
+  ModalTitle,
+  ModalContent,
+  ModalFooter,
+} from '@/shared/components/ui/Modal';
+import { Button } from '@/shared/components/ui/Button';
+import { Textarea } from '@/shared/components/ui/Input';
+import { Badge } from '@/shared/components/ui/Badge';
 import type {
   DocumentSubmission,
   SubmissionStatus,
@@ -49,14 +57,12 @@ export function ReviewDocumentModal({
       const res = await documentsApi.audit(submission.id);
       setLocalAudit(res.auditResult);
       if (res.auditResult.observations.length > 0 && !feedbackNotes) {
-        // Sugerir feedback automático si está vacío
         const suggestedNotes = res.auditResult.observations
           .map((obs) => `• ${obs}`)
           .join('\n');
         setFeedbackNotes(suggestedNotes);
       }
     } catch {
-      // Mock de auditoría heurística local en caso de desconexión
       const fallbackResult: DocumentAuditResult = {
         isValid: true,
         score: 85,
@@ -96,13 +102,13 @@ export function ReviewDocumentModal({
       onSuccess(updated);
       onClose();
     } catch {
-      // Fallback demo
       const updated: DocumentSubmission = {
         ...submission,
         status,
         feedbackNotes: feedbackNotes.trim() || null,
-        auditedAt: new Date().toISOString(),
         approvedAt: status === 'approved' ? new Date().toISOString() : null,
+        auditResult: currentAudit,
+        auditScore: currentAudit?.score ?? null,
       };
       onSuccess(updated);
       onClose();
@@ -111,42 +117,31 @@ export function ReviewDocumentModal({
     }
   };
 
-  const studentName = submission.enrollment?.user?.fullName || 'Estudiante';
-  const studentEmail = submission.enrollment?.user?.email || '';
+  const student = submission.enrollment?.user;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center">
-              <MessageSquare className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white">Revisión y Dictamen Docente</h3>
-              <p className="text-xs text-slate-400">
-                {studentName} {studentEmail && `• ${studentEmail}`}
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors cursor-pointer p-1"
-          >
-            <X className="w-5 h-5" />
-          </button>
+    <Modal isOpen={isOpen} onClose={onClose} maxWidth="xl">
+      <ModalHeader onClose={onClose}>
+        <div className="h-9 w-9 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0">
+          <MessageSquare className="w-5 h-5" />
         </div>
+        <div>
+          <ModalTitle>Revisión y Dictamen Documental</ModalTitle>
+          <p className="text-xs text-slate-400 font-normal">
+            Estudiante: {student ? `${student.fullName} (${student.email})` : 'Inscrito'}
+          </p>
+        </div>
+      </ModalHeader>
 
-        {errorMessage && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span>{errorMessage}</span>
-          </div>
-        )}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <ModalContent className="max-h-[65vh] overflow-y-auto pr-1">
+          {errorMessage && (
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Resumen del Documento */}
           <div className="bg-slate-950/70 border border-slate-800/80 rounded-2xl p-4">
             <span className="text-[11px] font-semibold text-slate-400 block mb-1 uppercase tracking-wider">
@@ -161,22 +156,23 @@ export function ReviewDocumentModal({
               <div className="flex items-center gap-2">
                 <Cpu className="w-4 h-4 text-purple-400" />
                 <span className="text-xs font-bold text-white">Auditor Documental Heurístico</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                <Badge variant="purple" size="sm">
                   Fase 1 (RRA)
-                </span>
+                </Badge>
               </div>
 
               {currentAudit && (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={handleRunAudit}
-                  disabled={isAuditing}
-                  className="text-[11px] text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
-                  title="Re-ejecutar auditoría"
+                  isLoading={isAuditing}
+                  className="text-[11px] text-purple-400 hover:text-purple-300 p-0 h-auto gap-1"
                 >
-                  <RefreshCw className={`w-3 h-3 ${isAuditing ? 'animate-spin' : ''}`} />
+                  <RefreshCw className="w-3 h-3" />
                   <span>Re-analizar</span>
-                </button>
+                </Button>
               )}
             </div>
 
@@ -186,22 +182,16 @@ export function ReviewDocumentModal({
                 <p className="text-xs text-slate-400">
                   Valida automáticamente legibilidad, páginas mínimas y secciones obligatorias.
                 </p>
-                <button
+                <Button
                   type="button"
+                  variant="purple"
+                  size="sm"
                   onClick={handleRunAudit}
-                  disabled={isAuditing}
-                  className="mt-1 px-4 py-1.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/40 text-purple-200 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                  isLoading={isAuditing}
+                  className="gap-2 mt-1"
                 >
-                  {isAuditing ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" /> Analizando documento...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-3.5 h-3.5 text-purple-300" /> Ejecutar Auditoría Heurística
-                    </>
-                  )}
-                </button>
+                  <Sparkles className="w-3.5 h-3.5" /> Ejecutar Auditoría Heurística
+                </Button>
               </div>
             ) : (
               <div className="space-y-2.5">
@@ -321,44 +311,24 @@ export function ReviewDocumentModal({
           </div>
 
           {/* Feedback Notes */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Feedback y Observaciones al Estudiante
-            </label>
-            <textarea
-              rows={4}
-              value={feedbackNotes}
-              onChange={(e) => setFeedbackNotes(e.target.value)}
-              placeholder="Redacta las indicaciones de corrección o felicitación institucional..."
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-purple-500 transition-colors"
-            />
-          </div>
+          <Textarea
+            label="Feedback y Observaciones al Estudiante"
+            rows={4}
+            value={feedbackNotes}
+            onChange={(e) => setFeedbackNotes(e.target.value)}
+            placeholder="Redacta las indicaciones de corrección o felicitación institucional..."
+          />
+        </ModalContent>
 
-          {/* Acciones */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white flex items-center gap-2 shadow-md shadow-purple-600/20 transition-all cursor-pointer disabled:opacity-50"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" /> Guardando...
-                </>
-              ) : (
-                'Registrar Dictamen'
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <ModalFooter>
+          <Button type="button" variant="ghost" size="sm" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button type="submit" variant="purple" size="sm" isLoading={isSubmitting}>
+            Registrar Dictamen
+          </Button>
+        </ModalFooter>
+      </form>
+    </Modal>
   );
 }

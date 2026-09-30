@@ -12,6 +12,10 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import { eventsApi } from '../api/events.api';
+import { Card } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
+import { Button } from '@/shared/components/ui/Button';
+import { Input, Textarea } from '@/shared/components/ui/Input';
 import type { PublicEvent } from '@/shared/types/event.types';
 
 interface PublicEventPortalProps {
@@ -40,7 +44,6 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
         const data = await eventsApi.getPublicEvent(accessCode);
         setEventData(data);
       } catch {
-        // Fallback institucional en vivo
         setEventData({
           id: 'event-demo-1',
           title: 'Conferencia Magistral: Inteligencia Artificial en Educación Superior',
@@ -121,22 +124,18 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
   if (!eventData) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 text-white text-center">
-        <div className="max-w-md bg-slate-900 border border-slate-800 p-8 rounded-3xl">
+        <Card className="max-w-md p-8">
           <AlertCircle className="w-10 h-10 text-rose-400 mx-auto mb-3" />
           <h3 className="text-lg font-bold mb-2">Evento no encontrado</h3>
           <p className="text-xs text-slate-400 mb-6">
             El código &quot;{accessCode}&quot; no corresponde a ningún evento activo.
           </p>
           {onBackToApp && (
-            <button
-              type="button"
-              onClick={onBackToApp}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer"
-            >
+            <Button variant="secondary" size="sm" onClick={onBackToApp} className="w-full">
               Volver al inicio
-            </button>
+            </Button>
           )}
-        </div>
+        </Card>
       </div>
     );
   }
@@ -144,24 +143,24 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white py-8 px-4 sm:px-6">
       <div className="max-w-xl mx-auto space-y-6">
-        {/* Barra superior de navegación */}
         {onBackToApp && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onBackToApp}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer bg-slate-900/60 border border-slate-800 px-3.5 py-1.5 rounded-xl"
+            className="gap-2 bg-slate-900/60 border border-slate-800 text-slate-300"
           >
             <ArrowLeft className="w-4 h-4" /> Regresar al Ecosistema
-          </button>
+          </Button>
         )}
 
         {/* Encabezado del Evento */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-md relative overflow-hidden text-center sm:text-left">
+        <Card className="p-6 sm:p-8 shadow-2xl backdrop-blur-md relative overflow-hidden text-center sm:text-left">
           <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Portal Oficial del Asistente (QR)
-          </div>
+          <Badge variant="purple" className="mb-3">
+            <Sparkles className="w-3.5 h-3.5" /> Portal Oficial del Asistente (QR)
+          </Badge>
 
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white mb-2 leading-snug">
             {eventData.title}
@@ -179,16 +178,16 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
             <span>•</span>
             <span className="text-slate-300">Coordinación Wilfrido Trujillo</span>
           </div>
-        </div>
+        </Card>
 
         {/* Sección: Descarga de Diapositivas */}
-        <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+        <Card className="p-6 shadow-xl space-y-4">
           <div className="flex items-center gap-2.5 pb-3 border-b border-slate-800">
-            <div className="h-8 w-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0">
               <FileText className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">Material de Apoyo y Diapositivas</h3>
+              <h3 className="text-sm font-bold text-white tracking-tight">Material de Apoyo y Diapositivas</h3>
               <p className="text-[11px] text-slate-400">Descarga directa para los asistentes</p>
             </div>
           </div>
@@ -220,18 +219,18 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
                         alert(`Descargando material: ${res.title}`);
                       }
                     }}
-                    className="px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-1.5 transition-all shadow-md shadow-blue-500/20 flex-shrink-0 cursor-pointer"
+                    className="ui-btn ui-btn-primary text-xs py-1.5 px-3 flex-shrink-0"
                   >
-                    <Download className="w-3.5 h-3.5" /> Descargar
+                    <Download className="w-3.5 h-3.5 mr-1" /> Descargar
                   </a>
                 </div>
               ))
             )}
           </div>
-        </div>
+        </Card>
 
         {/* Sección: Encuesta Rápida de Satisfacción */}
-        <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+        <Card className="p-6 sm:p-8 shadow-xl">
           {isSubmitted ? (
             <div className="text-center py-6 space-y-4 animate-fadeIn">
               <div className="h-16 w-16 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
@@ -255,11 +254,11 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
           ) : (
             <form onSubmit={handleSubmitSurvey} className="space-y-5">
               <div className="flex items-center gap-2.5 pb-3 border-b border-slate-800">
-                <div className="h-8 w-8 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center">
+                <div className="h-8 w-8 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0">
                   <Star className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">Encuesta Rápida de Satisfacción (1 min)</h3>
+                  <h3 className="text-sm font-bold text-white tracking-tight">Encuesta Rápida de Satisfacción (1 min)</h3>
                   <p className="text-[11px] text-slate-400">
                     Registra tu asistencia y evalúa la calidad del taller
                   </p>
@@ -273,49 +272,29 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
                 </div>
               )}
 
-              {/* Nombre y Cédula */}
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Nombre Completo (para tu certificado) *
-                  </label>
-                  <input
-                    type="text"
-                    value={attendeeName}
-                    onChange={(e) => setAttendeeName(e.target.value)}
-                    placeholder="Ej. Juan Carlos Pérez Salazar"
-                    required
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-purple-500"
-                  />
-                </div>
+              <Input
+                label="Nombre Completo (para tu certificado) *"
+                value={attendeeName}
+                onChange={(e) => setAttendeeName(e.target.value)}
+                placeholder="Ej. Juan Carlos Pérez Salazar"
+                required
+              />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">
-                      Correo Electrónico *
-                    </label>
-                    <input
-                      type="email"
-                      value={attendeeEmail}
-                      onChange={(e) => setAttendeeEmail(e.target.value)}
-                      placeholder="tunombre@correo.com"
-                      required
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-purple-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">
-                      Cédula / Identificación
-                    </label>
-                    <input
-                      type="text"
-                      value={attendeeIdentification}
-                      onChange={(e) => setAttendeeIdentification(e.target.value)}
-                      placeholder="17xxxxxxxx"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-purple-500"
-                    />
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Input
+                  label="Correo Electrónico *"
+                  type="email"
+                  value={attendeeEmail}
+                  onChange={(e) => setAttendeeEmail(e.target.value)}
+                  placeholder="tunombre@correo.com"
+                  required
+                />
+                <Input
+                  label="Cédula / Identificación"
+                  value={attendeeIdentification}
+                  onChange={(e) => setAttendeeIdentification(e.target.value)}
+                  placeholder="17xxxxxxxx"
+                />
               </div>
 
               {/* Calificación General con Estrellas */}
@@ -397,39 +376,26 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
                 </div>
               </div>
 
-              {/* Comentarios */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Comentario u Observación (Opcional)
-                </label>
-                <textarea
-                  rows={2}
-                  value={comments}
-                  onChange={(e) => setComments(e.target.value)}
-                  placeholder="¿Qué temas te gustaría profundizar en próximos eventos?"
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-purple-500"
-                />
-              </div>
+              <Textarea
+                label="Comentario u Observación (Opcional)"
+                rows={2}
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                placeholder="¿Qué temas te gustaría profundizar en próximos eventos?"
+              />
 
-              {/* Botón de Enviar */}
-              <button
+              <Button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 px-4 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white flex items-center justify-center gap-2 shadow-lg shadow-purple-600/30 transition-all cursor-pointer disabled:opacity-50"
+                variant="purple"
+                size="lg"
+                isLoading={isSubmitting}
+                className="w-full font-bold gap-2 text-xs"
               >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Registrando Asistencia...
-                  </>
-                ) : (
-                  <>
-                    <MessageSquare className="w-4 h-4" /> Enviar Encuesta y Registrar Asistencia
-                  </>
-                )}
-              </button>
+                <MessageSquare className="w-4 h-4" /> Enviar Encuesta y Registrar Asistencia
+              </Button>
             </form>
           )}
-        </div>
+        </Card>
 
         {/* Footer */}
         <footer className="text-center text-[11px] text-slate-500 pt-2 pb-6">

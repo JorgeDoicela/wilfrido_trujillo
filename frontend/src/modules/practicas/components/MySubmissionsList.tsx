@@ -5,10 +5,12 @@ import {
   CheckCircle2,
   AlertTriangle,
   Download,
-  Loader2,
   MessageSquareQuote,
 } from 'lucide-react';
 import { documentsApi } from '../api/documents.api';
+import { Card } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
+import { Button } from '@/shared/components/ui/Button';
 import type { DocumentSubmission } from '@/shared/types/document.types';
 
 interface MySubmissionsListProps {
@@ -33,30 +35,30 @@ export function MySubmissionsList({ submissions }: MySubmissionsListProps) {
     switch (status) {
       case 'approved':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+          <Badge variant="success">
             <CheckCircle2 className="w-3.5 h-3.5" /> Aprobada Oficialmente
-          </span>
+          </Badge>
         );
       case 'observed':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-500/10 border border-amber-500/30 text-amber-300">
+          <Badge variant="warning">
             <AlertTriangle className="w-3.5 h-3.5" /> Con Observaciones Docente
-          </span>
+          </Badge>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-500/10 border border-blue-500/30 text-blue-400">
+          <Badge variant="info">
             <Clock className="w-3.5 h-3.5" /> En Revisión
-          </span>
+          </Badge>
         );
     }
   };
 
   if (submissions.length === 0) {
     return (
-      <div className="bg-slate-900/40 border border-slate-800 rounded-3xl p-6 text-center text-xs text-slate-400 max-w-2xl mx-auto">
+      <Card className="p-6 text-center text-xs text-slate-400 max-w-2xl mx-auto bg-slate-900/40">
         Aún no has entregado bitácoras ni evidencias en este espacio de trabajo.
-      </div>
+      </Card>
     );
   }
 
@@ -67,9 +69,9 @@ export function MySubmissionsList({ submissions }: MySubmissionsListProps) {
       </h4>
 
       {submissions.map((sub) => (
-        <div
+        <Card
           key={sub.id}
-          className="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col gap-3 shadow-lg"
+          className="p-4 sm:p-5 flex flex-col gap-3 shadow-lg"
         >
           <div className="flex items-start justify-between flex-wrap gap-2">
             <div className="flex items-start gap-3">
@@ -77,7 +79,7 @@ export function MySubmissionsList({ submissions }: MySubmissionsListProps) {
                 <FileText className="w-5 h-5" />
               </div>
               <div>
-                <h5 className="text-sm font-bold text-white">{sub.documentTitle}</h5>
+                <h5 className="text-sm font-bold text-white tracking-tight">{sub.documentTitle}</h5>
                 <p className="text-[11px] text-slate-400 mt-0.5">
                   Fecha de entrega:{' '}
                   {sub.createdAt
@@ -95,19 +97,16 @@ export function MySubmissionsList({ submissions }: MySubmissionsListProps) {
 
             <div className="flex items-center gap-2">
               {getStatusBadge(sub.status)}
-              <button
-                type="button"
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => handleDownload(sub)}
-                disabled={downloadingId === sub.id}
-                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer"
+                isLoading={downloadingId === sub.id}
+                className="p-2 h-auto text-slate-300"
                 title="Descargar copia entregada"
               >
-                {downloadingId === sub.id ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
-                ) : (
-                  <Download className="w-4 h-4" />
-                )}
-              </button>
+                <Download className="w-4 h-4" />
+              </Button>
             </div>
           </div>
 
@@ -123,7 +122,7 @@ export function MySubmissionsList({ submissions }: MySubmissionsListProps) {
               </div>
             </div>
           )}
-        </div>
+        </Card>
       ))}
     </div>
   );

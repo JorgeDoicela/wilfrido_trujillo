@@ -7,10 +7,12 @@ import {
   Lock,
   CheckCircle2,
   Trash2,
-  Loader2,
   AlertCircle,
 } from 'lucide-react';
 import { resourcesApi } from '../api/resources.api';
+import { Card } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
+import { Button } from '@/shared/components/ui/Button';
 import type { ResourceFile } from '@/shared/types/resource.types';
 
 interface ResourceCardProps {
@@ -70,38 +72,38 @@ export function ResourceCard({
       return {
         label: 'PDF Oficial',
         icon: <FileText className="w-5 h-5 text-rose-400" />,
-        color: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
+        variant: 'danger' as const,
       };
     }
     if (type.includes('excel') || type.includes('xls')) {
       return {
         label: 'Hoja Excel',
         icon: <FileSpreadsheet className="w-5 h-5 text-emerald-400" />,
-        color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+        variant: 'success' as const,
       };
     }
     if (type.includes('word') || type.includes('doc')) {
       return {
         label: 'Formato Word',
         icon: <FileCode className="w-5 h-5 text-blue-400" />,
-        color: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+        variant: 'info' as const,
       };
     }
     return {
       label: 'Documento',
       icon: <FileText className="w-5 h-5 text-slate-400" />,
-      color: 'text-slate-400 bg-slate-500/10 border-slate-500/20',
+      variant: 'neutral' as const,
     };
   };
 
   const badge = getFileBadge();
 
   return (
-    <div
-      className={`relative rounded-2xl border transition-all duration-200 p-5 flex flex-col justify-between ${
+    <Card
+      className={`p-5 flex flex-col justify-between transition-all duration-200 ${
         isLocked
-          ? 'bg-slate-900/40 border-slate-800/80 opacity-80 hover:border-amber-500/40'
-          : 'bg-slate-900/70 border-slate-800 hover:border-blue-500/50 hover:shadow-xl shadow-lg'
+          ? 'bg-slate-900/40 border-slate-800/80 opacity-80'
+          : 'hover:border-blue-500/50 hover:shadow-xl shadow-lg'
       }`}
     >
       <div>
@@ -112,35 +114,25 @@ export function ResourceCard({
               {badge.icon}
             </div>
             <div>
-              <span
-                className={`inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${badge.color}`}
-              >
+              <Badge variant={badge.variant} size="sm">
                 {badge.label}
-              </span>
+              </Badge>
             </div>
           </div>
 
           {/* Indicador de Candado / Desbloqueo */}
           {resource.isLockedUntilTestPass ? (
             isLocked ? (
-              <span
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-500/10 border border-amber-500/30 text-amber-300"
-                title="Bloqueado hasta aprobar el examen"
-              >
+              <Badge variant="warning" title="Bloqueado hasta aprobar el examen">
                 <Lock className="w-3.5 h-3.5" /> Protegido
-              </span>
+              </Badge>
             ) : (
-              <span
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
-                title="Desbloqueado tras aprobar el examen"
-              >
+              <Badge variant="success" title="Desbloqueado tras aprobar el examen">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Desbloqueado
-              </span>
+              </Badge>
             )
           ) : (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400">
-              Acceso Libre
-            </span>
+            <Badge variant="neutral">Acceso Libre</Badge>
           )}
         </div>
 
@@ -166,47 +158,40 @@ export function ResourceCard({
 
       {/* Botones de Acción */}
       <div className="flex items-center justify-between gap-2 pt-3 border-t border-slate-800/80">
-        <button
+        <Button
           type="button"
+          variant={isLocked ? 'secondary' : 'primary'}
+          size="sm"
           onClick={handleDownload}
-          disabled={isLocked || isDownloading}
-          className={`flex-1 py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-            isLocked
-              ? 'bg-slate-800/60 text-slate-500 border border-slate-700/50 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-500/20'
-          }`}
+          disabled={isLocked}
+          isLoading={isDownloading}
+          className="flex-1 text-xs"
         >
-          {isDownloading ? (
+          {isLocked ? (
             <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin" /> Descargando...
-            </>
-          ) : isLocked ? (
-            <>
-              <Lock className="w-3.5 h-3.5" /> Requiere Examen Aprobado
+              <Lock className="w-3.5 h-3.5 mr-1" /> Requiere Examen Aprobado
             </>
           ) : (
             <>
-              <Download className="w-3.5 h-3.5" /> Descargar Plantilla
+              <Download className="w-3.5 h-3.5 mr-1" /> Descargar Plantilla
             </>
           )}
-        </button>
+        </Button>
 
         {canManage && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={handleDelete}
-            disabled={isDeleting}
-            className="p-2.5 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all cursor-pointer"
+            isLoading={isDeleting}
+            className="p-2.5 h-auto text-slate-500 hover:text-rose-400 hover:bg-rose-500/10"
             title="Eliminar plantilla"
           >
-            {isDeleting ? (
-              <Loader2 className="w-4 h-4 animate-spin text-rose-400" />
-            ) : (
-              <Trash2 className="w-4 h-4" />
-            )}
-          </button>
+            <Trash2 className="w-4 h-4" />
+          </Button>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

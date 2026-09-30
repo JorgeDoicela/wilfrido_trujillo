@@ -1,5 +1,5 @@
 ---
-name: wilfrido-auditor
+name: auditor-wilfrido
 description: Directrices maestras del Agente Auditor Documental (análisis heurístico RRA de PDFs, validación estructural, semáforo de dictamen y arquitectura pluggable bajo IDocumentAuditor para IA/Gemini).
 ---
 

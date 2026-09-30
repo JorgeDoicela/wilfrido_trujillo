@@ -1,5 +1,5 @@
 ---
-name: wilfrido-backend
+name: backend-wilfrido
 description: Directrices maestras de desarrollo backend para el proyecto wilfrido_trujillo (NestJS 11, SQLite WAL con better-sqlite3, TypeORM, PBAC, RFC 7807 y patrones desacoplados con DIP).
 ---
 

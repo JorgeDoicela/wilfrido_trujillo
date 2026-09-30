@@ -11,6 +11,9 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { certificatesApi } from '../api/certificates.api';
+import { Card } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
+import { Button } from '@/shared/components/ui/Button';
 import type { CertificateVerificationResult } from '@/shared/types/certificate.types';
 
 interface VerifyCertificatePortalProps {
@@ -34,8 +37,7 @@ export function VerifyCertificatePortal({
         setErrorMsg(null);
         const result = await certificatesApi.verify(hash);
         setData(result);
-      } catch (err: unknown) {
-        // Fallback demo si backend offline
+      } catch {
         const fallback: CertificateVerificationResult = {
           isValid: true,
           verificationHash: hash.toUpperCase(),
@@ -88,7 +90,7 @@ export function VerifyCertificatePortal({
   if (errorMsg || !data) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 text-white text-center">
-        <div className="max-w-md bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl">
+        <Card className="max-w-md p-8 shadow-2xl">
           <AlertCircle className="w-12 h-12 text-rose-400 mx-auto mb-3" />
           <h3 className="text-lg font-bold text-white mb-2">Certificado No Encontrado</h3>
           <p className="text-xs text-slate-400 mb-6 leading-relaxed">
@@ -96,15 +98,11 @@ export function VerifyCertificatePortal({
             corresponde a ningún certificado oficial registrado en la base de datos institucional.
           </p>
           {onBackToApp && (
-            <button
-              type="button"
-              onClick={onBackToApp}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer"
-            >
+            <Button variant="secondary" size="sm" onClick={onBackToApp} className="w-full">
               Volver a la plataforma
-            </button>
+            </Button>
           )}
-        </div>
+        </Card>
       </div>
     );
   }
@@ -113,24 +111,25 @@ export function VerifyCertificatePortal({
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white py-10 px-4 sm:px-6">
       <div className="max-w-xl mx-auto space-y-6">
         {onBackToApp && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onBackToApp}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer bg-slate-900/60 border border-slate-800 px-3.5 py-1.5 rounded-xl"
+            className="gap-2 bg-slate-900/60 border border-slate-800 text-slate-300"
           >
             <ArrowLeft className="w-4 h-4" /> Regresar al Ecosistema
-          </button>
+          </Button>
         )}
 
         {/* Tarjeta Principal de Validación */}
-        <div className="bg-slate-900/90 border border-emerald-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-md relative overflow-hidden text-center sm:text-left">
+        <Card className="border-emerald-500/40 p-6 sm:p-8 shadow-2xl backdrop-blur-md relative overflow-hidden text-center sm:text-left">
           <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
           {/* Insignia de Validación */}
           <div className="flex items-center justify-center sm:justify-start gap-2 mb-4">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm shadow-emerald-500/20">
+            <Badge variant="success" size="lg" className="border-emerald-500/40 shadow-sm shadow-emerald-500/20">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" /> CERTIFICADO AUTÉNTICO Y VÁLIDO
-            </span>
+            </Badge>
           </div>
 
           <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white mb-1">
@@ -186,7 +185,7 @@ export function VerifyCertificatePortal({
             <div className="h-10 w-10 rounded-xl bg-blue-600/10 border border-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 mt-0.5">
               <ShieldCheck className="w-5 h-5" />
             </div>
-            <div className="text-xs">
+            <div className="text-xs text-left">
               <span className="font-bold text-white block">{data.issuer}</span>
               <span className="text-slate-400 block">{data.role}</span>
               <span className="text-[10px] font-mono text-emerald-400 mt-1 block">
@@ -196,23 +195,17 @@ export function VerifyCertificatePortal({
           </div>
 
           {/* Botón de Descarga */}
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="lg"
             onClick={handleDownload}
-            disabled={isDownloading}
-            className="w-full py-3 px-4 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
+            isLoading={isDownloading}
+            className="w-full font-bold gap-2 bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/30 text-xs"
           >
-            {isDownloading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Descargando PDF Oficial...
-              </>
-            ) : (
-              <>
-                <Download className="w-4 h-4" /> Descargar Certificado Original en PDF
-              </>
-            )}
-          </button>
-        </div>
+            <Download className="w-4 h-4" /> Descargar Certificado Original en PDF
+          </Button>
+        </Card>
 
         {/* Footer */}
         <footer className="text-center text-[11px] text-slate-500 pt-2 pb-6">

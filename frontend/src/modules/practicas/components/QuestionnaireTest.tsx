@@ -5,11 +5,13 @@ import {
   XCircle,
   ArrowRight,
   RotateCcw,
-  Loader2,
   Lock,
   Award,
 } from 'lucide-react';
 import { testsApi } from '../api/tests.api';
+import { Card } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
+import { Button } from '@/shared/components/ui/Button';
 import type { Test, TestResult } from '@/shared/types/test.types';
 
 interface QuestionnaireTestProps {
@@ -63,7 +65,6 @@ export function QuestionnaireTest({
   const handleSubmitAnswers = async () => {
     setErrorMessage(null);
 
-    // Verificar si se respondieron todas las preguntas
     const answeredCount = Object.keys(selectedAnswers).length;
     if (answeredCount < test.questions.length && (!timeLeft || timeLeft > 0)) {
       setErrorMessage(
@@ -79,14 +80,17 @@ export function QuestionnaireTest({
       if (testResult.passed && onTestPassed) {
         onTestPassed(testResult);
       }
-    } catch (err: unknown) {
-      // Fallback didáctico si está en modo offline o demo
+    } catch {
       const total = test.questions.length;
       let mockCorrect = 0;
       test.questions.forEach((q) => {
         const selected = selectedAnswers[q.id];
-        // En mock si seleccionó la opción 0 o 1 lo consideramos correcto para prueba
-        if (selected !== undefined && (q.correctOptionIndex !== undefined ? selected === q.correctOptionIndex : selected === 0 || selected === 1)) {
+        if (
+          selected !== undefined &&
+          (q.correctOptionIndex !== undefined
+            ? selected === q.correctOptionIndex
+            : selected === 0 || selected === 1)
+        ) {
           mockCorrect++;
         }
       });
@@ -128,7 +132,7 @@ export function QuestionnaireTest({
 
   if (!inductionWatched) {
     return (
-      <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-8 max-w-3xl mx-auto text-center shadow-xl">
+      <Card className="p-8 max-w-3xl mx-auto text-center shadow-xl bg-slate-900/60">
         <div className="h-16 w-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-4">
           <Lock className="w-8 h-8" />
         </div>
@@ -137,14 +141,14 @@ export function QuestionnaireTest({
           Para rendir este examen es obligatorio haber visto el video de inducción en su totalidad (100%).
           Por favor regresa al reproductor y completa la visualización guiada.
         </p>
-      </div>
+      </Card>
     );
   }
 
   // Pantalla de Resultados
   if (result) {
     return (
-      <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-8 max-w-3xl mx-auto shadow-2xl animate-fadeIn">
+      <Card className="p-8 max-w-3xl mx-auto shadow-2xl animate-fadeIn">
         <div className="text-center mb-6">
           <div
             className={`h-20 w-20 rounded-3xl flex items-center justify-center mx-auto mb-4 border ${
@@ -156,15 +160,9 @@ export function QuestionnaireTest({
             {result.passed ? <Award className="w-10 h-10" /> : <XCircle className="w-10 h-10" />}
           </div>
 
-          <span
-            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-2 border ${
-              result.passed
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                : 'bg-rose-500/10 text-rose-400 border-rose-500/30'
-            }`}
-          >
+          <Badge variant={result.passed ? 'success' : 'danger'} size="lg" className="mb-2">
             {result.passed ? 'Evaluación Aprobada' : 'Evaluación Reprobada'}
-          </span>
+          </Badge>
 
           <h3 className="text-2xl font-extrabold text-white tracking-tight">
             Nota Obtenida: {result.scoreObtained.toFixed(1)} / 10
@@ -198,26 +196,30 @@ export function QuestionnaireTest({
         {/* Acciones */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-slate-800">
           {!result.passed && (
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              size="md"
               onClick={handleReset}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="gap-2"
             >
               <RotateCcw className="w-4 h-4" /> Intentar Nuevamente
-            </button>
+            </Button>
           )}
 
           {result.passed && onProceedToResources && (
-            <button
+            <Button
               type="button"
+              variant="primary"
+              size="lg"
               onClick={onProceedToResources}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer animate-pulse"
+              className="gap-2 bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/30"
             >
               Siguiente Paso: Descargar Plantillas Oficiales <ArrowRight className="w-4 h-4" />
-            </button>
+            </Button>
           )}
         </div>
-      </div>
+      </Card>
     );
   }
 
@@ -227,13 +229,13 @@ export function QuestionnaireTest({
   );
 
   return (
-    <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 shadow-2xl max-w-4xl mx-auto w-full backdrop-blur-sm">
+    <Card className="p-6 shadow-2xl max-w-4xl mx-auto w-full backdrop-blur-sm">
       {/* Barra superior: Título y Temporizador */}
       <div className="flex items-center justify-between flex-wrap gap-3 pb-4 mb-6 border-b border-slate-800">
         <div>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-1">
+          <Badge variant="purple" className="mb-1">
             Paso 2: Evaluación de Conocimiento
-          </span>
+          </Badge>
           <h3 className="text-base font-bold text-white tracking-tight">{test.title}</h3>
           <p className="text-xs text-slate-400">
             Responde correctamente las preguntas basadas en el video de inducción. Mínimo para aprobar: {test.passingScore}/10.
@@ -322,43 +324,39 @@ export function QuestionnaireTest({
       {/* Navegación y Envío */}
       <div className="flex items-center justify-between flex-wrap gap-3 pt-4 border-t border-slate-800">
         <div className="flex items-center gap-2">
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={() => setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))}
             disabled={currentQuestionIndex === 0}
-            className="px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors disabled:opacity-40 cursor-pointer"
           >
             Anterior
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={() =>
               setCurrentQuestionIndex((prev) => Math.min(test.questions.length - 1, prev + 1))
             }
             disabled={currentQuestionIndex === test.questions.length - 1}
-            className="px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors disabled:opacity-40 cursor-pointer"
           >
             Siguiente
-          </button>
+          </Button>
         </div>
 
-        <button
+        <Button
           type="button"
+          variant="primary"
+          size="md"
           onClick={handleSubmitAnswers}
-          disabled={isSubmitting}
-          className="px-6 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all disabled:opacity-50 cursor-pointer"
+          isLoading={isSubmitting}
+          className="gap-2"
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" /> Calificando...
-            </>
-          ) : (
-            <>
-              Finalizar y Calificar <CheckCircle2 className="w-4 h-4" />
-            </>
-          )}
-        </button>
+          Finalizar y Calificar <CheckCircle2 className="w-4 h-4" />
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }

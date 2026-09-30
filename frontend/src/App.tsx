@@ -1,47 +1,24 @@
 import { useState, useEffect } from 'react';
-import {
-  GraduationCap,
-  BookOpen,
-  Calendar,
-  ShieldCheck,
-  Lock,
-  CheckCircle2,
-  FileCheck,
-  UserCheck,
-  AlertCircle,
-  Plus,
-  FolderOpen,
-  Video,
-  HelpCircle,
-  FolderArchive,
-  QrCode,
-  Award,
-} from 'lucide-react';
 import { useAuth } from '@/modules/auth/context/AuthContext';
-import { Can } from '@/shared/components/Can';
-import { usePermission } from '@/shared/hooks/usePermission';
-import { JoinWorkspaceCard } from '@/shared/components/JoinWorkspaceCard';
-import { WorkspaceCard } from '@/modules/admin/components/WorkspaceCard';
+import { Navbar } from '@/shared/components/Navbar';
+import { PbacSimulatorCard } from '@/shared/components/PbacSimulatorCard';
+import { WorkspaceSelectorSection } from '@/modules/admin/components/WorkspaceSelectorSection';
+import { PracticasOverviewPage } from '@/modules/practicas/pages/PracticasOverviewPage';
+import { CertificatesSection } from '@/modules/eventos/components/CertificatesSection';
+import { FeaturePillars } from '@/shared/components/FeaturePillars';
 import { CreateWorkspaceModal } from '@/modules/admin/components/CreateWorkspaceModal';
-import { InductionVideoPlayer } from '@/modules/practicas/components/InductionVideoPlayer';
+import { CreateTestModal } from '@/modules/admin/components/CreateTestModal';
+import { UploadResourceModal } from '@/modules/admin/components/UploadResourceModal';
+import { ReviewDocumentModal } from '@/modules/admin/components/ReviewDocumentModal';
+import { EventQrShareModal } from '@/modules/eventos/components/EventQrShareModal';
+import { IssueCertificateModal } from '@/modules/eventos/components/IssueCertificateModal';
+import { PublicEventPortal } from '@/modules/eventos/pages/PublicEventPortal';
+import { VerifyCertificatePortal } from '@/modules/eventos/pages/VerifyCertificatePortal';
 import { workspacesApi } from '@/modules/admin/api/workspaces.api';
 import { testsApi } from '@/modules/practicas/api/tests.api';
 import { resourcesApi } from '@/modules/practicas/api/resources.api';
 import { documentsApi } from '@/modules/practicas/api/documents.api';
 import { certificatesApi } from '@/modules/eventos/api/certificates.api';
-import { QuestionnaireTest } from '@/modules/practicas/components/QuestionnaireTest';
-import { ResourceCard } from '@/modules/practicas/components/ResourceCard';
-import { DocumentDropzone } from '@/modules/practicas/components/DocumentDropzone';
-import { MySubmissionsList } from '@/modules/practicas/components/MySubmissionsList';
-import { SubmissionsReviewTable } from '@/modules/admin/components/SubmissionsReviewTable';
-import { CreateTestModal } from '@/modules/admin/components/CreateTestModal';
-import { UploadResourceModal } from '@/modules/admin/components/UploadResourceModal';
-import { ReviewDocumentModal } from '@/modules/admin/components/ReviewDocumentModal';
-import { PublicEventPortal } from '@/modules/eventos/pages/PublicEventPortal';
-import { EventQrShareModal } from '@/modules/eventos/components/EventQrShareModal';
-import { CertificatesList } from '@/modules/eventos/components/CertificatesList';
-import { IssueCertificateModal } from '@/modules/eventos/components/IssueCertificateModal';
-import { VerifyCertificatePortal } from '@/modules/eventos/pages/VerifyCertificatePortal';
 import type { Workspace } from '@/shared/types/workspace.types';
 import type { Test, TestResult } from '@/shared/types/test.types';
 import type { ResourceFile } from '@/shared/types/resource.types';
@@ -49,8 +26,7 @@ import type { DocumentSubmission } from '@/shared/types/document.types';
 import type { Certificate } from '@/shared/types/certificate.types';
 
 export default function App() {
-  const { user, setUserDirectlyForDemo, logout } = useAuth();
-  const canReview = usePermission('document:review');
+  const { setUserDirectlyForDemo } = useAuth();
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
   const [inductionWatched, setInductionWatched] = useState(false);
@@ -63,12 +39,16 @@ export default function App() {
   const [selectedSubmissionForReview, setSelectedSubmissionForReview] = useState<DocumentSubmission | null>(null);
   const [publicEventCode, setPublicEventCode] = useState<string | null>(null);
   const [verifyHash, setVerifyHash] = useState<string | null>(null);
+
+  // Modals state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCreateTestModalOpen, setIsCreateTestModalOpen] = useState(false);
   const [isUploadResourceModalOpen, setIsUploadResourceModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [isIssueCertModalOpen, setIsIssueCertModalOpen] = useState(false);
+
+  // Loading flags
   const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false);
   const [isLoadingTest, setIsLoadingTest] = useState(false);
   const [isLoadingResources, setIsLoadingResources] = useState(false);
@@ -263,7 +243,7 @@ export default function App() {
               id: 'enr-1',
               user: {
                 id: 'u-1',
-                fullName: 'Carlos Alberto Estudiante',
+                fullName: 'Carlos Estudiante',
                 email: 'alumno@instituto.edu.ec',
                 identification: '1723456789',
               },
@@ -272,32 +252,47 @@ export default function App() {
           {
             id: 'sub-sample-2',
             enrollmentId: 'enr-2',
-            documentTitle: 'Plan de Aprendizaje Firmado por Tutor Empresarial',
-            fileUrl: 'plan_aprendizaje_firmado.pdf',
+            documentTitle: 'Convenio de Prácticas Firmado y Legalizado',
+            fileUrl: 'convenio_legalizado.pdf',
             status: 'approved',
-            feedbackNotes: 'Documento legalizado conforme a las directrices del RRA.',
-            auditedAt: new Date(Date.now() - 3600000 * 12).toISOString(),
-            approvedAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+            feedbackNotes: 'Validado conforme a la normativa institucional vigente.',
+            auditedAt: new Date().toISOString(),
+            approvedAt: new Date().toISOString(),
             createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
-            updatedAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+            updatedAt: new Date().toISOString(),
             enrollment: {
               id: 'enr-2',
               user: {
                 id: 'u-2',
-                fullName: 'María Fernanda Gómez',
-                email: 'mgomez@instituto.edu.ec',
-                identification: '1719876543',
+                fullName: 'María Estudiante',
+                email: 'maria@instituto.edu.ec',
+                identification: '1723456790',
               },
             },
           },
         ]);
       }
 
-      if (mySubs.status === 'fulfilled') {
+      if (mySubs.status === 'fulfilled' && mySubs.value.length > 0) {
         setMySubmissions(mySubs.value);
+      } else {
+        setMySubmissions([
+          {
+            id: 'sub-my-sample',
+            enrollmentId: 'enr-me',
+            documentTitle: 'Bitácora Semanal 1 y 2 - Convenio Activo',
+            fileUrl: 'bitacora_semanal_1.pdf',
+            status: 'submitted',
+            feedbackNotes: null,
+            auditedAt: null,
+            approvedAt: null,
+            createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+            updatedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+          },
+        ]);
       }
     } catch {
-      // Demo fallback
+      // Ignorar fallback silencioso
     } finally {
       setIsLoadingSubmissions(false);
     }
@@ -307,35 +302,35 @@ export default function App() {
     try {
       setIsLoadingCertificates(true);
       const data = await certificatesApi.getByWorkspace(workspaceId);
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         setCertificates(data);
       } else {
         setCertificates([
           {
-            id: 'cert-sample-1',
+            id: 'cert-demo-1',
             workspaceId,
-            recipientName: 'Carlos Alberto Estudiante',
+            recipientName: 'Carlos Estudiante',
             recipientEmail: 'alumno@instituto.edu.ec',
             recipientIdentification: '1723456789',
-            hours: 40,
-            verificationHash: 'WT-A1B2-C3D4-E5F6',
-            pdfPath: null,
-            issuedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+            hours: 160,
+            verificationHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+            pdfPath: 'cert_carlos_estudiante.pdf',
+            issuedAt: new Date().toISOString(),
           },
         ]);
       }
     } catch {
       setCertificates([
         {
-          id: 'cert-sample-1',
+          id: 'cert-demo-1',
           workspaceId,
-          recipientName: 'Carlos Alberto Estudiante',
+          recipientName: 'Carlos Estudiante',
           recipientEmail: 'alumno@instituto.edu.ec',
           recipientIdentification: '1723456789',
-          hours: 40,
-          verificationHash: 'WT-A1B2-C3D4-E5F6',
-          pdfPath: null,
-          issuedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+          hours: 160,
+          verificationHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+          pdfPath: 'cert_carlos_estudiante.pdf',
+          issuedAt: new Date().toISOString(),
         },
       ]);
     } finally {
@@ -343,31 +338,28 @@ export default function App() {
     }
   };
 
+  // Enrutamiento mediante hash
   useEffect(() => {
-    const handleHashChange = () => {
+    const handleHash = () => {
       const hash = window.location.hash;
       if (hash.startsWith('#/eventos/')) {
-        const code = hash.replace('#/eventos/', '').trim();
-        if (code) {
-          setPublicEventCode(code);
-          setVerifyHash(null);
-        }
+        const code = hash.replace('#/eventos/', '');
+        setPublicEventCode(code);
+        setVerifyHash(null);
       } else if (hash.startsWith('#/certificados/validar/')) {
-        const certHash = hash.replace('#/certificados/validar/', '').trim();
-        if (certHash) {
-          setVerifyHash(certHash);
-          setPublicEventCode(null);
-        }
+        const h = hash.replace('#/certificados/validar/', '');
+        setVerifyHash(h);
+        setPublicEventCode(null);
       } else {
-        if (publicEventCode) setPublicEventCode(null);
-        if (verifyHash) setVerifyHash(null);
+        setPublicEventCode(null);
+        setVerifyHash(null);
       }
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [publicEventCode, verifyHash]);
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   useEffect(() => {
     fetchWorkspaces();
@@ -449,50 +441,15 @@ export default function App() {
     );
   }
 
-  const handleWorkspaceCreated = (newWs: Workspace) => {
-    setWorkspaces((prev) => [newWs, ...prev]);
-    setSelectedWorkspace(newWs);
-  };
-
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between">
-      {/* Header */}
-      <header className="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur px-6 py-4 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold">
-              WT
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold text-white tracking-tight">Ing. Wilfrido Trujillo</h1>
-              <p className="text-xs text-slate-400">Gestión Académica & Eventos</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <ShieldCheck className="w-3.5 h-3.5" /> PBAC Activo
-            </span>
-            {user ? (
-              <div className="flex items-center gap-2">
-                <span className="text-xs px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300">
-                  {user.fullName} ({user.roleKey})
-                </span>
-                <button
-                  type="button"
-                  onClick={logout}
-                  className="text-xs text-rose-400 hover:text-rose-300 underline transition-colors cursor-pointer"
-                >
-                  Salir
-                </button>
-              </div>
-            ) : (
-              <span className="text-xs text-slate-400">Sin sesión activa</span>
-            )}
-          </div>
-        </div>
-      </header>
+      {/* Header global */}
+      <Navbar
+        onSimulateStudent={simulateStudent}
+        onSimulateIngeniero={simulateIngeniero}
+      />
 
-      {/* Main Container */}
+      {/* Contenedor Principal */}
       <main className="max-w-7xl mx-auto px-6 py-10 flex-1 flex flex-col gap-10 w-full">
         {/* Hero Section */}
         <div className="text-center max-w-3xl mx-auto">
@@ -509,449 +466,127 @@ export default function App() {
         </div>
 
         {/* Simulador Interactivo PBAC */}
-        <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 max-w-5xl mx-auto w-full shadow-xl">
-          <div className="flex items-center justify-between flex-wrap gap-4 border-b border-slate-800 pb-4 mb-6">
-            <div>
-              <h3 className="text-base font-semibold text-white flex items-center gap-2">
-                <UserCheck className="w-4 h-4 text-blue-400" />
-                Simulador de Permisos PBAC
-              </h3>
-              <p className="text-xs text-slate-400">
-                Alterna entre perfiles para comprobar las capacidades activas en tiempo real.
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={simulateStudent}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all cursor-pointer"
-              >
-                Simular Alumno
-              </button>
-              <button
-                type="button"
-                onClick={simulateIngeniero}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-600 hover:bg-blue-500 text-white transition-all cursor-pointer shadow-sm shadow-blue-500/20"
-              >
-                Simular Docente / Ingeniero
-              </button>
-            </div>
-          </div>
+        <PbacSimulatorCard
+          onSimulateStudent={simulateStudent}
+          onSimulateIngeniero={simulateIngeniero}
+        />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Estado de Permisos */}
-            <div className="bg-slate-950/60 rounded-xl p-4 border border-slate-800/80">
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                Usuario en Sesión
-              </h4>
-              <p className="text-sm font-medium text-white mb-1">
-                {user ? user.fullName : 'Invitado sin autenticar'}
-              </p>
-              <p className="text-xs text-slate-400 mb-3">
-                Rol: <span className="text-blue-400 font-semibold">{user?.roleKey || 'ANÓNIMO'}</span>
-              </p>
-              <div className="text-xs text-slate-400 flex items-center gap-1.5 mb-2">
-                <code>usePermission('document:review')</code>:
-                {canReview ? (
-                  <span className="text-emerald-400 font-bold inline-flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> TRUE
-                  </span>
-                ) : (
-                  <span className="text-rose-400 font-bold inline-flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" /> FALSE
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Zona Protegida con <Can do="document:review"> */}
-            <div className="bg-slate-950/60 rounded-xl p-4 border border-slate-800/80 flex flex-col justify-center">
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                Permiso: <code>document:review</code>
-              </h4>
-              <Can
-                do="document:review"
-                fallback={
-                  <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-center">
-                    <Lock className="w-4 h-4 text-rose-400 mx-auto mb-1 opacity-80" />
-                    <p className="text-xs font-semibold text-rose-300">Bandeja de Aprobación Oculta</p>
-                    <p className="text-[11px] text-slate-400">Requiere permiso de revisión docente.</p>
-                  </div>
-                }
-              >
-                <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
-                  <div className="flex items-center gap-2 text-emerald-400 mb-1">
-                    <FileCheck className="w-4 h-4" />
-                    <span className="text-xs font-bold uppercase">Bandeja Desbloqueada</span>
-                  </div>
-                  <p className="text-xs text-slate-300">
-                    Acceso para calificar y emitir observaciones a las bitácoras entregadas.
-                  </p>
-                </div>
-              </Can>
-            </div>
-          </div>
-        </section>
-
-        {/* Sección de Inducción con Reproductor y Tracking (Paso 11) */}
-        <section className="max-w-5xl mx-auto w-full flex flex-col gap-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2">
-              <Video className="w-5 h-5 text-blue-400" />
-              <h3 className="text-lg font-bold text-white">
-                Módulo de Inducción con Reproductor y Tracking
-              </h3>
-            </div>
-            {selectedWorkspace && (
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-slate-400 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
-                  Espacio activo: <strong className="text-white">{selectedWorkspace.title}</strong>
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIsQrModalOpen(true)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-600/20 border border-purple-500/30 text-purple-300 hover:bg-purple-600/30 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
-                  title="Abrir portal público y código QR para asistentes móviles"
-                >
-                  <QrCode className="w-3.5 h-3.5" /> Portal QR & Asistentes
-                </button>
-              </div>
-            )}
-          </div>
-
-          <InductionVideoPlayer
-            workspaceId={selectedWorkspace?.id || 'ws-demo-1'}
-            videoTitle={
-              selectedWorkspace
-                ? `Inducción Oficial: ${selectedWorkspace.title}`
-                : 'Inducción Oficial y Normativa del RRA'
-            }
-            initialWatched={inductionWatched}
+        {/* Módulo de Prácticas Preprofesionales: Flujo de 4 pasos */}
+        {selectedWorkspace && (
+          <PracticasOverviewPage
+            workspace={selectedWorkspace}
+            inductionWatched={inductionWatched}
             onInductionComplete={() => setInductionWatched(true)}
-            onProceedToTest={() => {
-              const el = document.getElementById('evaluacion-section');
-              if (el) {
-                el.scrollIntoView({ behavior: 'smooth' });
-              }
+            activeTest={activeTest}
+            isLoadingTest={isLoadingTest}
+            testResult={testResult}
+            onTestPassed={(res) => setTestResult(res)}
+            onOpenCreateTestModal={() => setIsCreateTestModalOpen(true)}
+            resources={resources}
+            isLoadingResources={isLoadingResources}
+            onOpenUploadResourceModal={() => setIsUploadResourceModalOpen(true)}
+            onDeleteResourceSuccess={(id) => {
+              setResources((prev) => prev.filter((r) => r.id !== id));
             }}
+            mySubmissions={mySubmissions}
+            allSubmissions={submissions}
+            isLoadingSubmissions={isLoadingSubmissions}
+            onUploadSuccess={(sub) => {
+              setMySubmissions((prev) => [sub, ...prev]);
+              setSubmissions((prev) => [sub, ...prev]);
+            }}
+            onOpenReviewSubmission={(sub) => {
+              setSelectedSubmissionForReview(sub);
+              setIsReviewModalOpen(true);
+            }}
+            onOpenQrModal={() => setIsQrModalOpen(true)}
           />
-        </section>
+        )}
 
-        {/* Sección de Motor de Evaluaciones Dinámicas (Paso 12) */}
-        <section id="evaluacion-section" className="max-w-5xl mx-auto w-full flex flex-col gap-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2">
-              <HelpCircle className="w-5 h-5 text-purple-400" />
-              <h3 className="text-lg font-bold text-white">
-                Motor de Evaluaciones Dinámicas
-              </h3>
-            </div>
-            <div className="flex items-center gap-2">
-              {testResult?.passed && (
-                <span className="text-xs px-2.5 py-1 rounded-full font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  Aprobado ({testResult.scoreObtained}/10)
-                </span>
-              )}
-              <Can do="test:manage">
-                <button
-                  type="button"
-                  onClick={() => setIsCreateTestModalOpen(true)}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-purple-600 hover:bg-purple-500 text-white flex items-center gap-1.5 transition-all shadow-md shadow-purple-600/20 cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" /> Configurar Nuevo Examen
-                </button>
-              </Can>
-            </div>
-          </div>
+        {/* Sección de Certificados PDF con Verificación QR */}
+        <CertificatesSection
+          certificates={certificates}
+          isLoading={isLoadingCertificates}
+          onOpenIssueModal={() => setIsIssueCertModalOpen(true)}
+          onVerifyHash={(hash) => {
+            setVerifyHash(hash);
+            window.location.hash = `#/certificados/validar/${hash}`;
+          }}
+        />
 
-          {isLoadingTest ? (
-            <div className="p-8 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
-              Cargando cuestionario de evaluación...
-            </div>
-          ) : activeTest ? (
-            <QuestionnaireTest
-              test={activeTest}
-              inductionWatched={inductionWatched}
-              onTestPassed={(res) => {
-                setTestResult(res);
-              }}
-              onProceedToResources={() => {
-                const el = document.getElementById('recursos-section');
-                if (el) {
-                  el.scrollIntoView({ behavior: 'smooth' });
+        {/* Sección de Selección y Creación de Espacios */}
+        <WorkspaceSelectorSection
+          workspaces={workspaces}
+          isLoading={isLoadingWorkspaces}
+          onSelectWorkspace={(ws) => setSelectedWorkspace(ws)}
+          onOpenCreateModal={() => setIsCreateModalOpen(true)}
+          onJoinSuccess={(res) => {
+            if (res.workspace) {
+              setWorkspaces((prev) => {
+                if (!prev.some((w) => w.id === res.workspace.id)) {
+                  return [res.workspace, ...prev];
                 }
-              }}
-            />
-          ) : (
-            <div className="p-6 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
-              No hay evaluaciones configuradas para este espacio de trabajo.
-            </div>
-          )}
-        </section>
-
-        {/* Sección de Repositorio de Recursos y Desbloqueo Condicional (Paso 13) */}
-        <section id="recursos-section" className="max-w-5xl mx-auto w-full flex flex-col gap-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <div className="flex items-center gap-2">
-                <FolderArchive className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-lg font-bold text-white">
-                  Repositorio de Recursos y Desbloqueo Condicional
-                </h3>
-              </div>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Plantillas y formatos institucionales oficiales. Los formatos con candado requieren haber aprobado la evaluación.
-              </p>
-            </div>
-
-            <Can do="resource:manage">
-              <button
-                type="button"
-                onClick={() => setIsUploadResourceModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1.5 transition-all shadow-md shadow-emerald-600/20 cursor-pointer"
-              >
-                <Plus className="w-4 h-4" /> Subir Nueva Plantilla
-              </button>
-            </Can>
-          </div>
-
-          {isLoadingResources ? (
-            <div className="p-8 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
-              Cargando repositorio de recursos...
-            </div>
-          ) : resources.length === 0 ? (
-            <div className="p-6 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
-              No hay plantillas registradas en este espacio de trabajo.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {resources.map((res) => (
-                <ResourceCard
-                  key={res.id}
-                  resource={res}
-                  testPassed={testResult?.passed ?? false}
-                  canManage={user?.roleKey === 'INGENIERO' || user?.roleKey === 'SUPERADMIN'}
-                  onDeleteSuccess={(deletedId) => {
-                    setResources((prev) => prev.filter((r) => r.id !== deletedId));
-                  }}
-                />
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Sección de Sistema Documental y Bandeja de Entregas (Paso 14) */}
-        <section id="documentos-section" className="max-w-5xl mx-auto w-full flex flex-col gap-6">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <div className="flex items-center gap-2">
-                <FileCheck className="w-5 h-5 text-blue-400" />
-                <h3 className="text-lg font-bold text-white">
-                  Sistema Documental y Bandeja de Entregas
-                </h3>
-              </div>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Carga de bitácoras de actividades, convenios legalizados y revisión institucional con retroalimentación.
-              </p>
-            </div>
-          </div>
-
-          <Can
-            do="document:review"
-            fallback={
-              <div className="space-y-8">
-                <DocumentDropzone
-                  workspaceId={selectedWorkspace?.id || 'ws-demo-1'}
-                  testPassed={testResult?.passed ?? false}
-                  onUploadSuccess={(sub) => {
-                    setMySubmissions((prev) => [sub, ...prev]);
-                    setSubmissions((prev) => [sub, ...prev]);
-                  }}
-                />
-
-                <MySubmissionsList submissions={mySubmissions} />
-              </div>
+                return prev;
+              });
+              setSelectedWorkspace(res.workspace);
             }
-          >
-            <SubmissionsReviewTable
-              submissions={submissions}
-              isLoading={isLoadingSubmissions}
-              onOpenReview={(sub) => {
-                setSelectedSubmissionForReview(sub);
-                setIsReviewModalOpen(true);
-              }}
-            />
-          </Can>
-        </section>
-
-        {/* Sección de Certificados PDF con Verificación QR (Paso 16) */}
-        <section id="certificados-section" className="max-w-5xl mx-auto w-full flex flex-col gap-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <div className="flex items-center gap-2">
-                <Award className="w-5 h-5 text-amber-400" />
-                <h3 className="text-lg font-bold text-white">
-                  Generador de Certificados PDF con Verificación QR
-                </h3>
-              </div>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Emisión de certificados oficiales con firma digital del Ing. Wilfrido Trujillo y código QR de validación criptográfica.
-              </p>
-            </div>
-
-            <Can do="certificate:issue">
-              <button
-                type="button"
-                onClick={() => setIsIssueCertModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-600 hover:bg-amber-500 text-white flex items-center gap-1.5 transition-all shadow-md shadow-amber-600/20 cursor-pointer"
-              >
-                <Plus className="w-4 h-4" /> Emitir Certificado Digital
-              </button>
-            </Can>
-          </div>
-
-          <CertificatesList
-            certificates={certificates}
-            isLoading={isLoadingCertificates}
-            onVerifyHash={(hash) => {
-              setVerifyHash(hash);
-              window.location.hash = `#/certificados/validar/${hash}`;
-            }}
-          />
-        </section>
-
-        {/* Sección de Workspaces (Paso 10) */}
-        <section className="max-w-5xl mx-auto w-full flex flex-col gap-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            {/* Formulario de Unirse a un Espacio por Código */}
-            <div className="lg:col-span-1">
-              <JoinWorkspaceCard
-                onJoinSuccess={(res) => {
-                  if (res.workspace) {
-                    setWorkspaces((prev) => {
-                      if (!prev.some((w) => w.id === res.workspace.id)) {
-                        return [res.workspace, ...prev];
-                      }
-                      return prev;
-                    });
-                    setSelectedWorkspace(res.workspace);
-                  }
-                }}
-              />
-            </div>
-
-            {/* Listado de Espacios y Botón de Crear */}
-            <div className="lg:col-span-2 flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <FolderOpen className="w-5 h-5 text-blue-400" />
-                  <h3 className="text-base font-semibold text-white">
-                    Espacios de Trabajo ({workspaces.length})
-                  </h3>
-                </div>
-
-                <Can do="workspace:create">
-                  <button
-                    type="button"
-                    onClick={() => setIsCreateModalOpen(true)}
-                    className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-1.5 transition-all shadow-md shadow-blue-500/20 cursor-pointer"
-                  >
-                    <Plus className="w-4 h-4" /> Nuevo Espacio
-                  </button>
-                </Can>
-              </div>
-
-              {isLoadingWorkspaces ? (
-                <div className="p-8 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
-                  Cargando espacios de trabajo...
-                </div>
-              ) : workspaces.length === 0 ? (
-                <div className="p-8 text-center text-xs text-slate-400 bg-slate-900/40 rounded-2xl border border-slate-800">
-                  No hay espacios creados aún.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {workspaces.map((ws) => (
-                    <WorkspaceCard
-                      key={ws.id}
-                      workspace={ws}
-                      onEnter={(w) => setSelectedWorkspace(w)}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
+          }}
+        />
 
         {/* Pilares Funcionales */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto w-full">
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-blue-500/40 transition-all duration-300 group">
-            <div className="h-12 w-12 rounded-xl bg-blue-600/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-              <GraduationCap className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Prácticas Preprofesionales</h3>
-            <p className="text-sm text-slate-400">
-              Inducción obligatoria guiada, evaluación de directrices y entrega de bitácoras oficiales.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-purple-500/40 transition-all duration-300 group">
-            <div className="h-12 w-12 rounded-xl bg-purple-600/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-              <BookOpen className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Vinculación Comunitaria</h3>
-            <p className="text-sm text-slate-400">
-              Gestión de proyectos con la sociedad, plantillas de evidencias y validación de horas.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-emerald-500/40 transition-all duration-300 group">
-            <div className="h-12 w-12 rounded-xl bg-emerald-600/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-              <Calendar className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Conferencias & Eventos</h3>
-            <p className="text-sm text-slate-400">
-              Acceso rápido vía QR a diapositivas, encuestas de satisfacción y certificados PDF verificables.
-            </p>
-          </div>
-        </div>
+        <FeaturePillars />
       </main>
 
-      {/* Modal de Creación */}
+      {/* Modales de la aplicación */}
       <CreateWorkspaceModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={handleWorkspaceCreated}
+        onSuccess={(newWs) => {
+          setWorkspaces((prev) => [newWs, ...prev]);
+          setSelectedWorkspace(newWs);
+        }}
       />
 
-      {/* Modal de Creación de Examen */}
       {selectedWorkspace && (
-        <CreateTestModal
-          isOpen={isCreateTestModalOpen}
-          workspaceId={selectedWorkspace.id}
-          workspaceTitle={selectedWorkspace.title}
-          onClose={() => setIsCreateTestModalOpen(false)}
-          onSuccess={(created) => {
-            setActiveTest(created);
-          }}
-        />
+        <>
+          <CreateTestModal
+            isOpen={isCreateTestModalOpen}
+            workspaceId={selectedWorkspace.id}
+            workspaceTitle={selectedWorkspace.title}
+            onClose={() => setIsCreateTestModalOpen(false)}
+            onSuccess={(created) => setActiveTest(created)}
+          />
+
+          <UploadResourceModal
+            isOpen={isUploadResourceModalOpen}
+            workspaceId={selectedWorkspace.id}
+            workspaceTitle={selectedWorkspace.title}
+            onClose={() => setIsUploadResourceModalOpen(false)}
+            onSuccess={(created) => setResources((prev) => [created, ...prev])}
+          />
+
+          <EventQrShareModal
+            isOpen={isQrModalOpen}
+            workspaceId={selectedWorkspace.id}
+            workspaceTitle={selectedWorkspace.title}
+            accessCode={selectedWorkspace.accessCode}
+            onClose={() => setIsQrModalOpen(false)}
+            onOpenPublicPortal={(code) => {
+              setPublicEventCode(code);
+              window.location.hash = `#/eventos/${code}`;
+            }}
+          />
+
+          <IssueCertificateModal
+            isOpen={isIssueCertModalOpen}
+            workspaceId={selectedWorkspace.id}
+            workspaceTitle={selectedWorkspace.title}
+            onClose={() => setIsIssueCertModalOpen(false)}
+            onSuccess={(created) => setCertificates((prev) => [created, ...prev])}
+          />
+        </>
       )}
 
-      {/* Modal de Subida de Plantilla Oficial */}
-      {selectedWorkspace && (
-        <UploadResourceModal
-          isOpen={isUploadResourceModalOpen}
-          workspaceId={selectedWorkspace.id}
-          workspaceTitle={selectedWorkspace.title}
-          onClose={() => setIsUploadResourceModalOpen(false)}
-          onSuccess={(created) => {
-            setResources((prev) => [created, ...prev]);
-          }}
-        />
-      )}
-
-      {/* Modal de Revisión Documental */}
       <ReviewDocumentModal
         isOpen={isReviewModalOpen}
         submission={selectedSubmissionForReview}
@@ -969,35 +604,7 @@ export default function App() {
         }}
       />
 
-      {/* Modal de Portal QR y Asistentes */}
-      {selectedWorkspace && (
-        <EventQrShareModal
-          isOpen={isQrModalOpen}
-          workspaceId={selectedWorkspace.id}
-          workspaceTitle={selectedWorkspace.title}
-          accessCode={selectedWorkspace.accessCode}
-          onClose={() => setIsQrModalOpen(false)}
-          onOpenPublicPortal={(code) => {
-            setPublicEventCode(code);
-            window.location.hash = `#/eventos/${code}`;
-          }}
-        />
-      )}
-
-      {/* Modal de Emisión de Certificado */}
-      {selectedWorkspace && (
-        <IssueCertificateModal
-          isOpen={isIssueCertModalOpen}
-          workspaceId={selectedWorkspace.id}
-          workspaceTitle={selectedWorkspace.title}
-          onClose={() => setIsIssueCertModalOpen(false)}
-          onSuccess={(created) => {
-            setCertificates((prev) => [created, ...prev]);
-          }}
-        />
-      )}
-
-      {/* Footer */}
+      {/* Footer soberano */}
       <footer className="border-t border-slate-800/80 bg-slate-900/30 px-6 py-4 text-center text-xs text-slate-500">
         Plataforma Privada y Soberana &copy; {new Date().getFullYear()} Ing. Wilfrido Trujillo. Todos los derechos reservados.
       </footer>

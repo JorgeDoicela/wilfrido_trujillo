@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import { KeyRound, ArrowRight, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { KeyRound, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
 import { workspacesApi } from '@/modules/admin/api/workspaces.api';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/shared/components/ui/Card';
+import { Button } from '@/shared/components/ui/Button';
+import { Input } from '@/shared/components/ui/Input';
 import type { WorkspaceEnrollment, Workspace } from '@/shared/types/workspace.types';
 
 interface JoinWorkspaceCardProps {
@@ -58,58 +61,54 @@ export function JoinWorkspaceCard({ onJoinSuccess }: JoinWorkspaceCardProps) {
   };
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 relative overflow-hidden">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="h-10 w-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
+    <Card className="relative overflow-hidden shadow-xl">
+      <CardHeader className="flex items-center gap-3 mb-4">
+        <div className="h-10 w-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0">
           <KeyRound className="w-5 h-5" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-white">Unirse a un Espacio de Trabajo</h3>
-          <p className="text-xs text-slate-400">
+          <CardTitle className="text-sm">Unirse a un Espacio de Trabajo</CardTitle>
+          <CardDescription className="text-xs">
             Ingresa el código proporcionado por el Ing. Wilfrido Trujillo (ej. PRAC-2026)
-          </p>
+          </CardDescription>
         </div>
-      </div>
+      </CardHeader>
 
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
-        <input
-          type="text"
-          value={accessCode}
-          onChange={(e) => setAccessCode(e.target.value)}
-          placeholder="CÓDIGO DE ACCESO"
-          className="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm uppercase font-mono tracking-wider focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-        />
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-500/20 disabled:opacity-50 cursor-pointer"
-        >
-          {isLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <>
-              Ingresar <ArrowRight className="w-4 h-4" />
-            </>
-          )}
-        </button>
-      </form>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 items-center">
+          <Input
+            value={accessCode}
+            onChange={(e) => setAccessCode(e.target.value)}
+            placeholder="CÓDIGO DE ACCESO"
+            className="uppercase font-mono tracking-wider text-center sm:text-left"
+          />
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={isLoading}
+            className="w-full sm:w-auto text-xs py-2.5 px-4 whitespace-nowrap"
+          >
+            Ingresar <ArrowRight className="w-4 h-4 ml-1" />
+          </Button>
+        </form>
 
-      {feedback && (
-        <div
-          className={`mt-3 p-3 rounded-lg text-xs flex items-center gap-2 animate-fadeIn ${
-            feedback.type === 'success'
-              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-300'
-              : 'bg-rose-500/10 border border-rose-500/20 text-rose-300'
-          }`}
-        >
-          {feedback.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-          ) : (
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-          )}
-          <span>{feedback.message}</span>
-        </div>
-      )}
-    </div>
+        {feedback && (
+          <div
+            className={`mt-3 p-3 rounded-xl text-xs flex items-center gap-2 animate-fadeIn border ${
+              feedback.type === 'success'
+                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'
+                : 'bg-rose-500/10 border-rose-500/20 text-rose-300'
+            }`}
+          >
+            {feedback.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            )}
+            <span>{feedback.message}</span>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { Copy, Check, GraduationCap, BookOpen, Calendar, ArrowRight } from 'lucide-react';
+import { Card } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
+import { Button } from '@/shared/components/ui/Button';
 import type { Workspace } from '@/shared/types/workspace.types';
 
 interface WorkspaceCardProps {
@@ -16,49 +19,41 @@ export function WorkspaceCard({ workspace, onEnter }: WorkspaceCardProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const getBadgeStyle = () => {
+  const getBadgeConfig = () => {
     switch (workspace.type) {
       case 'PRACTICAS':
         return {
           icon: <GraduationCap className="w-3.5 h-3.5" />,
           label: 'Prácticas',
-          style: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+          variant: 'info' as const,
         };
       case 'VINCULACION':
         return {
           icon: <BookOpen className="w-3.5 h-3.5" />,
           label: 'Vinculación',
-          style: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+          variant: 'purple' as const,
         };
       case 'EVENTO':
         return {
           icon: <Calendar className="w-3.5 h-3.5" />,
           label: 'Conferencia / Evento',
-          style: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+          variant: 'success' as const,
         };
     }
   };
 
-  const badge = getBadgeStyle();
+  const badge = getBadgeConfig();
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 hover:border-slate-700 transition-all flex flex-col justify-between group shadow-lg">
+    <Card className="p-5 hover:border-slate-700 transition-all flex flex-col justify-between group shadow-lg">
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${badge.style}`}
-          >
+          <Badge variant={badge.variant}>
             {badge.icon} {badge.label}
-          </span>
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded font-medium ${
-              workspace.isActive
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                : 'bg-slate-800 text-slate-400'
-            }`}
-          >
+          </Badge>
+          <Badge variant={workspace.isActive ? 'success' : 'neutral'}>
             {workspace.isActive ? 'Activo' : 'Inactivo'}
-          </span>
+          </Badge>
         </div>
 
         <h4 className="text-base font-semibold text-white tracking-tight mb-1 group-hover:text-blue-400 transition-colors">
@@ -90,15 +85,16 @@ export function WorkspaceCard({ workspace, onEnter }: WorkspaceCardProps) {
         </div>
 
         {onEnter && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => onEnter(workspace)}
-            className="text-xs font-medium text-blue-400 hover:text-blue-300 flex items-center gap-1 cursor-pointer transition-colors"
+            className="text-xs text-blue-400 hover:text-blue-300 p-0 h-auto hover:bg-transparent"
           >
-            Ver espacio <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+            Ver espacio <ArrowRight className="w-3.5 h-3.5 ml-1" />
+          </Button>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

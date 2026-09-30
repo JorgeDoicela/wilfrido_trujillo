@@ -1,5 +1,5 @@
 ---
-name: wilfrido-frontend
+name: frontend-wilfrido
 description: Directrices maestras de desarrollo frontend para el proyecto wilfrido_trujillo (React 19, Vite, Tailwind CSS v4, arquitectura modular por dominios, componentes PBAC y hash routing).
 ---
 
