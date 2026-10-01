@@ -35,8 +35,7 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Estandarización visual y funcional 100% fiel a la suite moderna de **Microsoft 365 / Teams / SharePoint**:
     * **Suite Bar Superior (48px):** Fondo en Microsoft Brand Blue `#0f6cbd`, App Launcher Waffle (matriz 3x3 de 9 puntos que despliega el menú oficial de aplicaciones `M365WaffleMenu`), buscador central en cápsula con atajo `Ctrl+K`, y avatar con halo de presencia verde `#107c10` que despliega el `M365ProfileFlyout` institucional.
     * **Profile Persona Flyout M365 (`M365ProfileFlyout.tsx`):** Menú flotante oficial de cuenta que encapsula la identidad del usuario, permisos atómicos activos y el conmutador de roles PBAC (Estudiante / Docente Evaluador), erradicando cajas toscas de simulación del lienzo de trabajo.
-    * **Left App Rail (56px):** Fondo blanco puro `#ffffff` estilo Microsoft Teams, botones verticales de 56x52px con icono de 20px arriba y etiqueta completa de 10px abajo, indicador activo en azul `#0f6cbd` con fondo `#ebf3fc`.
-    * **Secondary Navigation Drawer (220px):** Panel retráctil con navegación contextual al módulo activo (`Prácticas`, `Certificados`, `Vinculación`, `Eventos`, `Espacios`).
+    * **Barra Lateral Unificada (Unified Navigation Sidebar):** Sustitución del antiguo esquema de doble columna adyacente (rail de 56px + drawer de 220px) por una sola barra lateral limpia (`w-64` expandida, `w-14` colapsada) con un único borde derecho `#e0e0e0`. Integra navegación principal por módulos, selector contextual de espacios de trabajo y pie de auditoría documental bajo una sola columna continua sin doble separación visual.
     * **M365 Command Bar (44px):** Barra horizontal de herramientas blanca con acciones operativas (`+ Nuevo`, `Sincronizar`, `Filtrar`) y breadcrumbs dinámicos según el módulo.
     * **Vistas Modulares Focalizadas (Cero Apilamiento):** Cada pestaña de navegación renderiza exclusivamente su vista de negocio en pantalla completa sin concatenar tarjetas de otros módulos debajo.
     * **Canvas y Tarjetas de Trabajo:** Fondo general gris neutro limpio `#f5f5f5`, tarjetas en blanco puro con esquinas redondeadas modernas de 8px (`rounded-lg`), bordes sutiles `#e0e0e0` y sombras de elevación neutras Fluent 2.
@@ -50,7 +49,7 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
     * Tipografía oficial: Segoe UI / Segoe UI Variable con escala de texto jerárquica estandarizada.
     * Cero Cajas o Píldoras con Color de Fondo para Palabras o Íconos: Prohibido encerrar palabras, categorías o íconos SVG dentro de cuadros u óvalos con fondos de color (`bg-[#ebf3fc]`, etc.) como adorno sobre títulos o secciones. La jerarquía se expresa con tipografía pura, peso y colores neutros.
     * Cero Información Irrelevante o Relleno: Todo texto debe ser fáctico, técnico y operativo para la gestión académica; cero lemas publicitarios.
-    * Layout Suite: Suite Bar (48px), App Rail (56px), Drawer Contextual (220px), Command Bar (44px).
+    * Layout Suite: Suite Bar (48px), Barra Lateral Unificada (`w-64` / `w-14`), Command Bar (44px). Prohibido el doble carril adyacente o doble separación vertical.
     * Radios de curvatura contenidos: 4px para controles interactivos y 8px para tarjetas/modales (prohibidos radios superiores a 12px).
     * Cero emojis en toda la interfaz, código y documentación técnica.
     * Uso funcional mínimo de SVG (16px a 20px), sin saturación decorativa.

@@ -101,7 +101,7 @@ export const FluentShell: React.FC<FluentShellProps> = ({
         return {
           category: 'Expediente Académico • Periodo 2026-I',
           title: selectedWorkspace ? selectedWorkspace.title : 'Prácticas Preprofesionales',
-          subtitle: 'Coordinador Académico: Ing. Wilfrido Trujillo, M.Sc. • Régimen Oficial RRA',
+          subtitle: 'Wilfrido Trujillo • Régimen Oficial RRA',
         };
     }
   };
@@ -142,12 +142,13 @@ export const FluentShell: React.FC<FluentShellProps> = ({
               Microsoft 365
             </span>
             <span className="text-white/40 hidden sm:inline">|</span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <span className="text-[13px] font-semibold text-white">
                 Gestión Académica
               </span>
-              <span className="text-[10px] font-medium bg-white/20 text-white px-1.5 py-0.5 rounded-full hidden md:inline">
-                Ing. Wilfrido Trujillo
+              <span className="text-white/40 hidden md:inline">•</span>
+              <span className="text-[12px] font-medium text-white/90 hidden md:inline">
+                Wilfrido Trujillo
               </span>
             </div>
           </div>
@@ -234,72 +235,60 @@ export const FluentShell: React.FC<FluentShellProps> = ({
       {/* ====================================================================
           2. BODY CONTAINER: M365 APP RAIL (56px) + SIDEBAR (220px) + WORKSPACE
           ==================================================================== */}
+      {/* ====================================================================
+          2. UNIFIED SIDEBAR (M365 Fluent Nav + Workspace Contextual)
+          ==================================================================== */}
       <div className="flex-1 flex w-full">
         
-        {/* Left App Rail (56px - Microsoft Teams Style) */}
-        <aside className="w-14 bg-white border-r border-[#edebe9] flex flex-col items-center py-2 gap-1 flex-shrink-0 z-20 select-none shadow-[1px_0_2px_rgba(0,0,0,0.02)]">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeNavTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => onSelectNavTab(item.id)}
-                title={item.fullName}
-                className={`w-12 h-12 rounded-md flex flex-col items-center justify-center relative transition-all group cursor-pointer ${
-                  isActive
-                    ? 'bg-[#ebf3fc] text-[#0f6cbd] font-semibold'
-                    : 'text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5]'
-                }`}
-              >
-                {/* Indicador vertical izquierdo */}
-                {isActive && (
-                  <span className="absolute left-0 top-2 bottom-2 w-[3px] bg-[#0f6cbd] rounded-r-md" />
-                )}
-                <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'text-[#0f6cbd]' : 'text-[#616161] group-hover:text-[#242424]'}`} />
-                <span className="text-[9px] leading-tight tracking-tight text-center truncate max-w-[46px]">
-                  {item.label}
-                </span>
-              </button>
-            );
-          })}
-          
-          <div className="flex-1" />
-
-          {/* Toggle Sidebar Button */}
-          <button
-            type="button"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            title={isSidebarOpen ? 'Ocultar panel lateral' : 'Mostrar panel lateral'}
-            className="w-10 h-10 rounded-md text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] flex items-center justify-center transition-colors mb-1 cursor-pointer"
-          >
-            {isSidebarOpen ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeft className="w-4 h-4" />}
-          </button>
-        </aside>
-
-        {/* Secondary Navigation Drawer (220px - Contextual) */}
-        {isSidebarOpen && (
-          <aside className="w-[220px] bg-white border-r border-[#e0e0e0] flex flex-col justify-between py-3 px-2.5 flex-shrink-0 z-10 select-none">
-            <div className="flex flex-col gap-4">
-              
-              {/* Encabezado Contextual de la Barra */}
-              <div>
-                <div className="flex items-center justify-between px-2 mb-2">
-                  <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider">
-                    {currentNav.fullName}
-                  </span>
-                  <span className="text-[10px] text-[#0f6cbd] font-semibold">
-                    {currentNav.count}
-                  </span>
+        {/* Single Unified Sidebar */}
+        <aside
+          className={`bg-white border-r border-[#e0e0e0] flex flex-col justify-between py-2.5 flex-shrink-0 z-20 select-none transition-all duration-200 ${
+            isSidebarOpen ? 'w-64 px-3' : 'w-14 items-center px-1'
+          }`}
+        >
+          {isSidebarOpen ? (
+            <div className="flex flex-col gap-3 flex-1 min-h-0">
+              {/* Lista principal de Módulos */}
+              <div className="flex flex-col gap-1">
+                <div className="px-2 pt-0.5 pb-1 text-[11px] font-semibold text-[#616161] uppercase tracking-wider">
+                  Módulos
                 </div>
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeNavTab === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => onSelectNavTab(item.id)}
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-md text-xs font-medium transition-colors cursor-pointer ${
+                        isActive
+                          ? 'bg-[#ebf3fc] text-[#0f6cbd] font-semibold'
+                          : 'text-[#424242] hover:bg-[#f5f5f5] hover:text-[#242424]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 truncate">
+                        <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#0f6cbd]' : 'text-[#616161]'}`} />
+                        <span className="truncate">{item.fullName}</span>
+                      </div>
+                      <span className={`text-[10px] font-mono ${isActive ? 'text-[#0f6cbd]' : 'text-[#8a8886]'}`}>
+                        {item.count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
 
-                {/* Sub-navegación según el módulo activo */}
+              {/* Separador sutil */}
+              <div className="h-px bg-[#edebe9]" />
+
+              {/* Sección contextual según el módulo activo */}
+              <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
                 {activeNavTab === 'practicas' && (
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[11px] font-semibold text-[#616161] px-2 mb-1">
-                      Espacio Seleccionado:
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider px-2">
+                      Espacio Seleccionado
                     </span>
-                    <div className="flex flex-col gap-1 max-h-56 overflow-y-auto pr-0.5">
+                    <div className="flex flex-col gap-1 pr-0.5">
                       {workspaces
                         .filter((ws) => ws.type === 'PRACTICAS')
                         .map((ws) => {
@@ -308,17 +297,17 @@ export const FluentShell: React.FC<FluentShellProps> = ({
                             <button
                               key={ws.id}
                               onClick={() => onSelectWorkspace(ws)}
-                              className={`w-full text-left p-2 rounded-md border text-xs transition-all ${
+                              className={`w-full text-left p-2 rounded-md border text-xs transition-all cursor-pointer ${
                                 isSelected
-                                  ? 'bg-[#ebf3fc] border-[#0f6cbd] text-[#0f6cbd] shadow-xs'
+                                  ? 'bg-[#ebf3fc] border-[#0f6cbd] text-[#0f6cbd] font-semibold'
                                   : 'bg-white border-[#e0e0e0] text-[#242424] hover:bg-[#fafafa]'
                               }`}
                             >
                               <div className="flex items-center gap-1.5 font-medium truncate">
-                                <Briefcase className="w-3 h-3 text-[#0f6cbd] flex-shrink-0" />
+                                <Briefcase className="w-3.5 h-3.5 text-[#0f6cbd] flex-shrink-0" />
                                 <span className="truncate">{ws.title}</span>
                               </div>
-                              <div className="text-[10px] text-[#616161] font-mono mt-0.5 pl-4.5">
+                              <div className="text-[10px] text-[#616161] font-mono mt-0.5 pl-5">
                                 {ws.accessCode}
                               </div>
                             </button>
@@ -330,16 +319,19 @@ export const FluentShell: React.FC<FluentShellProps> = ({
 
                 {activeNavTab === 'certificados' && (
                   <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider px-2 mb-1">
+                      Acreditaciones
+                    </span>
                     <button
                       type="button"
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold cursor-pointer"
                     >
                       <span>Todos los Certificados</span>
                       <span className="text-[10px] font-mono">{currentNav.count}</span>
                     </button>
                     <button
                       type="button"
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs text-[#616161] hover:bg-[#f5f5f5]"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs text-[#616161] hover:bg-[#f5f5f5] cursor-pointer"
                     >
                       <span>Acreditados por Horas</span>
                       <span className="text-[10px] font-mono">100%</span>
@@ -349,16 +341,19 @@ export const FluentShell: React.FC<FluentShellProps> = ({
 
                 {activeNavTab === 'eventos' && (
                   <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider px-2 mb-1">
+                      Eventos Activos
+                    </span>
                     <button
                       type="button"
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold cursor-pointer"
                     >
                       <span>Conferencias Activas</span>
                       <span className="text-[10px] font-mono">3</span>
                     </button>
                     <button
                       type="button"
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs text-[#616161] hover:bg-[#f5f5f5]"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs text-[#616161] hover:bg-[#f5f5f5] cursor-pointer"
                     >
                       <span>Portal de Registro QR</span>
                     </button>
@@ -367,9 +362,12 @@ export const FluentShell: React.FC<FluentShellProps> = ({
 
                 {activeNavTab === 'vinculacion' && (
                   <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider px-2 mb-1">
+                      Comunidad
+                    </span>
                     <button
                       type="button"
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold cursor-pointer"
                     >
                       <span>Proyectos Comunitarios</span>
                       <span className="text-[10px] font-mono">24</span>
@@ -379,9 +377,12 @@ export const FluentShell: React.FC<FluentShellProps> = ({
 
                 {activeNavTab === 'espacios' && (
                   <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider px-2 mb-1">
+                      Espacios
+                    </span>
                     <button
                       type="button"
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold cursor-pointer"
                     >
                       <span>Todos los Espacios</span>
                       <span className="text-[10px] font-mono">{workspaces.length}</span>
@@ -390,20 +391,66 @@ export const FluentShell: React.FC<FluentShellProps> = ({
                 )}
               </div>
 
-            </div>
+              {/* Pie de la barra unificada */}
+              <div className="pt-2 border-t border-[#edebe9] flex flex-col gap-2">
+                <div className="p-2.5 bg-[#fafafa] border border-[#e0e0e0] rounded-md text-xs">
+                  <div className="flex items-center gap-1.5 text-[#107c10] font-semibold text-[11px]">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Normativa RRA / CES</span>
+                  </div>
+                  <p className="text-[11px] text-[#616161] mt-0.5 leading-tight">
+                    Auditoría documental y control de horas activo.
+                  </p>
+                </div>
 
-            {/* Tarjeta de Acreditación RRA en el Pie */}
-            <div className="p-2.5 bg-[#fafafa] border border-[#e0e0e0] rounded-md text-xs">
-              <div className="flex items-center gap-1.5 text-[#107c10] font-semibold text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Normativa RRA / CES</span>
+                <button
+                  type="button"
+                  onClick={() => setIsSidebarOpen(false)}
+                  title="Contraer barra lateral"
+                  className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] rounded-md transition-colors cursor-pointer"
+                >
+                  <span>Contraer barra</span>
+                  <PanelLeftClose className="w-4 h-4" />
+                </button>
               </div>
-              <p className="text-[11px] text-[#616161] mt-1 leading-tight">
-                Auditoría heurística y control de horas activo para el ciclo 2026.
-              </p>
             </div>
-          </aside>
-        )}
+          ) : (
+            <div className="flex flex-col justify-between items-center h-full w-full py-1">
+              <div className="flex flex-col items-center gap-1 w-full">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeNavTab === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => onSelectNavTab(item.id)}
+                      title={item.fullName}
+                      className={`w-11 h-11 rounded-md flex items-center justify-center relative transition-all group cursor-pointer ${
+                        isActive
+                          ? 'bg-[#ebf3fc] text-[#0f6cbd]'
+                          : 'text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5]'
+                      }`}
+                    >
+                      {isActive && (
+                        <span className="absolute left-0 top-2 bottom-2 w-[3px] bg-[#0f6cbd] rounded-r-md" />
+                      )}
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-[#0f6cbd]' : 'text-[#616161] group-hover:text-[#242424]'}`} />
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsSidebarOpen(true)}
+                title="Expandir barra lateral"
+                className="w-10 h-10 rounded-md text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <PanelLeft className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </aside>
 
         {/* ====================================================================
             3. WORKSPACE ÁREA: COMMAND BAR + CANVAS + CONTENT
@@ -489,7 +536,7 @@ export const FluentShell: React.FC<FluentShellProps> = ({
 
             {/* Footer Legal M365 */}
             <footer className="mt-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#616161] border-t border-[#edebe9]">
-              <span>© {new Date().getFullYear()} Ing. Wilfrido Trujillo • Plataforma de Gestión Académica</span>
+              <span>© {new Date().getFullYear()} Wilfrido Trujillo • Plataforma de Gestión Académica</span>
               <span>Microsoft 365 Fluent Design System 2 • RRA Soberano</span>
             </footer>
 
