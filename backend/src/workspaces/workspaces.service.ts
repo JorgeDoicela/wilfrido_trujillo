@@ -61,7 +61,7 @@ export class WorkspacesService implements OnApplicationBootstrap {
         const ws = this.workspaceRepository.create(data);
         await this.workspaceRepository.save(ws);
       }
-      this.logger.log('✅ Espacios de trabajo iniciales sembrados (PRAC-2026, VINC-2026, CONF-IA)');
+      this.logger.log('Espacios de trabajo iniciales sembrados (PRAC-2026, VINC-2026, CONF-IA)');
     }
   }
 

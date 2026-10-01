@@ -81,7 +81,7 @@ export const PracticasOverviewPage: React.FC<PracticasOverviewPageProps> = ({
       statusType: inductionWatched ? 'success' : 'warning',
       isCompleted: inductionWatched,
       isActive: !inductionWatched,
-      meta: inductionWatched ? '✓ 100% Verificado' : 'En espera',
+      meta: inductionWatched ? '100% Verificado' : 'En espera',
     },
     {
       num: 2,

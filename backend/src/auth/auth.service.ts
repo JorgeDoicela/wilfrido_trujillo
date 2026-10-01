@@ -46,7 +46,7 @@ export class AuthService implements OnApplicationBootstrap {
         passwordHash,
       });
       await this.userRepository.save(admin);
-      this.logger.log('✅ Usuario Administrador Creado: wilfrido.trujillo@unach.edu.ec / 0600000001 (Clave: Admin123*)');
+      this.logger.log('Usuario Administrador Creado: wilfrido.trujillo@unach.edu.ec / 0600000001 (Clave: Admin123*)');
     }
 
     const studentEmail = 'estudiante@unach.edu.ec';
@@ -72,7 +72,7 @@ export class AuthService implements OnApplicationBootstrap {
         passwordHash,
       });
       await this.userRepository.save(student);
-      this.logger.log('✅ Usuario Estudiante Creado: estudiante@unach.edu.ec / 0600000002 (Clave: Estudiante123*)');
+      this.logger.log('Usuario Estudiante Creado: estudiante@unach.edu.ec / 0600000002 (Clave: Estudiante123*)');
     }
   }
 

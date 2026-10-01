@@ -6,20 +6,22 @@ El frontend adopta una **Arquitectura Modular por Dominios de Negocio** en lugar
 
 ```text
 frontend/src/
-├── app/                                 # Inicialización de la aplicación y enrutador
-│   ├── App.tsx                          # Orquestador de vistas, navegación y shells
-│   └── main.tsx                         # Punto de entrada de Vite
+├── app/                                 # Inicialización de la aplicación y punto de entrada
+│   ├── main.tsx                         # Punto de entrada de Vite y montaje del AuthProvider
+│   └── App.tsx                          # Orquestador raíz de vistas, navegación y shells
 │
 ├── shared/                              # Núcleo Transversal Compartido (Agnóstico al Negocio)
-│   ├── components/                      # Componentes atómicos (Navbar, Can, Button, Badges)
-│   ├── hooks/                           # Hooks de permisos (usePermission)
+│   ├── api/                             # Clientes API transversales (workspaces.api.ts)
+│   ├── components/                      # Componentes atómicos y shell (FluentShell, Navbar, Can, Modales)
+│   ├── context/                         # Estado de sesión y autenticación (AuthContext.tsx)
+│   ├── hooks/                           # Hooks de permisos y autenticación (usePermission, useAuth)
 │   ├── lib/api.ts                       # Instancia tipada de Axios con interceptores JWT
 │   └── types/                           # Tipos globales (auth, workspace, document, test, certificate)
 │
-└── modules/                             # MÓDULOS DE NEGOCIO AUTÓNOMOS
-    ├── auth/                            # Login, registro y sesión de usuario
-    ├── admin/                           # Panel docente del Ingeniero (supervisión, dictámenes)
-    ├── practicas/                       # Prácticas preprofesionales (video, examen, entrega)
+└── modules/                             # MÓDULOS DE NEGOCIO AUTÓNOMOS (DOMINIOS AISLADOS)
+    ├── auth/                            # Páginas y formularios de acceso
+    ├── admin/                           # Administración de espacios de trabajo
+    ├── practicas/                       # Prácticas preprofesionales (video, tests, recursos, entregas, auditoría)
     ├── vinculacion/                     # Vinculación comunitaria y bitácoras
     └── eventos/                         # Conferencias, encuestas QR y certificados digitales
 ```
