@@ -14,7 +14,6 @@ import {
   Plus,
   RefreshCw,
   Filter,
-  CheckCircle2,
   Layers,
   HelpCircle,
 } from 'lucide-react';
@@ -392,17 +391,7 @@ export const FluentShell: React.FC<FluentShellProps> = ({
               </div>
 
               {/* Pie de la barra unificada */}
-              <div className="pt-2 border-t border-[#edebe9] flex flex-col gap-2">
-                <div className="p-2.5 bg-[#fafafa] border border-[#e0e0e0] rounded-md text-xs">
-                  <div className="flex items-center gap-1.5 text-[#107c10] font-semibold text-[11px]">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Normativa RRA / CES</span>
-                  </div>
-                  <p className="text-[11px] text-[#616161] mt-0.5 leading-tight">
-                    Auditoría documental y control de horas activo.
-                  </p>
-                </div>
-
+              <div className="pt-2 border-t border-[#edebe9]">
                 <button
                   type="button"
                   onClick={() => setIsSidebarOpen(false)}
