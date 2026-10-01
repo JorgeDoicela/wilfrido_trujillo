@@ -79,14 +79,14 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
 * **Landing Page Institucional Soberana (`src/modules/landing/`):**
   * Portada pública ejecutiva que reproduce con fidelidad milimétrica la composición armónica, limpia y espaciosa de `jorge_doicela/frontend/web/src/app/(landing)/page.tsx`, adaptada al estándar de Microsoft 365 (Segoe UI, `#0f6cbd`, fondo `#f5f5f5`, tarjetas `#ffffff` con borde `#e0e0e0` y cero elementos de relleno).
   * Estructura centrada en 4 secciones cardinales dentro de `<main className="max-w-5xl ...">`:
-    * `LandingHeader`: Cabecera flotante translúcida con logo institucional, `QuitoClockBadge` (reloj de Riobamba UTC-5) y botón de acceso a la Suite M365.
+    * `LandingHeader`: Cabecera flotante pura (sin enlaces horizontales de navegación) con logo institucional, `QuitoClockBadge` (reloj de Riobamba UTC-5) y botón de acceso al portal, con ocultamiento dinámico mediante `useLandingHeaderScroll`.
     * `LandingHero`: Inspirado en `AppleHeroIntro`, con titular monumental en Segoe UI display, párrafo sobrio directo y botones de acción limpios.
     * `LandingHighlightsCarousel`: Carrusel amplio con visuales en 3 columnas limpias (Prácticas, Vinculación, Certificación Criptográfica) y controles sutiles de avance.
     * `LandingDetailExplorer`: Inspirado en `AppleDetailExplorer`, con botones de selección vertical para roles (Estudiantes, Tutores, Empresas, Validación Pública) y ventana de especificación clara.
     * `LandingBentoSection`: Sección de exactamente 2 BentoCards en cuadrícula `grid-cols-1 md:grid-cols-2`:
       * Tarjeta 1: Canales y enlaces directos (Suite M365, Portal UNACH, SICOA, Validación de Certificados).
       * Tarjeta 2: Filosofía académica y cita editorial del Ing. Wilfrido Trujillo.
-    * `LandingFooter`: Pie institucional limpio y sobrio.
+    * `LandingFooter`: Pie institucional limpio y sobrio en una sola línea (sin listas redundantes de anclas).
 * **Enrutamiento SPA Sincronizado por Hash:**
   * Ruta raíz (`#/` o vacía): Presenta la Landing Page soberana del Ing. Wilfrido Trujillo.
   * Ruta operativa (`#/app`, `#/practicas`, `#/vinculacion`, `#/certificados`, `#/eventos`, `#/espacios`): Despliega la Suite M365 `FluentShell` con transición fluida.
