@@ -7,19 +7,16 @@ export const FeaturePillars: React.FC = () => {
       title: 'Prácticas Preprofesionales',
       description: 'Inducción guiada en video, evaluación de directrices y entrega de bitácoras oficiales según RRA.',
       icon: GraduationCap,
-      code: 'RRA-PRAC-01',
     },
     {
       title: 'Vinculación Comunitaria',
       description: 'Gestión de proyectos con la sociedad, plantillas de evidencias y validación horaria ministerial.',
       icon: BookOpen,
-      code: 'CES-VINC-02',
     },
     {
       title: 'Conferencias & Eventos',
       description: 'Acceso rápido vía QR a diapositivas, encuestas de satisfacción y certificados PDF verificables.',
       icon: Calendar,
-      code: 'SEC-CERT-03',
     },
   ];
 
@@ -30,22 +27,11 @@ export const FeaturePillars: React.FC = () => {
         return (
           <div
             key={p.title}
-            className="m365-card m365-card-hover p-4 flex flex-col justify-between"
+            className="m365-card p-4 flex flex-col gap-2"
           >
-            <div>
-              <div className="flex items-center justify-between mb-2.5">
-                <Icon className="w-5 h-5 text-[#0f6cbd]" />
-                <span className="text-xs font-mono text-[#616161]">
-                  {p.code}
-                </span>
-              </div>
-              <h4 className="text-sm font-semibold text-[#242424] mb-1">{p.title}</h4>
-              <p className="text-xs text-[#616161] leading-relaxed">{p.description}</p>
-            </div>
-            <div className="mt-3.5 pt-2.5 border-t border-[#edebe9] flex items-center justify-between text-[11px] text-[#0f6cbd] font-semibold">
-              <span>Normativa vigente</span>
-              <span>100% Digital</span>
-            </div>
+            <Icon className="w-4 h-4 text-[#0f6cbd]" />
+            <h4 className="text-sm font-semibold text-[#242424]">{p.title}</h4>
+            <p className="text-xs text-[#616161] leading-relaxed">{p.description}</p>
           </div>
         );
       })}

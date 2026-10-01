@@ -22,7 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             WT
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-white tracking-tight">Ing. Wilfrido Trujillo</span>
+            <span className="text-sm font-semibold text-white tracking-tight">Wilfrido Trujillo</span>
             <span className="text-white/40 text-xs hidden sm:inline">|</span>
             <span className="text-xs text-white/70 hidden sm:inline">Gestión de Prácticas & Eventos</span>
           </div>

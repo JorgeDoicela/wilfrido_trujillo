@@ -151,7 +151,7 @@ export const M365ProfileFlyout: React.FC<M365ProfileFlyoutProps> = ({
             className="w-full py-1.5 px-2 rounded-md text-xs text-[#a4262c] hover:bg-[#fde7e9] flex items-center gap-2 transition-colors cursor-pointer text-left font-medium"
           >
             <LogOut className="w-3.5 h-3.5" />
-            <span>Cerrar sesión de Microsoft 365</span>
+            <span>Cerrar sesión</span>
           </button>
         </div>
 

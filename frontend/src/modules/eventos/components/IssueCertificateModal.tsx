@@ -139,7 +139,7 @@ export function IssueCertificateModal({
           />
 
           <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 leading-relaxed">
-            Se generará automáticamente un documento PDF apaisado con código QR único, hash criptográfico SHA-256 y rúbrica digital institucional del Ing. Wilfrido Trujillo.
+            Se generará automáticamente un documento PDF apaisado con código QR único, hash criptográfico SHA-256 y rúbrica digital institucional de Wilfrido Trujillo.
           </div>
         </ModalContent>
 

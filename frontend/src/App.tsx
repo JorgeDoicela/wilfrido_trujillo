@@ -417,7 +417,7 @@ export default function App() {
       id: 'ingeniero-uuid-demo',
       email: 'wilfrido@trujillo.com',
       identification: '1712345678',
-      fullName: 'Ing. Wilfrido Trujillo',
+      fullName: 'Wilfrido Trujillo',
       roleKey: 'INGENIERO',
       permissions: [
         'workspace:create',

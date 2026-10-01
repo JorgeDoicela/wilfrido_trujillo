@@ -137,7 +137,7 @@ export class CertificatesService {
       eventTitle: certificate.workspace ? certificate.workspace.title : 'Evento Institucional',
       hours: certificate.hours,
       issuedAt: certificate.issuedAt,
-      issuer: 'Ing. Wilfrido Trujillo, M.Sc.',
+      issuer: 'Wilfrido Trujillo',
       role: 'Coordinador de Prácticas Preprofesionales y Vinculación',
       statusMessage: 'Certificado oficial, auténtico y con validez institucional verificada mediante firma digital y QR.',
       downloadUrl: `/api/certificates/${certificate.id}/download`,
@@ -246,7 +246,7 @@ export class CertificatesService {
         .fillColor('#0f172a')
         .fontSize(22)
         .font('Helvetica-Bold')
-        .text('ING. WILFRIDO TRUJILLO, M.Sc.', {
+        .text('WILFRIDO TRUJILLO', {
           align: 'center',
           characterSpacing: 2,
         });
@@ -352,7 +352,7 @@ export class CertificatesService {
         .fillColor('#0f172a')
         .fontSize(11)
         .font('Helvetica-Bold')
-        .text('Ing. Wilfrido Trujillo, M.Sc.', signatureX, footerY + 32, {
+        .text('Wilfrido Trujillo', signatureX, footerY + 32, {
           width: 220,
           align: 'center',
         });

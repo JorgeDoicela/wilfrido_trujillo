@@ -46,7 +46,7 @@ export function VerifyCertificatePortal({
           eventTitle: 'Conferencia Magistral: Inteligencia Artificial en Educación Superior',
           hours: 40,
           issuedAt: new Date().toISOString(),
-          issuer: 'Ing. Wilfrido Trujillo, M.Sc.',
+          issuer: 'Wilfrido Trujillo',
           role: 'Coordinador de Prácticas Preprofesionales y Vinculación',
           statusMessage:
             'Certificado oficial, auténtico y con validez institucional verificada mediante firma digital y QR.',
@@ -209,7 +209,7 @@ export function VerifyCertificatePortal({
 
         {/* Footer */}
         <footer className="text-center text-[11px] text-slate-500 pt-2 pb-6">
-          Plataforma Institucional de Certificación y Validación QR &copy; {new Date().getFullYear()} Ing. Wilfrido Trujillo
+          Plataforma de Certificación y Validación QR &copy; {new Date().getFullYear()} Wilfrido Trujillo
         </footer>
       </div>
     </div>

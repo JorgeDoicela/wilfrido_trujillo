@@ -40,7 +40,7 @@ export class AuthService implements OnApplicationBootstrap {
       const admin = this.userRepository.create({
         email: adminEmail,
         identification: '0600000001',
-        fullName: 'Ing. Wilfrido Trujillo',
+        fullName: 'Wilfrido Trujillo',
         roleKey: 'INGENIERO',
         permissionsJson: Object.values(Permission),
         passwordHash,

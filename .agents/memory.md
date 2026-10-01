@@ -1,4 +1,4 @@
-# Memoria Técnica del Proyecto — Plataforma Ing. Wilfrido Trujillo
+# Memoria Técnica del Proyecto — Plataforma Wilfrido Trujillo
 
 Este documento preserva las decisiones arquitectónicas, convenciones operacionales, estado de desarrollo y lecciones aprendidas del repositorio `wilfrido_trujillo`. Es de actualización continua y persistencia local en el repositorio.
 
@@ -103,7 +103,7 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
 * **Estado Operativo:**
   * Pasos 1 al 17 de la Guía de Implementación completados al 100% y verificados.
   * Backend y frontend compilan con código de salida 0 mediante `pnpm -r run build`.
-  * Seeding automático de arranque (`onApplicationBootstrap`): cuentas maestras (`0600000001` - Ing. Wilfrido Trujillo y `0600000002` - Estudiante) y espacios iniciales (`PRAC-2026`, `VINC-2026`, `CONF-IA`).
+  * Seeding automático de arranque (`onApplicationBootstrap`): cuentas maestras (`0600000001` - Wilfrido Trujillo y `0600000002` - Estudiante) y espacios iniciales (`PRAC-2026`, `VINC-2026`, `CONF-IA`).
   * Dosier de documentación técnica modular Docs-as-Code publicado en `docs/` con 20 documentos organizados del `01-` al `05-` (incluyendo la especificación canónica del Sistema de Diseño Microsoft 365).
 * **Ruta de Escalabilidad (Fase 2 del Auditor):**
   * La arquitectura está lista para incorporar un adaptador de IA generativa (`AiDocumentAuditorService` mediante Gemini API u Ollama local) sustituyendo o enriqueciendo el proveedor `DOCUMENT_AUDITOR` sin modificar los controladores ni la capa de persistencia.

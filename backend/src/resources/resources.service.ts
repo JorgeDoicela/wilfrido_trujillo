@@ -219,7 +219,7 @@ export class ResourcesService {
     const filePath = path.join(this.uploadDir, filename);
 
     if (!fs.existsSync(filePath)) {
-      const content = `PLANTILLA OFICIAL - ING. WILFRIDO TRUJILLO
+      const content = `PLANTILLA OFICIAL - WILFRIDO TRUJILLO
 Documento: ${resource.title}
 Tipo: ${resource.fileType.toUpperCase()}
 Condición de Desbloqueo: ${resource.isLockedUntilTestPass ? 'Aprobación obligatoria de Test de Inducción' : 'Acceso Público'}

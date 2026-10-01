@@ -13,7 +13,6 @@ import {
   ChevronRight,
   Plus,
   RefreshCw,
-  Filter,
   Layers,
   HelpCircle,
 } from 'lucide-react';
@@ -116,14 +115,14 @@ export const FluentShell: React.FC<FluentShellProps> = ({
         
         {/* Brand Left: Waffle Icon (App Launcher) + App Title */}
         <div className="flex items-center gap-2">
-          {/* M365 App Launcher Waffle */}
+          {/* App Launcher */}
           <button
             type="button"
             onClick={() => {
               setIsWaffleOpen(!isWaffleOpen);
               setIsProfileOpen(false);
             }}
-            title="Iniciador de aplicaciones Microsoft 365"
+            title="Aplicaciones"
             className="w-9 h-9 rounded-md text-white hover:bg-white/15 flex items-center justify-center transition-colors cursor-pointer"
           >
             <LayoutGrid className="w-4 h-4" />
@@ -134,22 +133,16 @@ export const FluentShell: React.FC<FluentShellProps> = ({
             onClick={() => {
               window.location.hash = '';
             }}
-            title="Ir a la Portada Institucional"
+            title="Ir al inicio"
             className="flex items-center gap-2 pl-1 cursor-pointer hover:opacity-90 transition-opacity"
           >
-            <span className="text-[13px] font-bold tracking-tight text-white hidden sm:inline">
-              Microsoft 365
+            <span className="text-[14px] font-semibold tracking-tight text-white">
+              Wilfrido Trujillo
             </span>
             <span className="text-white/40 hidden sm:inline">|</span>
-            <div className="flex items-center gap-2">
-              <span className="text-[13px] font-semibold text-white">
-                Gestión Académica
-              </span>
-              <span className="text-white/40 hidden md:inline">•</span>
-              <span className="text-[12px] font-medium text-white/90 hidden md:inline">
-                Wilfrido Trujillo
-              </span>
-            </div>
+            <span className="text-[13px] font-normal text-white/90 hidden sm:inline">
+              Gestión Académica
+            </span>
           </div>
         </div>
 
@@ -470,13 +463,6 @@ export const FluentShell: React.FC<FluentShellProps> = ({
                 <span>Sincronizar</span>
               </button>
 
-              <button
-                type="button"
-                className="m365-command-btn"
-              >
-                <Filter className="w-3.5 h-3.5" />
-                <span>Filtrar</span>
-              </button>
             </div>
 
             {/* Breadcrumb Right */}
@@ -490,30 +476,17 @@ export const FluentShell: React.FC<FluentShellProps> = ({
           {/* Canvas Scrollable Content */}
           <main className="flex-1 p-5 md:p-6 overflow-y-auto flex flex-col gap-5">
             
-            {/* Page Header Institucional M365 */}
-            <div className="bg-white border border-[#e0e0e0] rounded-lg p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider">
-                    {meta.category}
-                  </span>
-                  <span className="text-[#d1d1d1]">•</span>
-                  <span className="text-[11px] font-semibold text-[#0f6cbd]">
-                    Régimen RRA Activo
-                  </span>
-                </div>
-                <h1 className="text-xl md:text-2xl font-semibold text-[#242424] tracking-tight">
-                  {meta.title}
-                </h1>
-                <p className="text-xs text-[#616161] mt-0.5">
-                  {meta.subtitle}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#107c10]">
-                <span className="w-2 h-2 rounded-full bg-[#107c10] animate-pulse" />
-                <span>SISTEMA OPERATIVO // WAL ACTIVO</span>
-              </div>
+            {/* Page Header */}
+            <div className="bg-white border border-[#e0e0e0] rounded-lg p-5 shadow-xs">
+              <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider block mb-1">
+                {meta.category}
+              </span>
+              <h1 className="text-xl md:text-2xl font-semibold text-[#242424] tracking-tight">
+                {meta.title}
+              </h1>
+              {meta.subtitle && (
+                <p className="text-xs text-[#616161] mt-0.5">{meta.subtitle}</p>
+              )}
             </div>
 
             {/* Contenido Modular Focalizado (Cero Apilamiento) */}
@@ -521,10 +494,9 @@ export const FluentShell: React.FC<FluentShellProps> = ({
               {children}
             </div>
 
-            {/* Footer Legal M365 */}
-            <footer className="mt-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#616161] border-t border-[#edebe9]">
-              <span>© {new Date().getFullYear()} Wilfrido Trujillo • Plataforma de Gestión Académica</span>
-              <span>Microsoft 365 Fluent Design System 2 • RRA Soberano</span>
+            {/* Footer */}
+            <footer className="mt-auto pt-6 text-xs text-[#616161] border-t border-[#edebe9]">
+              <span>© {new Date().getFullYear()} Wilfrido Trujillo</span>
             </footer>
 
           </main>

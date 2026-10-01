@@ -167,7 +167,7 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
-            {eventData.description || 'Conferencia y taller magistral dictado por el Ing. Wilfrido Trujillo.'}
+            {eventData.description || 'Conferencia y taller magistral dictado por Wilfrido Trujillo.'}
           </p>
 
           <div className="flex items-center justify-center sm:justify-start gap-3 flex-wrap text-xs text-slate-400 border-t border-slate-800/80 pt-4">
@@ -399,7 +399,7 @@ export function PublicEventPortal({ accessCode, onBackToApp }: PublicEventPortal
 
         {/* Footer */}
         <footer className="text-center text-[11px] text-slate-500 pt-2 pb-6">
-          Plataforma Institucional Oficial • Ing. Wilfrido Trujillo &copy; {new Date().getFullYear()}
+          Wilfrido Trujillo &copy; {new Date().getFullYear()}
         </footer>
       </div>
     </div>

@@ -26,7 +26,7 @@ export const M365WaffleMenu: React.FC<M365WaffleMenuProps> = ({
     {
       id: 'inicio',
       name: 'Portada Principal',
-      desc: 'Landing del Ing. Wilfrido',
+      desc: 'Inicio',
       icon: Home,
       color: 'bg-[#0f6cbd] text-white',
     },
@@ -74,7 +74,7 @@ export const M365WaffleMenu: React.FC<M365WaffleMenuProps> = ({
       <div className="absolute left-3 top-13 z-50 w-72 bg-white border border-[#e0e0e0] rounded-lg shadow-xl p-4 text-[#242424] animate-fadeIn select-none">
         <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#edebe9]">
           <span className="text-xs font-semibold text-[#242424]">
-            Aplicaciones de Microsoft 365
+            Aplicaciones
           </span>
           <button
             type="button"
@@ -116,8 +116,8 @@ export const M365WaffleMenu: React.FC<M365WaffleMenuProps> = ({
           })}
         </div>
 
-        <div className="mt-3 pt-2.5 border-t border-[#edebe9] text-[11px] text-[#0f6cbd] font-semibold flex items-center justify-between px-1">
-          <span>Plataforma Académica Soberana</span>
+        <div className="mt-3 pt-2.5 border-t border-[#edebe9] text-[11px] text-[#616161] font-medium flex items-center justify-between px-1">
+          <span>Wilfrido Trujillo</span>
           <span>v2.0</span>
         </div>
       </div>

@@ -297,7 +297,7 @@ Estudiante: ${studentName} (Cédula: ${studentId})
 Estado: ${submission.status.toUpperCase()}
 Fecha de Carga: ${submission.createdAt ? submission.createdAt.toISOString() : new Date().toISOString()}
 
-Este archivo fue registrado en la plataforma institucional del Ing. Wilfrido Trujillo para revisión y auditoría documental.
+Este archivo fue registrado en la plataforma de Wilfrido Trujillo para revisión y auditoría documental.
 `;
       fs.writeFileSync(filePath, content, 'utf8');
       submission.fileUrl = filename;

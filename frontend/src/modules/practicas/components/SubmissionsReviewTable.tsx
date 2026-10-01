@@ -6,7 +6,6 @@ import {
   Edit3,
   CheckCircle2,
   AlertTriangle,
-  ShieldCheck,
 } from 'lucide-react';
 import { documentsApi } from '../api/documents.api';
 import type { DocumentSubmission, SubmissionStatus } from '@/shared/types/document.types';
@@ -136,7 +135,6 @@ export const SubmissionsReviewTable: React.FC<SubmissionsReviewTableProps> = ({
                 <th>ESTUDIANTE / EXPEDIENTE</th>
                 <th>DOCUMENTO CONSIGNADO</th>
                 <th>FECHA DE CARGA</th>
-                <th>DICTAMEN RRA</th>
                 <th>ESTADO</th>
                 <th className="text-right">ACCIONES</th>
               </tr>
@@ -185,12 +183,6 @@ export const SubmissionsReviewTable: React.FC<SubmissionsReviewTableProps> = ({
                             minute: '2-digit',
                           })
                         : 'Reciente'}
-                    </td>
-                    <td>
-                      <div className="flex items-center gap-1.5 text-xs">
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#107c10]" />
-                        <span className="font-semibold text-[#107c10]">CONFORME</span>
-                      </div>
                     </td>
                     <td>{getStatusBadge(sub.status)}</td>
                     <td className="text-right">

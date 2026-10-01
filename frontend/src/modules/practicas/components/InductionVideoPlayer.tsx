@@ -109,7 +109,7 @@ export function InductionVideoPlayer({
             {videoTitle}
           </h4>
           <p className="text-xs text-[#616161] mt-0.5">
-            Grabado por el Ing. Wilfrido Trujillo. Explica la normativa oficial, deberes del practicante y llenado de bitácoras.
+            Grabado por Wilfrido Trujillo. Explica la normativa oficial, deberes del practicante y llenado de bitácoras.
           </p>
         </div>
 
@@ -126,13 +126,13 @@ export function InductionVideoPlayer({
         </div>
       </div>
 
-      {/* Pantalla del Reproductor de Video (Estilo Microsoft Stream) */}
+      {/* Pantalla del Reproductor de Video */}
       <div className="relative aspect-video rounded-lg bg-[#1b1a19] border border-[#d1d1d1] flex flex-col items-center justify-center overflow-hidden shadow-xs">
         
-        {/* Marca de agua institucional Stream style */}
+        {/* Marca de agua institucional */}
         <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/70 text-[10px] text-white font-medium">
           <span className="h-1.5 w-1.5 rounded-full bg-[#107c10] animate-pulse" />
-          <span>MICROSOFT STREAM // RRA ACADÉMICO</span>
+          <span>VIDEO DE INDUCCIÓN</span>
         </div>
 
         {/* Ícono central y mensaje */}
