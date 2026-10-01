@@ -1,15 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-  Play,
-  Pause,
-  ChevronLeft,
-  ChevronRight,
-  GraduationCap,
-  Building2,
-  Award,
-  FileCheck2,
-  ArrowRight,
-} from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Play, Pause, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 export interface LandingHighlightsCarouselProps {
   onEnterPortal: () => void;
@@ -20,202 +10,124 @@ export const LandingHighlightsCarousel: React.FC<LandingHighlightsCarouselProps>
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
   const SLIDE_DURATION = 6500;
-  const UPDATE_INTERVAL = 50;
 
   const slides = [
     {
       id: 'ppp',
-      icon: GraduationCap,
-      category: 'Prácticas Preprofesionales',
-      headline: 'Acreditación de 240 Horas de Práctica Laboral',
+      headline: 'Prácticas Preprofesionales',
       description:
-        'Supervisión de prácticas en entidades receptoras con convenio vigente, inducción audiovisual obligatoria, registro diario de actividades y control de asistencia semanal.',
-      cta: 'Verificar Espacio de Prácticas',
-      visual: (
-        <div className="bg-white rounded-lg border border-[#e0e0e0] p-5 flex flex-col justify-between h-full">
-          <div>
-            <div className="flex items-center justify-between border-b border-[#edebe9] pb-3 mb-4">
-              <span className="text-xs font-semibold text-[#242424]">
-                Módulo de Inducción Audiovisual
+        'Supervisión y acreditación de 240 horas laborales en empresas e instituciones bajo convenios formalizados.',
+      linkText: 'Ingresar al módulo de prácticas',
+      renderVisual: () => (
+        <div className="w-full flex flex-col justify-center text-left py-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-0 sm:divide-x divide-[#e0e0e0]">
+            <div className="flex flex-col gap-1 sm:gap-2 sm:pr-6">
+              <span className="text-xs sm:text-base font-semibold text-[#242424]">
+                Inducción Audiovisual
               </span>
-              <span className="text-xs font-mono text-[#616161]">
-                RRA-PPP-2026
-              </span>
+              <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
+                Cápsulas formativas sobre deberes reglamentarios y normativas del Régimen Académico.
+              </p>
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[#616161]">Progreso de Sesiones:</span>
-                <span className="font-semibold text-[#242424]">3 de 3 Módulos (100%)</span>
-              </div>
-              <div className="w-full bg-[#edebe9] h-2 rounded-full overflow-hidden">
-                <div className="bg-[#0f6cbd] h-full rounded-full w-full" />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="p-3 rounded border border-[#e0e0e0]">
-                  <span className="text-xs text-[#616161] block">Horas Acreditadas</span>
-                  <span className="text-sm font-bold text-[#242424]">240 / 240 h</span>
-                </div>
-                <div className="p-3 rounded border border-[#e0e0e0]">
-                  <span className="text-xs text-[#616161] block">Tutor Responsable</span>
-                  <span className="text-xs font-semibold text-[#242424] truncate block">
-                    Ing. Wilfrido Trujillo
-                  </span>
-                </div>
-              </div>
+            <div className="flex flex-col gap-1 sm:gap-2 sm:px-6">
+              <span className="text-xs sm:text-base font-semibold text-[#242424]">
+                Bitácoras Semanales
+              </span>
+              <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
+                Registro cronológico de actividades con cómputo automático de horas cumplidas.
+              </p>
             </div>
-          </div>
 
-          <div className="mt-4 pt-3 border-t border-[#edebe9] flex items-center justify-between text-xs">
-            <span className="text-[#616161]">Revisión de Tutor Académico</span>
-            <span className="font-semibold text-[#0f6cbd]">Estado: Acreditado</span>
+            <div className="flex flex-col gap-1 sm:gap-2 sm:pl-6">
+              <span className="text-xs sm:text-base font-semibold text-[#242424]">
+                Acreditación Oficial
+              </span>
+              <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
+                Visado conjunto y emisión de constancias de acreditación aprobadas.
+              </p>
+            </div>
           </div>
         </div>
       ),
     },
     {
       id: 'vinculacion',
-      icon: Building2,
-      category: 'Vinculación con la Sociedad',
-      headline: 'Proyectos de Impacto Social y Extensión',
+      headline: 'Vinculación con la Sociedad',
       description:
-        'Planificación y desarrollo de programas comunitarios con registro de beneficiarios directos, actas de entrega-recepción formalizadas y bitácoras técnicas de campo.',
-      cta: 'Consultar Proyectos Activos',
-      visual: (
-        <div className="bg-white rounded-lg border border-[#e0e0e0] p-5 flex flex-col justify-between h-full">
-          <div>
-            <div className="flex items-center justify-between border-b border-[#edebe9] pb-3 mb-4">
-              <span className="text-xs font-semibold text-[#242424]">
-                Alfabetización Digital & Seguridad Informática
+        'Programas de servicio comunitario orientados a la transferencia de conocimientos y asistencia técnica en territorio.',
+      linkText: 'Consultar proyectos comunitarios',
+      renderVisual: () => (
+        <div className="w-full flex flex-col justify-center text-left py-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-0 sm:divide-x divide-[#e0e0e0]">
+            <div className="flex flex-col gap-1 sm:gap-2 sm:pr-6">
+              <span className="text-xs sm:text-base font-semibold text-[#242424]">
+                Trabajo en Territorio
               </span>
-              <span className="text-xs font-mono text-[#616161]">
-                VINC-2026-04
-              </span>
+              <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
+                Proyectos directos en comunidades rurales y organizaciones sociales de la provincia.
+              </p>
             </div>
 
-            <div className="space-y-3">
-              <div className="p-3 rounded border border-[#e0e0e0]">
-                <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="font-semibold text-[#242424]">Comunidad Beneficiaria</span>
-                  <span className="text-xs font-bold text-[#242424]">145 Familias</span>
-                </div>
-                <p className="text-xs text-[#616161]">
-                  Capacitación presencial sobre herramientas informáticas y protección de datos.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 rounded border border-[#e0e0e0]">
-                  <span className="text-xs text-[#616161] block">Entregables</span>
-                  <span className="text-sm font-bold text-[#242424]">4 Manuales</span>
-                </div>
-                <div className="p-3 rounded border border-[#e0e0e0]">
-                  <span className="text-xs text-[#616161] block">Acta Final</span>
-                  <span className="text-xs font-semibold text-[#242424] truncate block">
-                    Suscrita
-                  </span>
-                </div>
-              </div>
+            <div className="flex flex-col gap-1 sm:gap-2 sm:px-6">
+              <span className="text-xs sm:text-base font-semibold text-[#242424]">
+                Transferencia Técnica
+              </span>
+              <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
+                Talleres de alfabetización digital, manuales de usuario y asesoramiento informático.
+              </p>
             </div>
-          </div>
 
-          <div className="mt-4 pt-3 border-t border-[#edebe9] flex items-center justify-between text-xs">
-            <span className="text-[#616161]">Evaluación Comunitaria</span>
-            <span className="font-semibold text-[#0f6cbd]">96 Horas Cumplidas</span>
+            <div className="flex flex-col gap-1 sm:gap-2 sm:pl-6">
+              <span className="text-xs sm:text-base font-semibold text-[#242424]">
+                Actas Finales
+              </span>
+              <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
+                Suscripción formal de entrega-recepción de resultados para archivo universitario.
+              </p>
+            </div>
           </div>
         </div>
       ),
     },
     {
       id: 'eventos',
-      icon: Award,
-      category: 'Eventos & Certificación',
-      headline: 'Acreditación y Emisión de Certificados',
+      headline: 'Eventos y Certificación Criptográfica',
       description:
-        'Registro de asistencia con verificación de participación, expedición de credenciales y generación de diplomas protegidos mediante huella criptográfica SHA-256.',
-      cta: 'Verificar Certificados Oficiales',
-      visual: (
-        <div className="bg-white rounded-lg border border-[#e0e0e0] p-5 flex flex-col justify-between h-full">
-          <div>
-            <div className="flex items-center justify-between border-b border-[#edebe9] pb-3 mb-4">
-              <span className="text-xs font-semibold text-[#242424]">
-                Simposio de Arquitectura de Software
+        'Registro de asistencia en simposios académicos y expedición de diplomas protegidos mediante algoritmo SHA-256.',
+      linkText: 'Verificar certificados emitidos',
+      renderVisual: () => (
+        <div className="w-full flex flex-col justify-center text-left py-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-0 sm:divide-x divide-[#e0e0e0]">
+            <div className="flex flex-col gap-1 sm:gap-2 sm:pr-6">
+              <span className="text-xs sm:text-base font-semibold text-[#242424]">
+                Control de Asistencia
               </span>
-              <span className="text-xs font-mono text-[#616161]">
-                Acreditado
-              </span>
+              <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
+                Registro automatizado de presencia en jornadas magistrales y talleres prácticos.
+              </p>
             </div>
 
-            <div className="space-y-3">
-              <div className="p-3 rounded border border-[#e0e0e0] space-y-1.5 text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-[#616161]">Participación Registrada:</span>
-                  <span className="font-semibold text-[#242424]">40 Horas Académicas</span>
-                </div>
-                <div className="flex items-center justify-between pt-1 border-t border-[#edebe9]">
-                  <span className="text-[#616161]">Huella Criptográfica:</span>
-                  <span className="font-mono text-xs text-[#242424] truncate max-w-[180px]">
-                    e3b0c44298fc1c149afbf4c8996fb924
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-3 border border-[#e0e0e0] rounded flex items-center justify-between text-xs">
-                <span className="text-[#616161]">Autenticidad:</span>
-                <span className="font-semibold text-[#0f6cbd]">Verificada</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4 pt-3 border-t border-[#edebe9] flex items-center justify-between text-xs">
-            <span className="text-[#616161]">Firma de Coordinación</span>
-            <span className="font-semibold text-[#242424]">Registrado</span>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 'auditor',
-      icon: FileCheck2,
-      category: 'Auditor Documental Heurístico',
-      headline: 'Auditoría Estructural de Informes Técnicos',
-      description:
-        'Análisis sintáctico y de estructura previo a la revisión del docente. Valida carátula, coherencia cronológica, evidencias requeridas y cumplimiento de formatos reglamentarios.',
-      cta: 'Ver Requisitos de Informes',
-      visual: (
-        <div className="bg-white rounded-lg border border-[#e0e0e0] p-5 flex flex-col justify-between h-full">
-          <div>
-            <div className="flex items-center justify-between border-b border-[#edebe9] pb-3 mb-4">
-              <span className="text-xs font-semibold text-[#242424]">
-                Revisión Estructural de Informe
+            <div className="flex flex-col gap-1 sm:gap-2 sm:px-6">
+              <span className="text-xs sm:text-base font-semibold text-[#242424]">
+                Criptografía SHA-256
               </span>
-              <span className="text-xs font-mono text-[#616161]">
-                RRA-CHECK
+              <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
+                Huella digital única indexada que garantiza la inmutabilidad de cada diploma.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-1 sm:gap-2 sm:pl-6">
+              <span className="text-xs sm:text-base font-semibold text-[#242424]">
+                Validación QR Pública
               </span>
+              <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
+                Comprobación abierta e instantánea sin necesidad de credenciales de acceso.
+              </p>
             </div>
-
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between p-2.5 rounded border border-[#e0e0e0]">
-                <span className="text-[#242424]">Estructura de Carátula</span>
-                <span className="font-semibold text-[#242424]">Conforme</span>
-              </div>
-              <div className="flex items-center justify-between p-2.5 rounded border border-[#e0e0e0]">
-                <span className="text-[#242424]">Cronograma de Bitácoras</span>
-                <span className="font-semibold text-[#242424]">240 Horas</span>
-              </div>
-              <div className="flex items-center justify-between p-2.5 rounded border border-[#e0e0e0]">
-                <span className="text-[#242424]">Anexos y Certificados</span>
-                <span className="font-semibold text-[#242424]">Completos</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4 pt-3 border-t border-[#edebe9] flex items-center justify-between text-xs">
-            <span className="text-[#616161]">Dictamen Heurístico</span>
-            <span className="font-semibold text-[#0f6cbd]">Aprobado para Visado</span>
           </div>
         </div>
       ),
@@ -226,156 +138,104 @@ export const LandingHighlightsCarousel: React.FC<LandingHighlightsCarouselProps>
 
   const nextSlide = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % totalSlides);
-    setProgress(0);
   }, [totalSlides]);
 
   const prevSlide = useCallback(() => {
     setActiveIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-    setProgress(0);
   }, [totalSlides]);
 
   const goToSlide = (idx: number) => {
     setActiveIndex(idx);
-    setProgress(0);
   };
 
   useEffect(() => {
     if (!isPlaying) return;
-
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          nextSlide();
-          return 0;
-        }
-        return prev + (UPDATE_INTERVAL / SLIDE_DURATION) * 100;
-      });
-    }, UPDATE_INTERVAL);
-
+    const interval = setInterval(nextSlide, SLIDE_DURATION);
     return () => clearInterval(interval);
   }, [isPlaying, nextSlide]);
 
-  const activeSlide = slides[activeIndex];
-
   return (
-    <section id="pilares" className="py-14 sm:py-20 bg-[#f5f5f5] border-t border-b border-[#e0e0e0]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Cabecera de Sección Sobria */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#616161] block mb-1">
-              Áreas de Gestión
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#242424]">
-              Pilares del Despacho de Coordinación
-            </h2>
-          </div>
+    <section
+      ref={sectionRef}
+      id="highlights"
+      className="w-full flex flex-col gap-6 py-6"
+    >
+      {/* Título de Sección Estilo Apple SF / Segoe UI */}
+      <div className="w-full flex items-center justify-between mb-2">
+        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#242424]">
+          Mira lo más destacado.
+        </h2>
 
-          {/* Controles de Reproducción y Avance */}
-          <div className="flex items-center gap-1.5 self-start md:self-auto">
-            <button
-              type="button"
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="w-8 h-8 rounded bg-white border border-[#d1d1d1] flex items-center justify-center text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
-              title={isPlaying ? 'Pausar' : 'Reanudar'}
-            >
-              {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-            </button>
+        {/* Controles de Navegación */}
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="w-8 h-8 rounded-full border border-[#d1d1d1] bg-white flex items-center justify-center text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
+            aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
+          >
+            {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+          </button>
+          <button
+            type="button"
+            onClick={prevSlide}
+            className="w-8 h-8 rounded-full border border-[#d1d1d1] bg-white flex items-center justify-center text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
+            aria-label="Anterior"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={nextSlide}
+            className="w-8 h-8 rounded-full border border-[#d1d1d1] bg-white flex items-center justify-center text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
+            aria-label="Siguiente"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
 
-            <button
-              type="button"
-              onClick={prevSlide}
-              className="w-8 h-8 rounded bg-white border border-[#d1d1d1] flex items-center justify-center text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
-              title="Anterior"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            <button
-              type="button"
-              onClick={nextSlide}
-              className="w-8 h-8 rounded bg-white border border-[#d1d1d1] flex items-center justify-center text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
-              title="Siguiente"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+      {/* Tarjeta del Slide Activo */}
+      <div className="w-full rounded-2xl md:rounded-3xl bg-white border border-[#e0e0e0] p-6 sm:p-10 md:p-12 shadow-xs flex flex-col justify-between min-h-[420px] sm:min-h-[460px] transition-all">
+        {/* Cabecera del Slide */}
+        <div className="flex flex-col text-left max-w-2xl gap-2 mb-6">
+          <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#242424]">
+            {slides[activeIndex].headline}
+          </h3>
+          <p className="text-sm sm:text-base text-[#616161] leading-relaxed">
+            {slides[activeIndex].description}
+          </p>
         </div>
 
-        {/* Indicadores Superiores Limpios */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
-          {slides.map((s, idx) => {
-            const isCurrent = idx === activeIndex;
-            return (
+        {/* Visual en 3 Columnas Limpias */}
+        <div className="my-auto py-4">
+          {slides[activeIndex].renderVisual()}
+        </div>
+
+        {/* Pie: Enlace Simple de Acción */}
+        <div className="pt-6 border-t border-[#edebe9] flex items-center justify-between">
+          <button
+            type="button"
+            onClick={onEnterPortal}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#0f6cbd] hover:text-[#115ea3] transition-colors cursor-pointer"
+          >
+            <span>{slides[activeIndex].linkText}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+
+          {/* Indicadores de Paginación */}
+          <div className="flex items-center gap-2">
+            {slides.map((_, idx) => (
               <button
-                key={s.id}
+                key={idx}
                 type="button"
                 onClick={() => goToSlide(idx)}
-                className={`text-left p-3 rounded border transition-all cursor-pointer relative overflow-hidden ${
-                  isCurrent
-                    ? 'bg-white border-[#0f6cbd] shadow-xs'
-                    : 'bg-white border-[#e0e0e0] hover:border-[#c7c7c7]'
+                className={`h-2 rounded-full transition-all cursor-pointer ${
+                  idx === activeIndex ? 'w-6 bg-[#0f6cbd]' : 'w-2 bg-[#d1d1d1] hover:bg-[#a19f9d]'
                 }`}
-              >
-                {isCurrent && (
-                  <div
-                    className="absolute top-0 left-0 bottom-0 bg-[#0f6cbd]/10 -z-0 transition-all duration-75"
-                    style={{ width: `${progress}%` }}
-                  />
-                )}
-
-                <div className="relative z-10">
-                  <span
-                    className={`text-xs font-semibold block truncate ${
-                      isCurrent ? 'text-[#0f6cbd]' : 'text-[#242424]'
-                    }`}
-                  >
-                    {s.category}
-                  </span>
-                  <span className="text-[10px] text-[#616161] block mt-0.5">
-                    Módulo {idx + 1} de {totalSlides}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Contenedor del Slide */}
-        <div className="bg-white border border-[#e0e0e0] rounded-lg p-6 sm:p-8 shadow-xs">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Lado Izquierdo: Descripción */}
-            <div className="lg:col-span-6 flex flex-col justify-between">
-              <div>
-                <span className="text-xs font-semibold text-[#0f6cbd] block mb-2">
-                  {activeSlide.category}
-                </span>
-
-                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[#242424] mb-3">
-                  {activeSlide.headline}
-                </h3>
-
-                <p className="text-sm text-[#616161] leading-relaxed mb-6">
-                  {activeSlide.description}
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-[#edebe9]">
-                <button
-                  type="button"
-                  onClick={onEnterPortal}
-                  className="px-4 py-2 rounded bg-[#0f6cbd] text-white font-semibold text-xs hover:bg-[#115ea3] active:bg-[#0c3b5e] transition-colors flex items-center gap-2 cursor-pointer"
-                >
-                  <span>{activeSlide.cta}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Lado Derecho: Maqueta Limpia */}
-            <div className="lg:col-span-6">
-              {activeSlide.visual}
-            </div>
+                aria-label={`Ir al pilar ${idx + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>

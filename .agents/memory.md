@@ -77,16 +77,16 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
     * API de Espacios de Trabajo (`workspaces.api.ts`): reside canónicamente en `src/shared/api/`, accesible sin acoplamiento a `modules/admin`.
     * Modales y Tablas Operativas de Prácticas (`CreateTestModal`, `UploadResourceModal`, `ReviewDocumentModal`, `SubmissionsReviewTable`): reubicados con alta cohesión dentro de `src/modules/practicas/components/`, consumiendo sus APIs locales relativas sin depender de `admin`.
 * **Landing Page Institucional Soberana (`src/modules/landing/`):**
-  * Portada pública ejecutiva inspirada en la arquitectura de interacción de alta gama (Bento Grid, carrusel de pilares con progreso continuo y explorador interactivo por roles) pero adaptada 100% al Sistema de Diseño Microsoft 365 (Fluent UI v9 / Fluent Design System 2: Segoe UI, paleta `#0f6cbd`, fondo `#f5f5f5`, superficies blancas y elevaciones neutras).
-  * Componentes modulares autónomos:
-    * `LandingHeader`: Cabecera flotante translúcida con detección de scroll, `QuitoClockBadge` (reloj en tiempo real de Riobamba UTC-5) y botón de acceso a la Suite M365.
-    * `LandingHero`: Tipografía Segoe UI de gran impacto, pastilla de estado normativo con indicador pulsante, botones duales de acción y barra de garantías (RRA CES Art. 89, Auditor Heurístico, SHA-256 + QR, LOPDP Ecuador).
-    * `LandingHighlightsCarousel`: Carrusel interactivo auto-rotativo con barras de progreso temporizadas (6.5s), botones de pausa/avance y 4 tarjetas de visualización de alta fidelidad (Prácticas 240h con progreso de inducción, Vinculación Social con impacto comunitario, Eventos con certificado criptográfico y Auditor Heurístico con dictamen algorítmico).
-    * `LandingDetailExplorer`: Explorador por perspectiva con pestañas interactivas (Estudiantes, Docentes/Coordinador, Empresas aliadas, Auditoría pública) y simuladores visuales en vivo del sistema.
-    * `LandingRraFlow`: Embudo secuencial normativo en 4 etapas (Inducción audiovisual, Test 7.0/10, Formatos membretados y Auditoría heurística previa al visado).
-    * `LandingBentoGrid`: Sección Bento Grid con Validador Criptográfico en vivo (input para hashes SHA-256 de 64 caracteres con botón de demostración rápida), matrícula directa a espacios lectivos por código, cita editorial enmarcada de filosofía docente y directorio de canales oficiales universitarios (UNACH, SICOA, Biblioteca Central).
-    * `LandingWorkspacesCatalog`: Catálogo filtrable de espacios activos por tipología.
-    * `LandingFooter`: Pie corporativo Microsoft 365 con indicación de servicios operativos y marco legal LOPDP.
+  * Portada pública ejecutiva que reproduce con fidelidad milimétrica la composición armónica, limpia y espaciosa de `jorge_doicela/frontend/web/src/app/(landing)/page.tsx`, adaptada al estándar de Microsoft 365 (Segoe UI, `#0f6cbd`, fondo `#f5f5f5`, tarjetas `#ffffff` con borde `#e0e0e0` y cero elementos de relleno).
+  * Estructura centrada en 4 secciones cardinales dentro de `<main className="max-w-5xl ...">`:
+    * `LandingHeader`: Cabecera flotante translúcida con logo institucional, `QuitoClockBadge` (reloj de Riobamba UTC-5) y botón de acceso a la Suite M365.
+    * `LandingHero`: Inspirado en `AppleHeroIntro`, con titular monumental en Segoe UI display, párrafo sobrio directo y botones de acción limpios.
+    * `LandingHighlightsCarousel`: Carrusel amplio con visuales en 3 columnas limpias (Prácticas, Vinculación, Certificación Criptográfica) y controles sutiles de avance.
+    * `LandingDetailExplorer`: Inspirado en `AppleDetailExplorer`, con botones de selección vertical para roles (Estudiantes, Tutores, Empresas, Validación Pública) y ventana de especificación clara.
+    * `LandingBentoSection`: Sección de exactamente 2 BentoCards en cuadrícula `grid-cols-1 md:grid-cols-2`:
+      * Tarjeta 1: Canales y enlaces directos (Suite M365, Portal UNACH, SICOA, Validación de Certificados).
+      * Tarjeta 2: Filosofía académica y cita editorial del Ing. Wilfrido Trujillo.
+    * `LandingFooter`: Pie institucional limpio y sobrio.
 * **Enrutamiento SPA Sincronizado por Hash:**
   * Ruta raíz (`#/` o vacía): Presenta la Landing Page soberana del Ing. Wilfrido Trujillo.
   * Ruta operativa (`#/app`, `#/practicas`, `#/vinculacion`, `#/certificados`, `#/eventos`, `#/espacios`): Despliega la Suite M365 `FluentShell` con transición fluida.
