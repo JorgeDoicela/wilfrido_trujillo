@@ -31,19 +31,29 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Inversión de Dependencias formal bajo la interfaz `IDocumentAuditor` y el token de inyección `DOCUMENT_AUDITOR`.
   * Implementación heurística de Fase 1 (`HeuristicDocumentAuditorService`): validación de cabecera `%PDF-`, conteo de páginas, densidad de caracteres legibles (alerta de escaneos sin OCR), verificación de secciones académicas normativas RRA (Datos, Objetivos, Actividades, Conclusiones, Firmas), análisis de metadatos y semáforo tripartito (Verde, Amarillo, Rojo).
   * Endpoints dedicados para auditoría de entregas almacenadas y pre-auditoría en memoria en el buzón estudiantil.
-* **Sistema de Diseño Microsoft Fluent Design 2 (Referencia ISTPET / M365 Desktop):**
-  * Adopción del estándar formal de **Microsoft Fluent Design 2 Desktop Shell** conforme a la especificación de `titulacion-istpet`.
-  * Layout estructural M365:
-    * Topbar (48px de altura fija) en Navy Institucional `#1b2a4a` con acento Gold `#c59b27`, buscador central sobrio, alternador rápido de simulación PBAC y perfil de usuario.
-    * Left Icon Rail (48px de ancho fijo) en Navy `#12213a` con indicador activo vertical en Gold (`border-left: 3px solid #c59b27`).
-    * Secondary Sidebar (220px de ancho) en blanco puro con navegación por dominios RRA (`practicas`, `vinculacion`, `eventos`, `certificados`), conteos numéricos y selector de espacios activos.
-    * Main Content Workspace sobre fondo Canvas neutro `#e8eaf0`, tarjetas operativas en blanco puro `#ffffff` con borde sutil `rgba(0,0,0,0.08)`.
-  * Radios geométricos estrictos: `--radius-input: 2px;`, `--radius-card: 4px;` (prohibido `> 4px` en tarjetas), `--radius-panel: 8px;`, `--radius-badge: 12px;`, `--radius-pill: 999px;`.
-  * Grilla de datos Fluent Data Grid (`.fluent-table`): alta densidad tipográfica (padding 8px 12px), cabecera gris `#faf9f8`, estados mediante badges planos (`.fluent-badge--success`, `--warning`, `--info`), y botones de acción sólidos Navy (`.fluent-btn-action`).
-  * Biblioteca de componentes atómicos en `src/shared/components/ui/` (`Button`, `Card`, `Badge`, `Input`, `Modal`) y componentes de negocio adaptados para heredar automáticamente estos tokens sin sombras de colores teñidos ni tarjetas flotantes oscuras.
+* **Sistema de Diseño Microsoft 365 Moderno (Fluent UI v9 Oficial):**
+  * Estandarización visual y funcional 100% fiel a la suite moderna de **Microsoft 365 / Teams / SharePoint**:
+    * **Suite Bar Superior (48px):** Fondo en Microsoft Brand Blue `#0f6cbd`, App Launcher Waffle (matriz 3x3 de 9 puntos que despliega el menú oficial de aplicaciones `M365WaffleMenu`), buscador central en cápsula con atajo `Ctrl+K`, y avatar con halo de presencia verde `#107c10` que despliega el `M365ProfileFlyout` institucional.
+    * **Profile Persona Flyout M365 (`M365ProfileFlyout.tsx`):** Menú flotante oficial de cuenta que encapsula la identidad del usuario, permisos atómicos activos y el conmutador de roles PBAC (Estudiante / Docente Evaluador), erradicando cajas toscas de simulación del lienzo de trabajo.
+    * **Left App Rail (56px):** Fondo blanco puro `#ffffff` estilo Microsoft Teams, botones verticales de 56x52px con icono de 20px arriba y etiqueta completa de 10px abajo, indicador activo en azul `#0f6cbd` con fondo `#ebf3fc`.
+    * **Secondary Navigation Drawer (220px):** Panel retráctil con navegación contextual al módulo activo (`Prácticas`, `Certificados`, `Vinculación`, `Eventos`, `Espacios`).
+    * **M365 Command Bar (44px):** Barra horizontal de herramientas blanca con acciones operativas (`+ Nuevo`, `Sincronizar`, `Filtrar`) y breadcrumbs dinámicos según el módulo.
+    * **Vistas Modulares Focalizadas (Cero Apilamiento):** Cada pestaña de navegación renderiza exclusivamente su vista de negocio en pantalla completa sin concatenar tarjetas de otros módulos debajo.
+    * **Canvas y Tarjetas de Trabajo:** Fondo general gris neutro limpio `#f5f5f5`, tarjetas en blanco puro con esquinas redondeadas modernas de 8px (`rounded-lg`), bordes sutiles `#e0e0e0` y sombras de elevación neutras Fluent 2.
+    * **Data Grid M365 Lists:** Cabeceras limpias `#fafafa`, bordes de fila `#edebe9`, hover suave `#f7f9fa` y badges redondeados planos (`.m365-badge`).
+    * **Flujo Secuencial (Fluent Stepper):** Stepper horizontal de 4 etapas con nodos circulares, numeración Fluent y badges de estado claros.
 * **Skill Maestra de Diseño UI/UX (`diseno-wilfrido`):**
-  * Especificación en `.agents/skills/diseno-wilfrido/SKILL.md`.
-  * Reglas mandatorias: Cero emojis, uso funcional mínimo de SVG (solo donde aporte affordance), prohibición de bloques gigantescos de KPIs superiores (priorizando la densidad de datos y flujos de trabajo) y cero componentes genéricos/plantillas comerciales.
+  * Especificación en `.agents/skills/diseno-wilfrido/SKILL.md` y documentación formal en `docs/04-frontend-aplicacion-web/05-sistema-de-diseno-microsoft-365.md`.
+  * Reglas mandatorias e inviolables:
+    * 100% Microsoft 365 Moderno (Fluent Design System 2 / Fluent UI v9) puro sin mezclas estéticas.
+    * Paleta de color oficial: Brand `#0f6cbd`, Hover `#115ea3`, Pressed `#0c3b5e`, Canvas `#f5f5f5`, Superficies `#ffffff`, Bordes `#e0e0e0`, Divisores `#edebe9`, Textos `#242424` / `#616161`, Presencia/Success `#107c10`.
+    * Tipografía oficial: Segoe UI / Segoe UI Variable con escala de texto jerárquica estandarizada.
+    * Layout Suite: Suite Bar (48px), App Rail (56px), Drawer Contextual (220px), Command Bar (44px).
+    * Radios de curvatura contenidos: 4px para controles interactivos y 8px para tarjetas/modales (prohibidos radios superiores a 12px).
+    * Cero emojis en toda la interfaz, código y documentación técnica.
+    * Uso funcional mínimo de SVG (16px a 20px), sin saturación decorativa.
+    * Prohibición de bloques superiores masivos de KPIs; priorización de densidad de datos y flujos de acción.
+    * Vistas modulares por pestañas independientes sin apilamiento de páginas.
 
 
 
@@ -59,7 +69,11 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Rama principal: `master` sincronizada contra `origin/master`.
 * **Estructura Modular por Dominios en Frontend:**
   * Todo recurso perteneciente a un dominio funcional reside dentro de su carpeta en `frontend/src/modules/` (`auth`, `admin`, `practicas`, `vinculacion`, `eventos`).
-  * Prohibidas las importaciones cruzadas entre módulos de negocio; componentes compartidos promovidos a `frontend/src/shared/`.
+  * **Aislamiento Estricto Verificado:** Prohibidas las importaciones cruzadas directas entre módulos hermanos.
+  * **Servicios e Infraestructura Compartida (`src/shared/`):**
+    * Autenticación y sesión (`AuthContext.tsx`, `useAuth.ts`): reside canónicamente en `src/shared/context/` y `src/shared/hooks/`, eliminando la dependencia invertida desde componentes transversales hacia `modules/auth`.
+    * API de Espacios de Trabajo (`workspaces.api.ts`): reside canónicamente en `src/shared/api/`, accesible sin acoplamiento a `modules/admin`.
+    * Modales y Tablas Operativas de Prácticas (`CreateTestModal`, `UploadResourceModal`, `ReviewDocumentModal`, `SubmissionsReviewTable`): reubicados con alta cohesión dentro de `src/modules/practicas/components/`, consumiendo sus APIs locales relativas sin depender de `admin`.
 * **Enrutamiento SPA Sincronizado por Hash:**
   * Enrutador declarativo en `App.tsx` que escucha `hashchange` para soportar navegación directa a rutas profundas públicas (`#/eventos/:code`, `#/certificados/validar/:hash`) en servidores web estáticos sin reescritura compleja de Nginx.
 * **Retención de Directorios en Git:**
@@ -74,7 +88,7 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Pasos 1 al 17 de la Guía de Implementación completados al 100% y verificados.
   * Backend y frontend compilan con código de salida 0 mediante `pnpm -r run build`.
   * Seeding automático de arranque (`onApplicationBootstrap`): cuentas maestras (`0600000001` - Ing. Wilfrido Trujillo y `0600000002` - Estudiante) y espacios iniciales (`PRAC-2026`, `VINC-2026`, `CONF-IA`).
-  * Dosier de documentación técnica modular Docs-as-Code publicado en `docs/` con 19 documentos organizados del `01-` al `05-`.
+  * Dosier de documentación técnica modular Docs-as-Code publicado en `docs/` con 20 documentos organizados del `01-` al `05-` (incluyendo la especificación canónica del Sistema de Diseño Microsoft 365).
 * **Ruta de Escalabilidad (Fase 2 del Auditor):**
   * La arquitectura está lista para incorporar un adaptador de IA generativa (`AiDocumentAuditorService` mediante Gemini API u Ollama local) sustituyendo o enriqueciendo el proveedor `DOCUMENT_AUDITOR` sin modificar los controladores ni la capa de persistencia.
 * **Deuda Técnica Identificada:**

@@ -1,9 +1,8 @@
 import React from 'react';
 import { FolderOpen, Plus } from 'lucide-react';
 import { JoinWorkspaceCard } from '@/shared/components/JoinWorkspaceCard';
-import { WorkspaceCard } from '@/modules/admin/components/WorkspaceCard';
+import { WorkspaceCard } from './WorkspaceCard';
 import { Can } from '@/shared/components/Can';
-import { Button } from '@/shared/components/ui/Button';
 import type { Workspace } from '@/shared/types/workspace.types';
 
 export interface WorkspaceSelectorSectionProps {
@@ -22,28 +21,29 @@ export const WorkspaceSelectorSection: React.FC<WorkspaceSelectorSectionProps> =
   onJoinSuccess,
 }) => {
   return (
-    <section className="bg-white border border-[rgba(0,0,0,0.08)] rounded-[4px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col gap-5">
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
+    <section className="m365-card p-5 flex flex-col gap-4">
+      <div className="flex items-center justify-between pb-3 border-b border-[#edebe9]">
         <div className="flex items-center gap-2">
-          <FolderOpen className="w-4 h-4 text-[#0078d4]" />
-          <h3 className="text-sm font-bold text-[#1a1a1a]">
+          <div className="w-6 h-6 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
+            <FolderOpen className="w-3.5 h-3.5" />
+          </div>
+          <h3 className="text-sm font-semibold text-[#242424]">
             Catálogo de Espacios y Periodos Académicos ({workspaces.length})
           </h3>
         </div>
 
         <Can do="workspace:create">
-          <Button
-            variant="primary"
-            size="sm"
+          <button
+            type="button"
             onClick={onOpenCreateModal}
-            className="gap-1 text-xs py-1"
+            className="m365-btn m365-btn-primary text-xs h-7.5 px-2.5"
           >
             <Plus className="w-3.5 h-3.5" /> Nuevo Espacio
-          </Button>
+          </button>
         </Can>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
         {/* Formulario de Unirse a un Espacio por Código */}
         <div className="lg:col-span-1">
           <JoinWorkspaceCard onJoinSuccess={onJoinSuccess} />
@@ -52,11 +52,11 @@ export const WorkspaceSelectorSection: React.FC<WorkspaceSelectorSectionProps> =
         {/* Listado de Espacios */}
         <div className="lg:col-span-2 flex flex-col gap-3">
           {isLoading ? (
-            <div className="p-8 text-center text-xs text-[#605e5c]">
+            <div className="p-8 text-center text-xs text-[#616161]">
               Cargando espacios de trabajo oficiales...
             </div>
           ) : workspaces.length === 0 ? (
-            <div className="p-6 text-center text-xs text-[#605e5c] bg-[#faf9f8] rounded-[2px] border border-[#e5e7eb]">
+            <div className="p-6 text-center text-xs text-[#616161] bg-[#fafafa] rounded-lg border border-[#e0e0e0]">
               No hay espacios registrados actualmente.
             </div>
           ) : (

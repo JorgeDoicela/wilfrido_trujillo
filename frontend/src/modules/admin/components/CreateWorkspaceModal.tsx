@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Plus, AlertCircle } from 'lucide-react';
-import { workspacesApi } from '../api/workspaces.api';
+import { workspacesApi } from '@/shared/api/workspaces.api';
 import {
   Modal,
   ModalHeader,

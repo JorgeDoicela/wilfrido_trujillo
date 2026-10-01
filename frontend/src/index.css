@@ -3,88 +3,77 @@
 @layer base {
   :root {
     /* ==========================================================================
-       MICROSOFT FLUENT DESIGN 2 - DESIGN TOKENS OFICIALES (REFERENCIA TITULACION-ISTPET)
+       MICROSOFT 365 MODERNO // FLUENT DESIGN SYSTEM 2 (FLUENT UI V9)
        ========================================================================== */
-    font-family: 'Segoe UI', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Segoe UI', 'Segoe UI Variable', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 
-    /* Identidad Institucional Wilfrido Trujillo */
-    --istpet-navy: #1b2a4a;
-    --istpet-navy-hover: #253d6b;
-    --istpet-navy-dark: #121d34;
-    --istpet-navy-rail: #12213a;
-    --istpet-gold: #c59b27;
-    --istpet-gold-hover: #d4af37;
-    --istpet-gold-subtle: rgba(197, 155, 39, 0.12);
+    /* Microsoft 365 Brand Colors (Fluent UI v9 Official) */
+    --m365-brand: #0f6cbd;
+    --m365-brand-hover: #115ea3;
+    --m365-brand-pressed: #0c3b5e;
+    --m365-brand-subtle: #ebf3fc;
+    --m365-brand-tint: #cfe4fa;
+    --m365-brand-foreground: #0f6cbd;
 
-    /* Fondos y Superficies Fluent 2 (Canvas M365 / Desktop Light) */
-    --bg-canvas: #e8eaf0;
+    /* Suite Bar & Header */
+    --m365-suite-bg: #0f6cbd;
+    --m365-suite-text: #ffffff;
+    --m365-suite-search-bg: rgba(255, 255, 255, 0.16);
+    --m365-suite-search-hover: rgba(255, 255, 255, 0.24);
+
+    /* Canvas & Surfaces (Microsoft 365 Clean Neutral) */
+    --bg-canvas: #f5f5f5;
     --bg-surface: #ffffff;
-    --bg-surface-alt: #faf9f8;
-    --bg-surface-elevated: #f3f2f1;
-    --bg-shape: rgba(255, 255, 255, 0.65);
+    --bg-surface-subtle: #fafafa;
+    --bg-surface-hover: #f0f0f0;
+    --bg-surface-pressed: #ebebeb;
 
-    /* Textos Tipográficos */
-    --text-primary: #1a1a1a;
-    --text-secondary: #323130;
-    --text-muted: #605e5c;
+    /* Tipografía Corporativa M365 */
+    --text-primary: #242424;
+    --text-secondary: #424242;
+    --text-muted: #616161;
     --text-disabled: #a19f9d;
-    --text-on-accent: #ffffff;
+    --text-on-brand: #ffffff;
 
-    /* Bordes Estructurales */
-    --border-default: #8a8886;
-    --border-subtle: rgba(0, 0, 0, 0.08);
-    --border-strong: #323130;
+    /* Bordes y Líneas Divisoras */
+    --border-subtle: #edebe9;
+    --border-default: #e0e0e0;
+    --border-strong: #c7c7c7;
+    --border-focus: #0f6cbd;
 
-    /* Estados Normativos Fluent */
-    --color-error: #a4262c;
-    --color-error-bg: #fde7e9;
-    --color-success: #107c10;
-    --color-success-bg: #dff6dd;
-    --color-warning-text: #7d5a00;
-    --color-warning-bg: #fff4ce;
-    --color-info: #0078d4;
-    --color-info-bg: #e6f2fb;
+    /* Estados de Notificación y Acreditación */
+    --m365-success: #107c10;
+    --m365-success-bg: #dff6dd;
+    --m365-success-border: #a3d9a5;
+    --m365-warning: #7d5a00;
+    --m365-warning-bg: #fff4ce;
+    --m365-warning-border: #f2c864;
+    --m365-danger: #a4262c;
+    --m365-danger-bg: #fde7e9;
+    --m365-danger-border: #f1aeb5;
+    --m365-info: #0078d4;
+    --m365-info-bg: #eff6fc;
+    --m365-info-border: #9ec5fe;
 
-    /* Radios Geométricos Estrictos Fluent 2 (Prohibido > 4px en tarjetas) */
-    --radius-input: 2px;
-    --radius-card: 4px;
-    --radius-panel: 8px;
-    --radius-badge: 12px;
-    --radius-pill: 999px;
+    /* Radios Modernos Fluent 2 */
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-pill: 9999px;
 
-    /* Espaciado Modular (Múltiplos de 4px) */
-    --space-1: 4px;
-    --space-2: 8px;
-    --space-3: 12px;
-    --space-4: 16px;
-    --space-5: 20px;
-    --space-6: 24px;
-    --space-8: 32px;
-    --space-10: 40px;
-
-    /* Motion Fluent Oficial */
-    --ease-fluent: cubic-bezier(0.1, 0.9, 0.2, 1);
-    --duration-fast: 83ms;
-    --duration-normal: 167ms;
-    --duration-slow: 333ms;
-
-    /* Dimensiones del Shell M365 */
-    --topbar-height: 48px;
-    --icon-rail-width: 48px;
-    --sidebar-width: 220px;
-    --sidebar-width-collapsed: 48px;
-
-    /* Elevación Fluent Neutra */
-    --fluent-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-    --fluent-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --fluent-shadow-flyout: 0 8px 24px rgba(0, 0, 0, 0.14);
+    /* Elevaciones Fluent 2 (Sombras Neutras M365) */
+    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    --shadow-elevated: 0 4px 12px 0 rgba(0, 0, 0, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+    --shadow-flyout: 0 8px 24px 0 rgba(0, 0, 0, 0.12), 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   }
 
   body {
     min-height: 100vh;
     background-color: var(--bg-canvas);
     color: var(--text-primary);
-    font-family: 'Segoe UI', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Segoe UI', 'Segoe UI Variable', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;
@@ -100,282 +89,345 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #c8c6c4;
+    background: #d1d1d1;
     border-radius: var(--radius-pill);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
+    background: #999999;
   }
 }
 
 @layer components {
   /* ==========================================================================
-     COMPONENTES BASE FLUENT 2
+     COMPONENTES MODERNOS MICROSOFT 365 (FLUENT UI V9)
      ========================================================================== */
 
-  /* Tarjeta Oficial Fluent 2: Fondo blanco, 4px de radio, borde 1px neutro sutil */
-  .ui-card {
+  /* Tarjeta M365: Blanco puro, 8px de radio, borde 1px sutil, sombra suave */
+  .m365-card {
     background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-card);
-    padding: var(--space-4);
-    box-shadow: var(--fluent-shadow-card);
-    color: var(--text-primary);
-    transition: border-color var(--duration-fast) var(--ease-fluent),
-                background-color var(--duration-fast) var(--ease-fluent),
-                box-shadow var(--duration-fast) var(--ease-fluent);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 150ms cubic-bezier(0.1, 0.9, 0.2, 1),
+                border-color 150ms cubic-bezier(0.1, 0.9, 0.2, 1);
   }
 
-  .ui-card-hover {
-    transition: all var(--duration-fast) var(--ease-fluent);
-  }
-  .ui-card-hover:hover {
-    border-color: #c8c6c4;
-    box-shadow: var(--fluent-shadow-hover);
+  .m365-card-hover:hover {
+    box-shadow: var(--shadow-elevated);
+    border-color: #c7c7c7;
   }
 
-  .ui-card-inner {
-    background-color: var(--bg-surface-alt);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-input);
-    padding: var(--space-3);
+  /* Command Bar Oficial M365 (Barra de Acciones Horizontal) */
+  .m365-command-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0 16px;
   }
 
-  /* Botones Planos Fluent 2: Radio de 2px, colores planos sólidos, cero gradientes */
-  .ui-btn {
+  .m365-command-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-    font-size: 0.75rem;
+    gap: 6px;
+    height: 32px;
+    padding: 0 10px;
+    font-size: 13px;
     font-weight: 500;
-    border-radius: var(--radius-input);
-    padding: 6px 12px;
-    transition: background-color var(--duration-fast) var(--ease-fluent),
-                border-color var(--duration-fast) var(--ease-fluent);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    transition: all 120ms ease;
     cursor: pointer;
-    font-family: inherit;
-    line-height: 1.25rem;
-    border: 1px solid transparent;
+    border: none;
+    background: transparent;
     user-select: none;
   }
 
-  .ui-btn:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-  }
-
-  .ui-btn-primary {
-    background-color: var(--istpet-navy);
-    color: #ffffff;
-    border-color: var(--istpet-navy);
-  }
-  .ui-btn-primary:hover:not(:disabled) {
-    background-color: var(--istpet-navy-hover);
-    border-color: var(--istpet-navy-hover);
-  }
-
-  .ui-btn-secondary {
-    background-color: var(--bg-surface);
-    border-color: #d1d5db;
+  .m365-command-btn:hover {
+    background-color: var(--bg-surface-hover);
     color: var(--text-primary);
   }
-  .ui-btn-secondary:hover:not(:disabled) {
-    background-color: var(--bg-surface-alt);
-    border-color: #9ca3af;
+
+  .m365-command-btn--primary {
+    background-color: var(--m365-brand);
+    color: #ffffff;
+    font-weight: 600;
   }
 
-  .ui-btn-ghost {
+  .m365-command-btn--primary:hover {
+    background-color: var(--m365-brand-hover);
+    color: #ffffff;
+  }
+
+  /* Botones Fluent UI v9 */
+  .m365-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    transition: all 120ms cubic-bezier(0.1, 0.9, 0.2, 1);
+    cursor: pointer;
+    border: 1px solid transparent;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .m365-btn-primary {
+    background-color: var(--m365-brand);
+    color: #ffffff;
+    border-color: var(--m365-brand);
+    font-weight: 600;
+  }
+  .m365-btn-primary:hover:not(:disabled) {
+    background-color: var(--m365-brand-hover);
+    border-color: var(--m365-brand-hover);
+  }
+  .m365-btn-primary:active:not(:disabled) {
+    background-color: var(--m365-brand-pressed);
+    border-color: var(--m365-brand-pressed);
+  }
+
+  .m365-btn-secondary {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border-color: var(--border-default);
+  }
+  .m365-btn-secondary:hover:not(:disabled) {
+    background-color: var(--bg-surface-hover);
+    border-color: var(--border-strong);
+  }
+
+  .m365-btn-subtle {
     background-color: transparent;
     color: var(--text-secondary);
     border-color: transparent;
   }
-  .ui-btn-ghost:hover:not(:disabled) {
+  .m365-btn-subtle:hover:not(:disabled) {
+    background-color: var(--bg-surface-hover);
     color: var(--text-primary);
-    background-color: var(--bg-surface-alt);
   }
 
-  .ui-btn-blue {
-    background-color: var(--color-info);
-    color: #ffffff;
-    border-color: var(--color-info);
-  }
-  .ui-btn-blue:hover:not(:disabled) {
-    background-color: #106ebe;
-    border-color: #106ebe;
-  }
-
-  /* Inputs de Formulario Fluent: Radio estricto de 2px, borde nítido */
-  .ui-input {
-    width: 100%;
-    padding: 6px 10px;
-    border-radius: var(--radius-input);
-    background-color: var(--bg-surface);
-    border: 1px solid #d1d5db;
-    color: var(--text-primary);
-    font-size: 0.8125rem;
-    font-family: inherit;
-    transition: border-color var(--duration-fast) var(--ease-fluent);
-  }
-  .ui-input:focus {
-    outline: none;
-    border-color: var(--istpet-navy);
-    box-shadow: 0 0 0 1px var(--istpet-navy);
-  }
-
-  /* Badges de Estado Fluent 2 (Texto plano nítido sin recuadro pesado) */
-  .fluent-badge {
+  /* Badges Modernos M365 (Pastillas redondeadas limpias) */
+  .m365-badge {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.75rem;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
     padding: 2px 8px;
-    border-radius: var(--radius-badge);
+    border-radius: var(--radius-pill);
+    line-height: 1.3;
   }
 
-  .fluent-badge--success {
-    background-color: var(--color-success-bg);
-    color: var(--color-success);
-    border: 1px solid rgba(16, 124, 16, 0.2);
+  .m365-badge--success {
+    background-color: var(--m365-success-bg);
+    color: var(--m365-success);
+    border: 1px solid var(--m365-success-border);
   }
 
-  .fluent-badge--error {
-    background-color: var(--color-error-bg);
-    color: var(--color-error);
-    border: 1px solid rgba(164, 38, 44, 0.2);
+  .m365-badge--warning {
+    background-color: var(--m365-warning-bg);
+    color: var(--m365-warning);
+    border: 1px solid var(--m365-warning-border);
   }
 
-  .fluent-badge--warning {
-    background-color: var(--color-warning-bg);
-    color: var(--color-warning-text);
-    border: 1px solid rgba(125, 90, 0, 0.2);
+  .m365-badge--danger {
+    background-color: var(--m365-danger-bg);
+    color: var(--m365-danger);
+    border: 1px solid var(--m365-danger-border);
   }
 
-  .fluent-badge--neutral {
-    background-color: var(--bg-surface-alt);
-    color: var(--text-muted);
-    border: 1px solid var(--border-subtle);
+  .m365-badge--info {
+    background-color: var(--m365-info-bg);
+    color: var(--m365-brand);
+    border: 1px solid var(--m365-info-border);
   }
 
-  .fluent-badge--info {
-    background-color: var(--color-info-bg);
-    color: var(--color-info);
-    border: 1px solid rgba(0, 120, 212, 0.2);
+  .m365-badge--neutral {
+    background-color: #f0f0f0;
+    color: #424242;
+    border: 1px solid #e0e0e0;
   }
 
-  /* Data Grid / Tabla Oficial Fluent 2 (Alta densidad de datos 8px 12px) */
-  .fluent-table-wrapper {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-card);
-    overflow: hidden;
-    box-shadow: var(--fluent-shadow-card);
-  }
-
+  /* Data Grid / Tabla M365 SharePoint/Lists style */
+  .m365-table,
   .fluent-table {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8125rem;
-    font-family: inherit;
-    text-align: left;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
   }
 
+  .m365-table thead th,
   .fluent-table thead th {
-    padding: 8px 12px;
-    background-color: var(--bg-surface-alt);
-    border-bottom: 2px solid var(--border-subtle);
-    font-size: 0.6875rem;
+    background-color: #fafafa;
+    color: var(--text-secondary);
     font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-size: 12px;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-default);
     white-space: nowrap;
     user-select: none;
   }
 
+  .m365-table tbody td,
   .fluent-table tbody td {
-    padding: 8px 12px;
+    padding: 10px 14px;
     border-bottom: 1px solid var(--border-subtle);
     color: var(--text-primary);
     vertical-align: middle;
-  }
-
-  .fluent-table tbody tr:last-child td {
-    border-bottom: none;
-  }
-
-  .fluent-table tbody tr:hover td {
-    background-color: var(--bg-surface-alt);
-  }
-
-  .fluent-table code {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    background: var(--bg-surface-alt);
-    padding: 2px 6px;
-    border-radius: var(--radius-input);
-    color: var(--istpet-navy);
-    border: 1px solid var(--border-subtle);
-  }
-
-  .fluent-btn-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    background: var(--istpet-navy);
-    color: #ffffff;
-    border: none;
-    border-radius: var(--radius-input);
-    font-size: 0.75rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color var(--duration-fast) var(--ease-fluent);
-  }
-
-  .fluent-btn-action:hover {
-    background-color: var(--istpet-navy-hover);
-  }
-
-  /* Stepper Oficial Fluent 2 (Flujo de 4 pasos) */
-  .fluent-stepper-card {
     background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-card);
-    padding: 16px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    box-shadow: var(--fluent-shadow-card);
   }
 
-  .step-icon-circle {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--bg-surface-alt);
-    border: 2px solid #d1d5db;
-    color: var(--text-muted);
+  .m365-table tbody tr:hover td,
+  .fluent-table tbody tr:hover td {
+    background-color: #f7f9fa;
+  }
+
+  /* Input M365 */
+  .m365-input,
+  .ui-input {
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    font-size: 13px;
+    color: var(--text-primary);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    transition: all 120ms ease;
+  }
+
+  .m365-input:focus,
+  .ui-input:focus {
+    outline: none;
+    border-color: var(--m365-brand);
+    box-shadow: 0 0 0 1px var(--m365-brand);
+  }
+
+  /* Stepper M365 */
+  .m365-step-node {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
     font-weight: 700;
-    transition: all var(--duration-fast) var(--ease-fluent);
+    transition: all 150ms ease;
   }
 
-  .step-icon-circle.completed {
-    background: var(--color-success);
-    border-color: var(--color-success);
+  .m365-step-node--completed {
+    background-color: var(--m365-brand);
     color: #ffffff;
   }
 
-  .step-icon-circle.active {
-    background: var(--istpet-gold);
-    border-color: var(--istpet-gold);
-    color: var(--istpet-navy);
+  .m365-step-node--active {
+    background-color: #ffffff;
+    border: 2px solid var(--m365-brand);
+    color: var(--m365-brand);
+  }
+
+  .m365-step-node--pending {
+    background-color: #f0f0f0;
+    color: var(--text-muted);
+    border: 1px solid var(--border-default);
+  }
+
+  /* Retrocompatibilidad limpia para clases heredadas */
+  .fluent-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    line-height: 1.3;
+  }
+  .fluent-badge--success {
+    background-color: var(--m365-success-bg);
+    color: var(--m365-success);
+    border: 1px solid var(--m365-success-border);
+  }
+  .fluent-badge--warning {
+    background-color: var(--m365-warning-bg);
+    color: var(--m365-warning);
+    border: 1px solid var(--m365-warning-border);
+  }
+  .fluent-badge--error {
+    background-color: var(--m365-danger-bg);
+    color: var(--m365-danger);
+    border: 1px solid var(--m365-danger-border);
+  }
+  .fluent-badge--info {
+    background-color: var(--m365-info-bg);
+    color: var(--m365-brand);
+    border: 1px solid var(--m365-info-border);
+  }
+  .fluent-badge--neutral {
+    background-color: #f0f0f0;
+    color: #424242;
+    border: 1px solid #e0e0e0;
+  }
+
+  .fluent-btn-action,
+  .ui-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    background-color: var(--m365-brand);
+    color: #ffffff;
+    border: 1px solid var(--m365-brand);
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+  .fluent-btn-action:hover,
+  .ui-btn-primary:hover:not(:disabled) {
+    background-color: var(--m365-brand-hover);
+    border-color: var(--m365-brand-hover);
+  }
+
+  .ui-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+
+  .ui-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-default);
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+  .ui-btn-secondary:hover:not(:disabled) {
+    background-color: var(--bg-surface-hover);
+    border-color: var(--border-strong);
   }
 }

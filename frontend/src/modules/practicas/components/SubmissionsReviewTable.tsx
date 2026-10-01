@@ -1,43 +1,39 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   FileText,
-  CheckCircle2,
-  AlertTriangle,
+  Search,
   Download,
   Edit3,
+  CheckCircle2,
+  AlertTriangle,
   ShieldCheck,
-  Search,
 } from 'lucide-react';
-import { documentsApi } from '@/modules/practicas/api/documents.api';
+import { documentsApi } from '../api/documents.api';
 import type { DocumentSubmission, SubmissionStatus } from '@/shared/types/document.types';
 
-interface SubmissionsReviewTableProps {
+export interface SubmissionsReviewTableProps {
   submissions: DocumentSubmission[];
   isLoading: boolean;
-  onOpenReview: (submission: DocumentSubmission) => void;
+  onOpenReview?: (submission: DocumentSubmission) => void;
 }
 
-export function SubmissionsReviewTable({
+export const SubmissionsReviewTable: React.FC<SubmissionsReviewTableProps> = ({
   submissions,
   isLoading,
   onOpenReview,
-}: SubmissionsReviewTableProps) {
+}) => {
   const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<string>('');
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const filteredSubmissions = submissions.filter((sub) => {
-    if (filterStatus !== 'all' && sub.status !== filterStatus) return false;
-    if (search) {
-      const q = search.toLowerCase();
-      const studentName = sub.enrollment?.user?.fullName?.toLowerCase() || '';
-      const ci = sub.enrollment?.user?.identification || '';
-      const title = sub.documentTitle.toLowerCase();
-      if (!studentName.includes(q) && !ci.includes(q) && !title.includes(q)) {
-        return false;
-      }
-    }
-    return true;
+    const matchesFilter = filterStatus === 'all' || sub.status === filterStatus;
+    const student = sub.enrollment?.user;
+    const matchesSearch =
+      sub.documentTitle.toLowerCase().includes(search.toLowerCase()) ||
+      (student?.fullName && student.fullName.toLowerCase().includes(search.toLowerCase())) ||
+      (student?.identification && student.identification.includes(search));
+    return matchesFilter && matchesSearch;
   });
 
   const handleDownload = async (sub: DocumentSubmission) => {
@@ -45,7 +41,7 @@ export function SubmissionsReviewTable({
       setDownloadingId(sub.id);
       await documentsApi.download(sub.id, `${sub.documentTitle}.pdf`);
     } catch {
-      alert('Descarga completada.');
+      window.open(sub.fileUrl, '_blank');
     } finally {
       setDownloadingId(null);
     }
@@ -55,20 +51,20 @@ export function SubmissionsReviewTable({
     switch (status) {
       case 'approved':
         return (
-          <span className="fluent-badge fluent-badge--success">
+          <span className="m365-badge m365-badge--success">
             <CheckCircle2 className="w-3 h-3" /> Aprobada
           </span>
         );
       case 'observed':
         return (
-          <span className="fluent-badge fluent-badge--warning">
+          <span className="m365-badge m365-badge--warning">
             <AlertTriangle className="w-3 h-3" /> Observada
           </span>
         );
       case 'submitted':
       default:
         return (
-          <span className="fluent-badge fluent-badge--info">
+          <span className="m365-badge m365-badge--info">
             En Revisión
           </span>
         );
@@ -83,11 +79,11 @@ export function SubmissionsReviewTable({
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      {/* Barra de Filtros y Búsqueda Fluent 2 */}
+    <div className="flex flex-col gap-3.5">
+      {/* Barra de Filtros y Búsqueda M365 */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        {/* Tabs de Filtro Subrayados Fluent */}
-        <div className="flex border-b border-[#e5e7eb] w-full sm:w-auto">
+        {/* Tabs de Filtro Subrayados M365 */}
+        <div className="flex border-b border-[#edebe9] w-full sm:w-auto">
           {[
             { id: 'all', label: 'Todas las Entregas', count: counts.all },
             { id: 'submitted', label: 'Pendientes', count: counts.submitted },
@@ -100,49 +96,49 @@ export function SubmissionsReviewTable({
               onClick={() => setFilterStatus(tab.id)}
               className={`px-3 py-2 text-xs font-medium border-b-2 -mb-[1px] transition-colors cursor-pointer ${
                 filterStatus === tab.id
-                  ? 'border-[#1b2a4a] text-[#1b2a4a] font-bold'
-                  : 'border-transparent text-[#605e5c] hover:text-[#1a1a1a]'
+                  ? 'border-[#0f6cbd] text-[#0f6cbd] font-semibold'
+                  : 'border-transparent text-[#616161] hover:text-[#242424]'
               }`}
             >
-              {tab.label} <span className="font-mono text-[11px] text-[#605e5c]">({tab.count})</span>
+              {tab.label} <span className="text-[11px] text-[#8a8886]">({tab.count})</span>
             </button>
           ))}
         </div>
 
         {/* Input de Búsqueda Rápida */}
         <div className="relative w-full sm:w-64">
-          <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#605e5c]" />
+          <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#616161]" />
           <input
             type="text"
-            placeholder="Buscar por estudiante, cédula..."
+            placeholder="Buscar estudiante, cédula..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1 bg-white border border-[#d1d5db] rounded-[2px] text-xs text-[#1a1a1a] placeholder-[#9ca3af] focus:outline-none focus:border-[#1b2a4a]"
+            className="m365-input pl-8 text-xs h-7.5"
           />
         </div>
       </div>
 
-      {/* Tabla Oficial Fluent 2 (Ref: titulacion-istpet) */}
-      <div className="fluent-table-wrapper">
+      {/* Tabla Oficial M365 SharePoint / Lists */}
+      <div className="overflow-x-auto border border-[#e0e0e0] rounded-lg shadow-2xs bg-white">
         {isLoading ? (
-          <div className="p-8 text-center text-xs text-[#605e5c]">
+          <div className="p-8 text-center text-xs text-[#616161]">
             Cargando bandeja de entregas oficiales...
           </div>
         ) : filteredSubmissions.length === 0 ? (
-          <div className="p-8 text-center text-xs text-[#605e5c]">
+          <div className="p-8 text-center text-xs text-[#616161]">
             No hay expedientes consignados con el criterio seleccionado.
           </div>
         ) : (
-          <table className="fluent-table">
+          <table className="m365-table">
             <thead>
               <tr>
-                <th>CÓDIGO // CI</th>
+                <th>CÓDIGO</th>
                 <th>ESTUDIANTE / EXPEDIENTE</th>
                 <th>DOCUMENTO CONSIGNADO</th>
                 <th>FECHA DE CARGA</th>
-                <th>AUDITORÍA RRA</th>
+                <th>DICTAMEN RRA</th>
                 <th>ESTADO</th>
-                <th className="text-right">ACCIÓN</th>
+                <th className="text-right">ACCIONES</th>
               </tr>
             </thead>
             <tbody>
@@ -151,33 +147,35 @@ export function SubmissionsReviewTable({
                 return (
                   <tr key={sub.id}>
                     <td>
-                      <code>EXP-{(idx + 1).toString().padStart(3, '0')}</code>
+                      <code className="text-xs font-mono bg-[#f0f0f0] px-1.5 py-0.5 rounded-sm text-[#424242]">
+                        EXP-{(idx + 1).toString().padStart(3, '0')}
+                      </code>
                       {student?.identification && (
-                        <span className="block text-[10px] text-[#605e5c] font-mono mt-0.5">
+                        <span className="block text-[10px] text-[#616161] font-mono mt-0.5">
                           {student.identification}
                         </span>
                       )}
                     </td>
                     <td>
-                      <div className="font-bold text-[#1a1a1a]">
+                      <div className="font-semibold text-[#242424]">
                         {student ? student.fullName : 'Estudiante Registrado'}
                       </div>
-                      <div className="text-[10px] text-[#605e5c]">
+                      <div className="text-[11px] text-[#616161]">
                         {student?.email || 'alumno@instituto.edu.ec'}
                       </div>
                     </td>
                     <td>
-                      <div className="flex items-center gap-1.5 font-medium text-[#1a1a1a]">
-                        <FileText className="w-3.5 h-3.5 text-[#0078d4] flex-shrink-0" />
+                      <div className="flex items-center gap-1.5 font-medium text-[#242424]">
+                        <FileText className="w-3.5 h-3.5 text-[#0f6cbd] flex-shrink-0" />
                         <span className="truncate max-w-xs">{sub.documentTitle}</span>
                       </div>
                       {sub.feedbackNotes && (
-                        <div className="text-[10px] text-[#7d5a00] truncate max-w-xs mt-0.5 italic">
+                        <div className="text-[11px] text-[#7d5a00] truncate max-w-xs mt-0.5 italic">
                           Nota: {sub.feedbackNotes}
                         </div>
                       )}
                     </td>
-                    <td className="text-[11px] text-[#605e5c] font-mono whitespace-nowrap">
+                    <td className="text-[11px] text-[#616161] font-mono whitespace-nowrap">
                       {sub.createdAt
                         ? new Date(sub.createdAt).toLocaleDateString('es-EC', {
                             year: 'numeric',
@@ -189,9 +187,9 @@ export function SubmissionsReviewTable({
                         : 'Reciente'}
                     </td>
                     <td>
-                      <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                      <div className="flex items-center gap-1.5 text-xs">
                         <ShieldCheck className="w-3.5 h-3.5 text-[#107c10]" />
-                        <span className="font-bold text-[#107c10]">CONFORME</span>
+                        <span className="font-semibold text-[#107c10]">CONFORME</span>
                       </div>
                     </td>
                     <td>{getStatusBadge(sub.status)}</td>
@@ -201,18 +199,20 @@ export function SubmissionsReviewTable({
                           type="button"
                           onClick={() => handleDownload(sub)}
                           disabled={downloadingId === sub.id}
-                          title="Descargar documento legal"
-                          className="p-1 border border-[#d1d5db] rounded-[2px] bg-white text-[#323130] hover:bg-[#faf9f8] transition-colors"
+                          title="Descargar documento oficial"
+                          className="h-7 w-7 rounded-md border border-[#d1d1d1] bg-white text-[#424242] hover:bg-[#f5f5f5] flex items-center justify-center transition-colors"
                         >
                           <Download className="w-3.5 h-3.5" />
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => onOpenReview(sub)}
-                          className="fluent-btn-action"
-                        >
-                          <Edit3 className="w-3 h-3" /> Dictaminar
-                        </button>
+                        {onOpenReview && (
+                          <button
+                            type="button"
+                            onClick={() => onOpenReview(sub)}
+                            className="m365-btn m365-btn-primary text-xs h-7 px-2.5"
+                          >
+                            <Edit3 className="w-3 h-3" /> Dictaminar
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -224,4 +224,4 @@ export function SubmissionsReviewTable({
       </div>
     </div>
   );
-}
+};

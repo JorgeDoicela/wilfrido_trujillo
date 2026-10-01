@@ -5,7 +5,7 @@ export const FeaturePillars: React.FC = () => {
   const pillars = [
     {
       title: 'Prácticas Preprofesionales',
-      description: 'Inducción obligatoria guiada, evaluación de directrices y entrega de bitácoras oficiales según RRA.',
+      description: 'Inducción guiada en video, evaluación de directrices y entrega de bitácoras oficiales según RRA.',
       icon: GraduationCap,
       code: 'RRA-PRAC-01',
     },
@@ -30,21 +30,21 @@ export const FeaturePillars: React.FC = () => {
         return (
           <div
             key={p.title}
-            className="bg-white border border-[#d1d5db]/80 rounded-[4px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col justify-between hover:border-[#1b2a4a]/40 transition-colors"
+            className="m365-card m365-card-hover p-4 flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="h-8 w-8 rounded-[2px] bg-[#f0f4f8] text-[#1b2a4a] border border-[#d1d5db] flex items-center justify-center">
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="h-8 w-8 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
                   <Icon className="w-4 h-4" />
                 </div>
-                <span className="text-[10px] font-mono text-[#605e5c] bg-[#faf9f8] px-2 py-0.5 border border-[#e5e7eb] rounded-[2px]">
+                <span className="text-[10px] font-mono text-[#616161] bg-[#f0f0f0] px-2 py-0.5 rounded-sm">
                   {p.code}
                 </span>
               </div>
-              <h3 className="text-sm font-bold text-[#1a1a1a] mb-1">{p.title}</h3>
-              <p className="text-xs text-[#605e5c] leading-relaxed">{p.description}</p>
+              <h4 className="text-sm font-semibold text-[#242424] mb-1">{p.title}</h4>
+              <p className="text-xs text-[#616161] leading-relaxed">{p.description}</p>
             </div>
-            <div className="mt-4 pt-3 border-t border-[#f0f0f0] flex items-center justify-between text-[11px] text-[#0078d4] font-semibold">
+            <div className="mt-3.5 pt-2.5 border-t border-[#edebe9] flex items-center justify-between text-[11px] text-[#0f6cbd] font-semibold">
               <span>Normativa vigente</span>
               <span>100% Digital</span>
             </div>

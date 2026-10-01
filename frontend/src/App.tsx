@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/modules/auth/context/AuthContext';
-import { PbacSimulatorCard } from '@/shared/components/PbacSimulatorCard';
+import { useAuth } from '@/shared/context/AuthContext';
 import { WorkspaceSelectorSection } from '@/modules/admin/components/WorkspaceSelectorSection';
 import { PracticasOverviewPage } from '@/modules/practicas/pages/PracticasOverviewPage';
 import { CertificatesSection } from '@/modules/eventos/components/CertificatesSection';
 import { FeaturePillars } from '@/shared/components/FeaturePillars';
 import { CreateWorkspaceModal } from '@/modules/admin/components/CreateWorkspaceModal';
-import { CreateTestModal } from '@/modules/admin/components/CreateTestModal';
-import { UploadResourceModal } from '@/modules/admin/components/UploadResourceModal';
-import { ReviewDocumentModal } from '@/modules/admin/components/ReviewDocumentModal';
+import { CreateTestModal } from '@/modules/practicas/components/CreateTestModal';
+import { UploadResourceModal } from '@/modules/practicas/components/UploadResourceModal';
+import { ReviewDocumentModal } from '@/modules/practicas/components/ReviewDocumentModal';
 import { EventQrShareModal } from '@/modules/eventos/components/EventQrShareModal';
 import { IssueCertificateModal } from '@/modules/eventos/components/IssueCertificateModal';
 import { PublicEventPortal } from '@/modules/eventos/pages/PublicEventPortal';
 import { VerifyCertificatePortal } from '@/modules/eventos/pages/VerifyCertificatePortal';
-import { workspacesApi } from '@/modules/admin/api/workspaces.api';
+import { workspacesApi } from '@/shared/api/workspaces.api';
 import { testsApi } from '@/modules/practicas/api/tests.api';
 import { resourcesApi } from '@/modules/practicas/api/resources.api';
 import { documentsApi } from '@/modules/practicas/api/documents.api';
@@ -451,47 +450,57 @@ export default function App() {
       onSelectNavTab={(tab) => setActiveNavTab(tab)}
       onSimulateStudent={simulateStudent}
       onSimulateIngeniero={simulateIngeniero}
+      onOpenCreateWorkspaceModal={() => setIsCreateModalOpen(true)}
     >
-      {/* Simulador Interactivo PBAC */}
-      <PbacSimulatorCard
-        onSimulateStudent={simulateStudent}
-        onSimulateIngeniero={simulateIngeniero}
-      />
-
-      {/* Vista de Prácticas Preprofesionales */}
-      {activeNavTab === 'practicas' && selectedWorkspace && (
-        <PracticasOverviewPage
-          workspace={selectedWorkspace}
-          inductionWatched={inductionWatched}
-          onInductionComplete={() => setInductionWatched(true)}
-          activeTest={activeTest}
-          isLoadingTest={isLoadingTest}
-          testResult={testResult}
-          onTestPassed={(res) => setTestResult(res)}
-          onOpenCreateTestModal={() => setIsCreateTestModalOpen(true)}
-          resources={resources}
-          isLoadingResources={isLoadingResources}
-          onOpenUploadResourceModal={() => setIsUploadResourceModalOpen(true)}
-          onDeleteResourceSuccess={(id) => {
-            setResources((prev) => prev.filter((r) => r.id !== id));
-          }}
-          mySubmissions={mySubmissions}
-          allSubmissions={submissions}
-          isLoadingSubmissions={isLoadingSubmissions}
-          onUploadSuccess={(sub) => {
-            setMySubmissions((prev) => [sub, ...prev]);
-            setSubmissions((prev) => [sub, ...prev]);
-          }}
-          onOpenReviewSubmission={(sub) => {
-            setSelectedSubmissionForReview(sub);
-            setIsReviewModalOpen(true);
-          }}
-          onOpenQrModal={() => setIsQrModalOpen(true)}
-        />
+      {/* VISTA 1: PRÁCTICAS PREPROFESIONALES */}
+      {activeNavTab === 'practicas' && (
+        selectedWorkspace ? (
+          <PracticasOverviewPage
+            workspace={selectedWorkspace}
+            inductionWatched={inductionWatched}
+            onInductionComplete={() => setInductionWatched(true)}
+            activeTest={activeTest}
+            isLoadingTest={isLoadingTest}
+            testResult={testResult}
+            onTestPassed={(res) => setTestResult(res)}
+            onOpenCreateTestModal={() => setIsCreateTestModalOpen(true)}
+            resources={resources}
+            isLoadingResources={isLoadingResources}
+            onOpenUploadResourceModal={() => setIsUploadResourceModalOpen(true)}
+            onDeleteResourceSuccess={(id) => {
+              setResources((prev) => prev.filter((r) => r.id !== id));
+            }}
+            mySubmissions={mySubmissions}
+            allSubmissions={submissions}
+            isLoadingSubmissions={isLoadingSubmissions}
+            onUploadSuccess={(sub) => {
+              setMySubmissions((prev) => [sub, ...prev]);
+              setSubmissions((prev) => [sub, ...prev]);
+            }}
+            onOpenReviewSubmission={(sub) => {
+              setSelectedSubmissionForReview(sub);
+              setIsReviewModalOpen(true);
+            }}
+            onOpenQrModal={() => setIsQrModalOpen(true)}
+          />
+        ) : (
+          <WorkspaceSelectorSection
+            workspaces={workspaces.filter((w) => w.type === 'PRACTICAS')}
+            isLoading={isLoadingWorkspaces}
+            onSelectWorkspace={(ws) => setSelectedWorkspace(ws)}
+            onOpenCreateModal={() => setIsCreateModalOpen(true)}
+            onJoinSuccess={(res) => {
+              if (res.workspace) {
+                setWorkspaces((prev) => [res.workspace, ...prev]);
+                setSelectedWorkspace(res.workspace);
+              }
+            }}
+          />
+        )
       )}
 
-      {/* Vista de Certificados y Registro QR */}
-      {(activeNavTab === 'certificados' || activeNavTab === 'eventos') && (
+      {/* VISTA 2: CERTIFICADOS Y REGISTRO QR (Estilo Microsoft Lists / SharePoint) */}
+      {activeNavTab === 'certificados' && (
         <CertificatesSection
           certificates={certificates}
           isLoading={isLoadingCertificates}
@@ -503,27 +512,61 @@ export default function App() {
         />
       )}
 
-      {/* Catálogo de Espacios y Unirse con Código */}
-      <WorkspaceSelectorSection
-        workspaces={workspaces}
-        isLoading={isLoadingWorkspaces}
-        onSelectWorkspace={(ws) => setSelectedWorkspace(ws)}
-        onOpenCreateModal={() => setIsCreateModalOpen(true)}
-        onJoinSuccess={(res) => {
-          if (res.workspace) {
-            setWorkspaces((prev) => {
-              if (!prev.some((w) => w.id === res.workspace.id)) {
-                return [res.workspace, ...prev];
-              }
-              return prev;
-            });
-            setSelectedWorkspace(res.workspace);
-          }
-        }}
-      />
+      {/* VISTA 3: VINCULACIÓN COMUNITARIA */}
+      {activeNavTab === 'vinculacion' && (
+        <WorkspaceSelectorSection
+          workspaces={workspaces.filter((w) => w.type === 'VINCULACION')}
+          isLoading={isLoadingWorkspaces}
+          onSelectWorkspace={(ws) => setSelectedWorkspace(ws)}
+          onOpenCreateModal={() => setIsCreateModalOpen(true)}
+          onJoinSuccess={(res) => {
+            if (res.workspace) {
+              setWorkspaces((prev) => [res.workspace, ...prev]);
+              setSelectedWorkspace(res.workspace);
+            }
+          }}
+        />
+      )}
 
-      {/* Pilares Institucionales de Acreditación */}
-      <FeaturePillars />
+      {/* VISTA 4: CONFERENCIAS Y EVENTOS */}
+      {activeNavTab === 'eventos' && (
+        <WorkspaceSelectorSection
+          workspaces={workspaces.filter((w) => w.type === 'EVENTO')}
+          isLoading={isLoadingWorkspaces}
+          onSelectWorkspace={(ws) => setSelectedWorkspace(ws)}
+          onOpenCreateModal={() => setIsCreateModalOpen(true)}
+          onJoinSuccess={(res) => {
+            if (res.workspace) {
+              setWorkspaces((prev) => [res.workspace, ...prev]);
+              setSelectedWorkspace(res.workspace);
+            }
+          }}
+        />
+      )}
+
+      {/* VISTA 5: CATÁLOGO DE ESPACIOS GENERAL */}
+      {activeNavTab === 'espacios' && (
+        <div className="flex flex-col gap-5">
+          <WorkspaceSelectorSection
+            workspaces={workspaces}
+            isLoading={isLoadingWorkspaces}
+            onSelectWorkspace={(ws) => {
+              setSelectedWorkspace(ws);
+              if (ws.type === 'PRACTICAS') setActiveNavTab('practicas');
+              if (ws.type === 'VINCULACION') setActiveNavTab('vinculacion');
+              if (ws.type === 'EVENTO') setActiveNavTab('eventos');
+            }}
+            onOpenCreateModal={() => setIsCreateModalOpen(true)}
+            onJoinSuccess={(res) => {
+              if (res.workspace) {
+                setWorkspaces((prev) => [res.workspace, ...prev]);
+                setSelectedWorkspace(res.workspace);
+              }
+            }}
+          />
+          <FeaturePillars />
+        </div>
+      )}
 
       {/* Modales de la aplicación */}
       <CreateWorkspaceModal

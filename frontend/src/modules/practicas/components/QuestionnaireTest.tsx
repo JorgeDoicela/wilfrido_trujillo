@@ -6,9 +6,9 @@ import {
   RotateCcw,
   Lock,
   Award,
+  CheckCircle2,
 } from 'lucide-react';
 import { testsApi } from '../api/tests.api';
-import { Button } from '@/shared/components/ui/Button';
 import type { Test, TestResult } from '@/shared/types/test.types';
 
 interface QuestionnaireTestProps {
@@ -26,44 +26,53 @@ export function QuestionnaireTest({
 }: QuestionnaireTestProps) {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState<number | null>(
-    test.timeLimitMinutes ? test.timeLimitMinutes * 60 : null,
-  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<TestResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number | null>(
+    test.timeLimitMinutes ? test.timeLimitMinutes * 60 : null,
+  );
 
-  // Temporizador
   useEffect(() => {
-    if (timeLeft === null || timeLeft <= 0 || result !== null) return;
+    if (timeLeft === null || result !== null) return;
+
+    if (timeLeft <= 0) {
+      handleSubmitTest();
+      return;
+    }
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev === null || prev <= 1) {
-          clearInterval(timer);
-          handleSubmitAnswers();
-          return 0;
-        }
-        return prev - 1;
-      });
+      setTimeLeft((prev) => (prev !== null && prev > 0 ? prev - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
   }, [timeLeft, result]);
 
   const handleSelectOption = (questionId: string, optionIndex: number) => {
-    if (result) return;
     setSelectedAnswers((prev) => ({
       ...prev,
       [questionId]: optionIndex,
     }));
+    setErrorMessage(null);
   };
 
-  const handleSubmitAnswers = async () => {
+  const handleNext = () => {
+    if (currentQuestionIndex < test.questions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prev) => prev - 1);
+    }
+  };
+
+  const handleSubmitTest = async () => {
     const answeredCount = Object.keys(selectedAnswers).length;
-    if (answeredCount < test.questions.length && timeLeft && timeLeft > 0) {
+    if (answeredCount < test.questions.length) {
       setErrorMessage(
-        `Has respondido ${answeredCount} de ${test.questions.length} preguntas. Debes responder todas para enviar.`,
+        `Has respondido ${answeredCount} de ${test.questions.length} preguntas. Completa todas antes de entregar.`,
       );
       return;
     }
@@ -110,9 +119,9 @@ export function QuestionnaireTest({
   const handleReset = () => {
     setSelectedAnswers({});
     setCurrentQuestionIndex(0);
-    setTimeLeft(test.timeLimitMinutes ? test.timeLimitMinutes * 60 : null);
     setResult(null);
     setErrorMessage(null);
+    setTimeLeft(test.timeLimitMinutes ? test.timeLimitMinutes * 60 : null);
   };
 
   const formatTimer = (seconds: number) => {
@@ -123,94 +132,90 @@ export function QuestionnaireTest({
 
   if (!inductionWatched) {
     return (
-      <div className="p-8 text-center bg-[#faf9f8] rounded-[4px] border border-[#e5e7eb] max-w-2xl mx-auto">
-        <div className="h-10 w-10 rounded-[2px] bg-[#fff4ce] border border-[#7d5a00]/30 text-[#7d5a00] flex items-center justify-center mx-auto mb-3">
+      <div className="p-8 text-center bg-[#fafafa] rounded-lg border border-[#e0e0e0] max-w-2xl mx-auto">
+        <div className="h-10 w-10 rounded-full bg-[#fff4ce] border border-[#f2c864] text-[#7d5a00] flex items-center justify-center mx-auto mb-3">
           <Lock className="w-5 h-5" />
         </div>
-        <h3 className="text-sm font-bold text-[#1a1a1a] mb-1">Evaluación Normativa Bloqueada</h3>
-        <p className="text-xs text-[#605e5c] max-w-md mx-auto leading-relaxed">
+        <h3 className="text-sm font-semibold text-[#242424] mb-1">Evaluación Normativa Bloqueada</h3>
+        <p className="text-xs text-[#616161] max-w-md mx-auto leading-relaxed">
           Para rendir este examen es obligatorio haber visto el video de inducción al 100%. Completa la visualización previa en el reproductor.
         </p>
       </div>
     );
   }
 
-  // Pantalla de Resultados Fluent
+  // Pantalla de Resultados Microsoft Forms style
   if (result) {
     return (
-      <div className="p-6 max-w-2xl mx-auto bg-white border border-[#e5e7eb] rounded-[4px] shadow-xs">
+      <div className="p-6 max-w-2xl mx-auto bg-white border border-[#e0e0e0] rounded-lg shadow-xs">
         <div className="text-center mb-5">
           <div
-            className={`h-12 w-12 rounded-[2px] flex items-center justify-center mx-auto mb-3 border ${
+            className={`h-14 w-14 rounded-full flex items-center justify-center mx-auto mb-3 border ${
               result.passed
-                ? 'bg-[#dff6dd] border-[#107c10]/40 text-[#107c10]'
-                : 'bg-[#fde7e9] border-[#a4262c]/40 text-[#a4262c]'
+                ? 'bg-[#dff6dd] border-[#a3d9a5] text-[#107c10]'
+                : 'bg-[#fde7e9] border-[#f1aeb5] text-[#a4262c]'
             }`}
           >
-            {result.passed ? <Award className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}
+            {result.passed ? <Award className="w-7 h-7" /> : <XCircle className="w-7 h-7" />}
           </div>
 
           <span
-            className={`fluent-badge ${
-              result.passed ? 'fluent-badge--success' : 'fluent-badge--error'
+            className={`m365-badge ${
+              result.passed ? 'm365-badge--success' : 'm365-badge--danger'
             } text-xs mb-2`}
           >
             {result.passed ? 'Evaluación Aprobada' : 'Evaluación Reprobada'}
           </span>
 
-          <h3 className="text-xl font-bold text-[#1a1a1a] tracking-tight">
-            Nota Obtenida: {result.scoreObtained.toFixed(1)} / 10
+          <h3 className="text-xl font-semibold text-[#242424] tracking-tight">
+            Calificación: {result.scoreObtained.toFixed(1)} / 10
           </h3>
 
-          <p className="text-xs text-[#605e5c] mt-0.5">
-            Umbral mínimo de aprobación reglamentario: <strong>{result.passingScore} / 10</strong>
+          <p className="text-xs text-[#616161] mt-0.5">
+            Nota mínima requerida por el RRA: <strong>{result.passingScore} / 10</strong>
           </p>
         </div>
 
         {/* Resumen métrico */}
         <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto mb-6">
-          <div className="bg-[#faf9f8] p-3 rounded-[2px] border border-[#e5e7eb] text-center">
-            <span className="text-[10px] text-[#605e5c] block mb-0.5 uppercase font-mono">Aciertos</span>
-            <span className="text-lg font-bold text-[#1a1a1a]">
+          <div className="bg-[#fafafa] p-3 rounded-lg border border-[#e0e0e0] text-center">
+            <span className="text-[11px] text-[#616161] block mb-0.5 font-medium">Preguntas Correctas</span>
+            <span className="text-lg font-semibold text-[#242424]">
               {result.correctCount} / {result.totalQuestions}
             </span>
           </div>
-          <div className="bg-[#faf9f8] p-3 rounded-[2px] border border-[#e5e7eb] text-center">
-            <span className="text-[10px] text-[#605e5c] block mb-0.5 uppercase font-mono">Efectividad</span>
+          <div className="bg-[#fafafa] p-3 rounded-lg border border-[#e0e0e0] text-center">
+            <span className="text-[11px] text-[#616161] block mb-0.5 font-medium">Porcentaje</span>
             <span
-              className={`text-lg font-bold ${
+              className={`text-lg font-semibold ${
                 result.passed ? 'text-[#107c10]' : 'text-[#a4262c]'
               }`}
             >
-              {Math.round((result.correctCount / result.totalQuestions) * 100)}%
+              {Math.round((result.scoreObtained / 10) * 100)}%
             </span>
           </div>
         </div>
 
         {/* Acciones */}
-        <div className="flex items-center justify-center gap-3 pt-3 border-t border-[#e5e7eb]">
+        <div className="flex items-center justify-center gap-3">
           {!result.passed && (
-            <Button
+            <button
               type="button"
-              variant="secondary"
-              size="sm"
               onClick={handleReset}
-              className="gap-1.5 text-xs py-1.5"
+              className="m365-btn m365-btn-secondary text-xs"
             >
-              <RotateCcw className="w-3.5 h-3.5" /> Reintentar Evaluación
-            </Button>
+              <RotateCcw className="w-3.5 h-3.5" /> Intentar Nuevamente
+            </button>
           )}
 
           {result.passed && onProceedToResources && (
-            <Button
+            <button
               type="button"
-              variant="primary"
-              size="sm"
               onClick={onProceedToResources}
-              className="gap-1.5 text-xs py-1.5"
+              className="m365-btn m365-btn-primary text-xs"
             >
-              Descargar Plantillas Oficiales <ArrowRight className="w-3.5 h-3.5 ml-1" />
-            </Button>
+              Descargar Formatos Oficiales <ArrowRight className="w-3.5 h-3.5 ml-1" />
+            </button>
           )}
         </div>
       </div>
@@ -225,17 +230,17 @@ export function QuestionnaireTest({
   return (
     <div className="flex flex-col gap-4 max-w-3xl mx-auto w-full">
       {/* Barra superior: Título y Temporizador */}
-      <div className="flex items-center justify-between flex-wrap gap-2 pb-2.5 border-b border-[#e5e7eb]">
+      <div className="flex items-center justify-between flex-wrap gap-2 pb-2.5 border-b border-[#edebe9]">
         <div>
-          <span className="fluent-badge fluent-badge--info mb-0.5 text-[10px]">
-            PASO 02 // EVALUACIÓN DE CONOCIMIENTOS
+          <span className="m365-badge m365-badge--info mb-1 text-[10px]">
+            Cuestionario de Conocimiento Normativo
           </span>
-          <h3 className="text-sm font-bold text-[#1a1a1a]">{test.title}</h3>
+          <h3 className="text-sm font-semibold text-[#242424]">{test.title}</h3>
         </div>
 
         {timeLeft !== null && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#faf9f8] border border-[#d1d5db] text-[#1a1a1a] font-mono text-xs">
-            <Clock className="w-3.5 h-3.5 text-[#0078d4]" />
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f0f0f0] border border-[#e0e0e0] text-[#242424] text-xs font-medium">
+            <Clock className="w-3.5 h-3.5 text-[#0f6cbd]" />
             <span>Tiempo: {formatTimer(timeLeft)}</span>
           </div>
         )}
@@ -243,7 +248,7 @@ export function QuestionnaireTest({
 
       {/* Progreso */}
       <div>
-        <div className="flex items-center justify-between text-xs text-[#605e5c] mb-1 font-mono">
+        <div className="flex items-center justify-between text-xs text-[#616161] mb-1 font-medium">
           <span>
             Pregunta {currentQuestionIndex + 1} de {test.questions.length}
           </span>
@@ -251,29 +256,29 @@ export function QuestionnaireTest({
             {Object.keys(selectedAnswers).length} de {test.questions.length} respondidas ({progressPercent}%)
           </span>
         </div>
-        <div className="w-full bg-[#e5e7eb] rounded-[2px] h-1.5 overflow-hidden">
+        <div className="w-full bg-[#e0e0e0] rounded-full h-1.5 overflow-hidden">
           <div
-            className="h-full bg-[#1b2a4a] transition-all duration-200"
+            className="h-full bg-[#0f6cbd] transition-all duration-200"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
       </div>
 
       {errorMessage && (
-        <div className="p-2.5 rounded-[2px] bg-[#fde7e9] border border-[#a4262c]/30 text-[#a4262c] text-xs flex items-center gap-2">
+        <div className="p-2.5 rounded-md bg-[#fde7e9] border border-[#f1aeb5] text-[#a4262c] text-xs flex items-center gap-2">
           <XCircle className="w-4 h-4 flex-shrink-0" />
           <span>{errorMessage}</span>
         </div>
       )}
 
-      {/* Pregunta Actual */}
+      {/* Pregunta Actual (Microsoft Forms Style) */}
       {currentQ && (
-        <div className="bg-[#faf9f8] border border-[#e5e7eb] rounded-[4px] p-4">
-          <div className="flex items-start gap-2.5 mb-3">
-            <span className="h-6 w-6 rounded-[2px] bg-[#1b2a4a] text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+        <div className="bg-[#fafafa] border border-[#e0e0e0] rounded-lg p-4">
+          <div className="flex items-start gap-2.5 mb-3.5">
+            <span className="h-6 w-6 rounded-full bg-[#0f6cbd] text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
               {currentQuestionIndex + 1}
             </span>
-            <h4 className="text-xs sm:text-sm font-semibold text-[#1a1a1a] leading-snug">
+            <h4 className="text-sm font-medium text-[#242424] leading-snug pt-0.5">
               {currentQ.question}
             </h4>
           </div>
@@ -289,22 +294,23 @@ export function QuestionnaireTest({
                   type="button"
                   key={idx}
                   onClick={() => handleSelectOption(currentQ.id, idx)}
-                  className={`w-full text-left p-3 rounded-[2px] border text-xs transition-colors flex items-center gap-2.5 cursor-pointer ${
+                  className={`w-full text-left p-3 rounded-lg border text-xs transition-all flex items-center gap-3 cursor-pointer ${
                     isSelected
-                      ? 'bg-[#e6f2fb] border-[#0078d4] text-[#1b2a4a] font-semibold'
-                      : 'bg-white border-[#d1d5db] text-[#323130] hover:bg-[#faf9f8]'
+                      ? 'bg-[#ebf3fc] border-[#0f6cbd] text-[#0f6cbd] font-semibold shadow-xs'
+                      : 'bg-white border-[#e0e0e0] text-[#242424] hover:bg-[#f5f5f5]'
                   }`}
                 >
                   <span
-                    className={`h-5 w-5 rounded-[2px] flex items-center justify-center font-bold text-[11px] ${
+                    className={`h-5 w-5 rounded-full border flex items-center justify-center font-semibold text-[11px] ${
                       isSelected
-                        ? 'bg-[#0078d4] text-white'
-                        : 'bg-[#e5e7eb] text-[#605e5c]'
+                        ? 'border-[#0f6cbd] bg-[#0f6cbd] text-white'
+                        : 'border-[#d1d1d1] text-[#616161]'
                     }`}
                   >
                     {optionLetter}
                   </span>
                   <span className="flex-1">{option}</span>
+                  {isSelected && <CheckCircle2 className="w-4 h-4 text-[#0f6cbd]" />}
                 </button>
               );
             })}
@@ -312,42 +318,37 @@ export function QuestionnaireTest({
         </div>
       )}
 
-      {/* Navegación y Envío */}
-      <div className="flex items-center justify-between pt-2 border-t border-[#e5e7eb]">
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            onClick={() => setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))}
-            disabled={currentQuestionIndex === 0}
-            className="text-xs py-1"
-          >
-            Anterior
-          </Button>
-
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            onClick={() => setCurrentQuestionIndex((prev) => Math.min(test.questions.length - 1, prev + 1))}
-            disabled={currentQuestionIndex === test.questions.length - 1}
-            className="text-xs py-1"
-          >
-            Siguiente
-          </Button>
-        </div>
-
-        <Button
+      {/* Controles de Navegación */}
+      <div className="flex items-center justify-between pt-2">
+        <button
           type="button"
-          variant="primary"
-          size="sm"
-          onClick={handleSubmitAnswers}
-          isLoading={isSubmitting}
-          className="text-xs py-1 px-4"
+          onClick={handlePrevious}
+          disabled={currentQuestionIndex === 0}
+          className="m365-btn m365-btn-secondary text-xs"
         >
-          Finalizar y Calificar
-        </Button>
+          Anterior
+        </button>
+
+        <div className="flex items-center gap-2">
+          {currentQuestionIndex < test.questions.length - 1 ? (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="m365-btn m365-btn-primary text-xs"
+            >
+              Siguiente
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSubmitTest}
+              disabled={isSubmitting}
+              className="m365-btn m365-btn-primary text-xs bg-[#107c10] hover:bg-[#0e6b0e] border-[#107c10]"
+            >
+              {isSubmitting ? 'Calificando...' : 'Finalizar y Entregar Test'}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ import {
   RefreshCw,
   Sparkles,
 } from 'lucide-react';
-import { documentsApi } from '@/modules/practicas/api/documents.api';
+import { documentsApi } from '../api/documents.api';
 import {
   Modal,
   ModalHeader,

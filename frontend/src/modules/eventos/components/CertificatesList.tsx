@@ -32,7 +32,7 @@ export function CertificatesList({
 
   if (isLoading) {
     return (
-      <div className="p-8 text-center text-xs text-[#605e5c]">
+      <div className="p-8 text-center text-xs text-[#616161]">
         Cargando certificados emitidos...
       </div>
     );
@@ -40,15 +40,15 @@ export function CertificatesList({
 
   if (certificates.length === 0) {
     return (
-      <div className="p-6 text-center text-xs text-[#605e5c] bg-[#faf9f8] rounded-[2px] border border-[#e5e7eb]">
+      <div className="p-6 text-center text-xs text-[#616161] bg-[#fafafa] rounded-lg border border-[#e0e0e0]">
         No se han emitido certificados oficiales en este espacio de trabajo aún.
       </div>
     );
   }
 
   return (
-    <div className="fluent-table-wrapper">
-      <table className="fluent-table">
+    <div className="overflow-x-auto border border-[#e0e0e0] rounded-lg shadow-2xs bg-white">
+      <table className="m365-table">
         <thead>
           <tr>
             <th>BENEFICIARIO / CÉDULA</th>
@@ -63,29 +63,31 @@ export function CertificatesList({
           {certificates.map((cert) => (
             <tr key={cert.id}>
               <td>
-                <div className="font-bold text-[#1a1a1a]">{cert.recipientName}</div>
-                <div className="text-[10px] text-[#605e5c] font-mono">
+                <div className="font-semibold text-[#242424]">{cert.recipientName}</div>
+                <div className="text-[11px] text-[#616161] font-mono">
                   CI: {cert.recipientIdentification} • {cert.recipientEmail}
                 </div>
               </td>
               <td>
-                <span className="font-mono text-xs font-bold text-[#1b2a4a]">
+                <span className="font-semibold text-xs text-[#0f6cbd]">
                   {cert.hours} Horas
                 </span>
               </td>
               <td>
-                <div className="flex items-center gap-1.5 font-mono text-[11px]">
-                  <code>{cert.verificationHash.slice(0, 16)}...</code>
+                <div className="flex items-center gap-1.5 font-mono text-xs">
+                  <code className="bg-[#f0f0f0] px-1.5 py-0.5 rounded-sm text-[#424242]">
+                    {cert.verificationHash.slice(0, 16)}...
+                  </code>
                   <button
                     type="button"
                     onClick={() => onVerifyHash(cert.verificationHash)}
-                    className="text-[10px] text-[#0078d4] hover:underline cursor-pointer"
+                    className="text-xs text-[#0f6cbd] hover:underline cursor-pointer font-medium"
                   >
                     Verificar
                   </button>
                 </div>
               </td>
-              <td className="text-[11px] text-[#605e5c] font-mono whitespace-nowrap">
+              <td className="text-[11px] text-[#616161] font-mono whitespace-nowrap">
                 {cert.issuedAt
                   ? new Date(cert.issuedAt).toLocaleDateString('es-EC', {
                       year: 'numeric',
@@ -95,7 +97,7 @@ export function CertificatesList({
                   : 'Reciente'}
               </td>
               <td>
-                <span className="fluent-badge fluent-badge--success">
+                <span className="m365-badge m365-badge--success">
                   <ShieldCheck className="w-3 h-3" /> Válido
                 </span>
               </td>
@@ -104,9 +106,9 @@ export function CertificatesList({
                   type="button"
                   onClick={() => handleDownload(cert)}
                   disabled={downloadingId === cert.id}
-                  className="fluent-btn-action"
+                  className="m365-btn m365-btn-secondary text-xs h-7 px-2.5 inline-flex items-center gap-1"
                 >
-                  <Download className="w-3 h-3" /> Descargar PDF
+                  <Download className="w-3.5 h-3.5" /> Descargar PDF
                 </button>
               </td>
             </tr>

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { Upload, FileText, AlertCircle, Lock } from 'lucide-react';
-import { resourcesApi } from '@/modules/practicas/api/resources.api';
+import { resourcesApi } from '../api/resources.api';
 import {
   Modal,
   ModalHeader,

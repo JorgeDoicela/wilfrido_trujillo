@@ -1,4 +1,4 @@
-import { useAuth } from '@/modules/auth/context/AuthContext';
+import { useAuth } from './useAuth';
 import type { PermissionType } from '@/shared/types/auth.types';
 
 export function usePermission(permission: PermissionType | string): boolean {

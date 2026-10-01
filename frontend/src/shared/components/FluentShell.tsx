@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
 import {
+  LayoutGrid,
   FileText,
   Users,
   Award,
   Calendar,
   Search,
-  LogOut,
-  Menu,
+  Settings,
+  PanelLeftClose,
+  PanelLeft,
+  Briefcase,
+  ChevronRight,
+  Plus,
+  RefreshCw,
+  Filter,
+  CheckCircle2,
+  Layers,
+  HelpCircle,
 } from 'lucide-react';
-import { useAuth } from '@/modules/auth/context/AuthContext';
+import { useAuth } from '@/shared/hooks/useAuth';
+import { M365ProfileFlyout } from './M365ProfileFlyout';
+import { M365WaffleMenu } from './M365WaffleMenu';
 import type { Workspace } from '@/shared/types/workspace.types';
 
 export interface FluentShellProps {
@@ -18,8 +30,9 @@ export interface FluentShellProps {
   onSelectWorkspace: (ws: Workspace) => void;
   activeNavTab: string;
   onSelectNavTab: (tab: string) => void;
-  onSimulateStudent?: () => void;
-  onSimulateIngeniero?: () => void;
+  onSimulateStudent: () => void;
+  onSimulateIngeniero: () => void;
+  onOpenCreateWorkspaceModal?: () => void;
 }
 
 export const FluentShell: React.FC<FluentShellProps> = ({
@@ -31,127 +44,194 @@ export const FluentShell: React.FC<FluentShellProps> = ({
   onSelectNavTab,
   onSimulateStudent,
   onSimulateIngeniero,
+  onOpenCreateWorkspaceModal,
 }) => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isWaffleOpen, setIsWaffleOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const navItems = [
-    { id: 'practicas', label: 'Prácticas Preprofesionales', icon: FileText, count: 48 },
-    { id: 'vinculacion', label: 'Vinculación Comunitaria', icon: Users, count: 24 },
-    { id: 'eventos', label: 'Eventos y Conferencias', icon: Calendar, count: 3 },
-    { id: 'certificados', label: 'Certificados y Registro QR', icon: Award, count: 12 },
+    { id: 'practicas', label: 'Prácticas', fullName: 'Prácticas Preprofesionales', icon: FileText, count: 48 },
+    { id: 'vinculacion', label: 'Vinculación', fullName: 'Vinculación con la Sociedad', icon: Users, count: 24 },
+    { id: 'eventos', label: 'Eventos', fullName: 'Conferencias y Eventos', icon: Calendar, count: 3 },
+    { id: 'certificados', label: 'Certificados', fullName: 'Certificados y Registro QR', icon: Award, count: 12 },
+    { id: 'espacios', label: 'Espacios', fullName: 'Catálogo de Espacios', icon: Layers, count: workspaces.length },
   ];
 
+  const currentNav = navItems.find((item) => item.id === activeNavTab) || navItems[0];
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
+  };
+
+  const getHeaderMeta = () => {
+    switch (activeNavTab) {
+      case 'certificados':
+        return {
+          category: 'Acreditación y Validación Digital',
+          title: 'Certificados Oficiales con Firma y Código QR',
+          subtitle: 'Validación criptográfica SHA-256 e historial de acreditaciones académicas',
+        };
+      case 'eventos':
+        return {
+          category: 'Conferencias y Seminarios',
+          title: 'Registro de Asistencia y Portal QR',
+          subtitle: 'Eventos institucionales, diapositivas y constancias de participación',
+        };
+      case 'vinculacion':
+        return {
+          category: 'Servicio Comunitario',
+          title: 'Proyectos de Vinculación con la Sociedad',
+          subtitle: 'Control horaria ministerial y convenios interinstitucionales vigentes',
+        };
+      case 'espacios':
+        return {
+          category: 'Administración Académica',
+          title: 'Catálogo General de Espacios y Periodos',
+          subtitle: 'Gestión de cohortes, códigos de acceso y configuración de aulas',
+        };
+      case 'practicas':
+      default:
+        return {
+          category: 'Expediente Académico • Periodo 2026-I',
+          title: selectedWorkspace ? selectedWorkspace.title : 'Prácticas Preprofesionales',
+          subtitle: 'Coordinador Académico: Ing. Wilfrido Trujillo, M.Sc. • Régimen Oficial RRA',
+        };
+    }
+  };
+
+  const meta = getHeaderMeta();
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#e8eaf0] text-[#1a1a1a] font-sans antialiased">
+    <div className="min-h-screen flex flex-col bg-[#f5f5f5] text-[#242424] font-sans antialiased">
       {/* ====================================================================
-          1. TOPBAR NAVBAR (48px height per M365 spec - Ref: titulacion-istpet)
+          1. MICROSOFT 365 SUITE BAR (48px height, Official #0f6cbd Blue)
           ==================================================================== */}
-      <header className="h-12 bg-[#1b2a4a] text-white px-4 flex items-center justify-between sticky top-0 z-50 shadow-xs gap-4 border-b border-white/10 select-none">
+      <header className="h-12 bg-[#0f6cbd] text-white px-3 flex items-center justify-between sticky top-0 z-40 shadow-xs select-none relative">
         
-        {/* Brand Left */}
-        <div className="flex items-center gap-3 min-w-[240px]">
+        {/* Brand Left: Waffle Icon (App Launcher) + App Title */}
+        <div className="flex items-center gap-2">
+          {/* M365 App Launcher Waffle */}
           <button
             type="button"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            title="Alternar panel de navegación"
-            className="w-8 h-8 rounded-[2px] text-white/80 hover:text-white hover:bg-white/10 flex items-center justify-center transition-colors cursor-pointer"
+            onClick={() => {
+              setIsWaffleOpen(!isWaffleOpen);
+              setIsProfileOpen(false);
+            }}
+            title="Iniciador de aplicaciones Microsoft 365"
+            className="w-9 h-9 rounded-md text-white hover:bg-white/15 flex items-center justify-center transition-colors cursor-pointer"
           >
-            <Menu className="w-4 h-4" />
+            <LayoutGrid className="w-4 h-4" />
           </button>
 
-          <div className="flex items-center gap-2.5">
-            <div className="h-7 w-7 rounded-[2px] bg-[#c59b27] text-[#1b2a4a] font-bold font-mono text-xs flex items-center justify-center shadow-xs">
-              WT
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="text-[13px] font-bold tracking-wide text-[#c59b27]">
-                ING. WILFRIDO TRUJILLO
+          {/* Institutional Title */}
+          <div className="flex items-center gap-2 pl-1">
+            <span className="text-[13px] font-bold tracking-tight text-white hidden sm:inline">
+              Microsoft 365
+            </span>
+            <span className="text-white/40 hidden sm:inline">|</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[13px] font-semibold text-white">
+                Gestión Académica
               </span>
-              <span className="text-[10px] text-white/70 font-normal">
-                Gestión Académica Soberana
+              <span className="text-[10px] font-medium bg-white/20 text-white px-1.5 py-0.5 rounded-full hidden md:inline">
+                Ing. Wilfrido Trujillo
               </span>
             </div>
           </div>
         </div>
 
-        {/* Central Search Bar (M365 Search Style) */}
-        <div className="hidden md:flex flex-1 max-w-md relative items-center">
-          <Search className="w-3.5 h-3.5 absolute left-3 text-white/60 pointer-events-none" />
+        {/* Central Search Bar (Microsoft 365 Capsule Style) */}
+        <div className="flex-1 max-w-md mx-4 relative hidden md:flex items-center">
+          <Search className="w-3.5 h-3.5 absolute left-3 text-white/70 pointer-events-none" />
           <input
             type="text"
-            placeholder="Buscar estudiante, cédula, bitácora o código..."
+            placeholder="Buscar en este sitio (Ctrl+K)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-[30px] pl-9 pr-3 text-xs bg-white/10 border border-white/20 rounded-[2px] text-white placeholder-white/60 focus:outline-none focus:bg-white/20 focus:border-[#c59b27] transition-all"
+            className="w-full h-8 pl-9 pr-14 text-xs bg-white/15 hover:bg-white/25 focus:bg-white text-white focus:text-[#242424] placeholder:text-white/70 focus:placeholder:text-[#616161] rounded-md border border-transparent focus:border-[#0f6cbd] focus:outline-none transition-all"
           />
+          <kbd className="absolute right-2 text-[10px] bg-white/20 text-white/90 px-1.5 py-0.5 rounded-sm pointer-events-none hidden lg:inline font-mono">
+            Ctrl+K
+          </kbd>
         </div>
 
-        {/* Right Actions: PBAC Simulator & Profile */}
-        <div className="flex items-center gap-3">
-          {/* Quick PBAC Switcher */}
-          {onSimulateStudent && onSimulateIngeniero && (
-            <div className="hidden sm:flex items-center gap-1 bg-black/25 p-0.5 rounded-[2px] border border-white/10 text-xs">
-              <button
-                type="button"
-                onClick={onSimulateStudent}
-                className={`py-1 px-2 rounded-[2px] transition-colors ${
-                  user?.roleKey === 'ESTUDIANTE'
-                    ? 'bg-[#c59b27] text-[#1b2a4a] font-bold'
-                    : 'text-white/80 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                Estudiante
-              </button>
-              <button
-                type="button"
-                onClick={onSimulateIngeniero}
-                className={`py-1 px-2 rounded-[2px] transition-colors ${
-                  user?.roleKey === 'INGENIERO'
-                    ? 'bg-[#0078d4] text-white font-bold'
-                    : 'text-white/80 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                Ingeniero
-              </button>
-            </div>
-          )}
+        {/* Right Actions: Help, Settings, Profile Avatar */}
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            title="Ayuda y normativa"
+            className="w-8 h-8 rounded-md text-white/80 hover:text-white hover:bg-white/15 flex items-center justify-center transition-colors"
+          >
+            <HelpCircle className="w-4 h-4" />
+          </button>
 
-          {/* User Profile Badge */}
-          {user && (
-            <div className="flex items-center gap-2 pl-2 border-l border-white/15">
-              <div className="w-6 h-6 rounded-full bg-[#c59b27] text-[#1b2a4a] text-xs font-bold flex items-center justify-center">
-                {user.fullName ? user.fullName[0] : 'U'}
+          <button
+            type="button"
+            title="Configuración de la plataforma"
+            className="w-8 h-8 rounded-md text-white/80 hover:text-white hover:bg-white/15 flex items-center justify-center transition-colors"
+          >
+            <Settings className="w-4 h-4" />
+          </button>
+
+          <div className="h-5 w-px bg-white/20 mx-1" />
+
+          {/* User Profile Avatar with Presence */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsProfileOpen(!isProfileOpen);
+              setIsWaffleOpen(false);
+            }}
+            title={`Cuenta: ${user?.fullName || 'Usuario'}`}
+            className="flex items-center gap-2 p-1 rounded-md hover:bg-white/15 transition-colors cursor-pointer text-left"
+          >
+            <div className="relative flex-shrink-0">
+              <div className="w-7 h-7 rounded-full bg-white text-[#0f6cbd] text-xs font-bold flex items-center justify-center shadow-xs">
+                {user?.fullName ? user.fullName[0] : 'U'}
               </div>
-              <div className="hidden lg:flex flex-col leading-none">
-                <span className="text-xs font-semibold text-white truncate max-w-[140px]">
-                  {user.fullName}
-                </span>
-                <span className="text-[10px] text-[#c59b27]">
-                  {user.roleKey}
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={logout}
-                title="Cerrar sesión"
-                className="text-white/70 hover:text-white p-1 rounded-[2px] transition-colors"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
+              <span className="w-2.5 h-2.5 bg-[#107c10] border-2 border-[#0f6cbd] rounded-full absolute -bottom-0.5 -right-0.5" />
             </div>
-          )}
+
+            <div className="hidden lg:flex flex-col leading-none">
+              <span className="text-xs font-semibold text-white truncate max-w-[120px]">
+                {user?.fullName}
+              </span>
+              <span className="text-[10px] text-white/75 capitalize">
+                {user?.roleKey?.toLowerCase()}
+              </span>
+            </div>
+          </button>
         </div>
+
+        {/* Dropdown Menús Flotantes Oficiales */}
+        <M365WaffleMenu
+          isOpen={isWaffleOpen}
+          onClose={() => setIsWaffleOpen(false)}
+          onSelectNavTab={onSelectNavTab}
+        />
+
+        <M365ProfileFlyout
+          isOpen={isProfileOpen}
+          onClose={() => setIsProfileOpen(false)}
+          onSimulateStudent={onSimulateStudent}
+          onSimulateIngeniero={onSimulateIngeniero}
+        />
       </header>
 
       {/* ====================================================================
-          2. BODY LAYOUT: ICON RAIL (48px) + SIDEBAR (220px) + MAIN CONTENT
+          2. BODY CONTAINER: M365 APP RAIL (56px) + SIDEBAR (220px) + WORKSPACE
           ==================================================================== */}
       <div className="flex-1 flex w-full">
         
-        {/* Icon Rail Lateral Izquierdo (48px - Ref: titulacion-istpet Section 6) */}
-        <aside className="w-12 bg-[#12213a] flex flex-col items-center py-2 gap-1 border-r border-white/5 flex-shrink-0 z-20 select-none">
+        {/* Left App Rail (56px - Microsoft Teams Style) */}
+        <aside className="w-14 bg-white border-r border-[#edebe9] flex flex-col items-center py-2 gap-1 flex-shrink-0 z-20 select-none shadow-[1px_0_2px_rgba(0,0,0,0.02)]">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeNavTab === item.id;
@@ -159,92 +239,160 @@ export const FluentShell: React.FC<FluentShellProps> = ({
               <button
                 key={item.id}
                 onClick={() => onSelectNavTab(item.id)}
-                title={item.label}
-                className={`w-12 h-10 flex items-center justify-center relative transition-colors ${
+                title={item.fullName}
+                className={`w-12 h-12 rounded-md flex flex-col items-center justify-center relative transition-all group cursor-pointer ${
                   isActive
-                    ? 'text-white bg-white/12'
-                    : 'text-white/70 hover:text-white hover:bg-white/8'
+                    ? 'bg-[#ebf3fc] text-[#0f6cbd] font-semibold'
+                    : 'text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5]'
                 }`}
               >
+                {/* Indicador vertical izquierdo */}
                 {isActive && (
-                  <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-[#c59b27] rounded-r-[2px]" />
+                  <span className="absolute left-0 top-2 bottom-2 w-[3px] bg-[#0f6cbd] rounded-r-md" />
                 )}
-                <Icon className="w-4 h-4" />
+                <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'text-[#0f6cbd]' : 'text-[#616161] group-hover:text-[#242424]'}`} />
+                <span className="text-[9px] leading-tight tracking-tight text-center truncate max-w-[46px]">
+                  {item.label}
+                </span>
               </button>
             );
           })}
           
           <div className="flex-1" />
 
-          <div className="w-8 h-8 rounded-[2px] bg-white/5 text-[#c59b27] flex items-center justify-center text-[10px] font-mono border border-white/10 mb-2">
-            RRA
-          </div>
+          {/* Toggle Sidebar Button */}
+          <button
+            type="button"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            title={isSidebarOpen ? 'Ocultar panel lateral' : 'Mostrar panel lateral'}
+            className="w-10 h-10 rounded-md text-[#616161] hover:text-[#242424] hover:bg-[#f5f5f5] flex items-center justify-center transition-colors mb-1 cursor-pointer"
+          >
+            {isSidebarOpen ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeft className="w-4 h-4" />}
+          </button>
         </aside>
 
-        {/* Sidebar Secundaria Desplegable (220px - Ref: titulacion-istpet) */}
+        {/* Secondary Navigation Drawer (220px - Contextual) */}
         {isSidebarOpen && (
-          <aside className="w-[220px] bg-white border-r border-[#d1d5db]/60 flex flex-col gap-4 py-4 px-3 flex-shrink-0 shadow-xs z-10">
-            <div className="flex flex-col gap-1">
-              <span className="text-[11px] font-semibold text-[#605e5c] uppercase tracking-wider px-2">
-                COORDINACIÓN RRA
-              </span>
-              <div className="flex flex-col gap-0.5 mt-1">
-                {navItems.map((item) => {
-                  const isActive = activeNavTab === item.id;
-                  return (
+          <aside className="w-[220px] bg-white border-r border-[#e0e0e0] flex flex-col justify-between py-3 px-2.5 flex-shrink-0 z-10 select-none">
+            <div className="flex flex-col gap-4">
+              
+              {/* Encabezado Contextual de la Barra */}
+              <div>
+                <div className="flex items-center justify-between px-2 mb-2">
+                  <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider">
+                    {currentNav.fullName}
+                  </span>
+                  <span className="text-[10px] text-[#0f6cbd] font-semibold">
+                    {currentNav.count}
+                  </span>
+                </div>
+
+                {/* Sub-navegación según el módulo activo */}
+                {activeNavTab === 'practicas' && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-semibold text-[#616161] px-2 mb-1">
+                      Espacio Seleccionado:
+                    </span>
+                    <div className="flex flex-col gap-1 max-h-56 overflow-y-auto pr-0.5">
+                      {workspaces
+                        .filter((ws) => ws.type === 'PRACTICAS')
+                        .map((ws) => {
+                          const isSelected = selectedWorkspace?.id === ws.id;
+                          return (
+                            <button
+                              key={ws.id}
+                              onClick={() => onSelectWorkspace(ws)}
+                              className={`w-full text-left p-2 rounded-md border text-xs transition-all ${
+                                isSelected
+                                  ? 'bg-[#ebf3fc] border-[#0f6cbd] text-[#0f6cbd] shadow-xs'
+                                  : 'bg-white border-[#e0e0e0] text-[#242424] hover:bg-[#fafafa]'
+                              }`}
+                            >
+                              <div className="flex items-center gap-1.5 font-medium truncate">
+                                <Briefcase className="w-3 h-3 text-[#0f6cbd] flex-shrink-0" />
+                                <span className="truncate">{ws.title}</span>
+                              </div>
+                              <div className="text-[10px] text-[#616161] font-mono mt-0.5 pl-4.5">
+                                {ws.accessCode}
+                              </div>
+                            </button>
+                          );
+                        })}
+                    </div>
+                  </div>
+                )}
+
+                {activeNavTab === 'certificados' && (
+                  <div className="flex flex-col gap-1">
                     <button
-                      key={item.id}
-                      onClick={() => onSelectNavTab(item.id)}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-[2px] text-xs transition-colors text-left border-l-2 ${
-                        isActive
-                          ? 'bg-[#c59b27]/12 text-[#1b2a4a] font-bold border-[#c59b27]'
-                          : 'text-[#323130] hover:bg-[#faf9f8] border-transparent font-normal'
-                      }`}
+                      type="button"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold"
                     >
-                      <span className="truncate">{item.label}</span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/5 text-[#605e5c]">
-                        {item.count}
-                      </span>
+                      <span>Todos los Certificados</span>
+                      <span className="text-[10px] font-mono">{currentNav.count}</span>
                     </button>
-                  );
-                })}
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs text-[#616161] hover:bg-[#f5f5f5]"
+                    >
+                      <span>Acreditados por Horas</span>
+                      <span className="text-[10px] font-mono">100%</span>
+                    </button>
+                  </div>
+                )}
+
+                {activeNavTab === 'eventos' && (
+                  <div className="flex flex-col gap-1">
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold"
+                    >
+                      <span>Conferencias Activas</span>
+                      <span className="text-[10px] font-mono">3</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs text-[#616161] hover:bg-[#f5f5f5]"
+                    >
+                      <span>Portal de Registro QR</span>
+                    </button>
+                  </div>
+                )}
+
+                {activeNavTab === 'vinculacion' && (
+                  <div className="flex flex-col gap-1">
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold"
+                    >
+                      <span>Proyectos Comunitarios</span>
+                      <span className="text-[10px] font-mono">24</span>
+                    </button>
+                  </div>
+                )}
+
+                {activeNavTab === 'espacios' && (
+                  <div className="flex flex-col gap-1">
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs bg-[#ebf3fc] text-[#0f6cbd] font-semibold"
+                    >
+                      <span>Todos los Espacios</span>
+                      <span className="text-[10px] font-mono">{workspaces.length}</span>
+                    </button>
+                  </div>
+                )}
               </div>
+
             </div>
 
-            {/* Espacios Activos / Carreras */}
-            <div className="flex flex-col gap-1 pt-3 border-t border-[#e5e7eb]">
-              <span className="text-[11px] font-semibold text-[#605e5c] uppercase tracking-wider px-2">
-                ESPACIOS ACTIVOS
-              </span>
-              <div className="flex flex-col gap-1 mt-1 max-h-48 overflow-y-auto">
-                {workspaces.map((ws) => {
-                  const isSelected = selectedWorkspace?.id === ws.id;
-                  return (
-                    <button
-                      key={ws.id}
-                      onClick={() => onSelectWorkspace(ws)}
-                      className={`w-full text-left p-2 rounded-[2px] border text-xs transition-colors ${
-                        isSelected
-                          ? 'bg-[#e6f2fb] border-[#0078d4] text-[#0078d4] font-semibold'
-                          : 'bg-white border-[#e5e7eb] text-[#323130] hover:bg-[#faf9f8]'
-                      }`}
-                    >
-                      <div className="truncate font-medium">{ws.title}</div>
-                      <div className="text-[10px] text-[#605e5c] font-mono mt-0.5">
-                        {ws.accessCode} • {ws.type}
-                      </div>
-                    </button>
-                  );
-                })}
+            {/* Tarjeta de Acreditación RRA en el Pie */}
+            <div className="p-2.5 bg-[#fafafa] border border-[#e0e0e0] rounded-md text-xs">
+              <div className="flex items-center gap-1.5 text-[#107c10] font-semibold text-[11px]">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Normativa RRA / CES</span>
               </div>
-            </div>
-
-            {/* Estado del Régimen Institucional */}
-            <div className="mt-auto p-2.5 bg-[#faf9f8] border border-[#e5e7eb] rounded-[4px] text-xs">
-              <div className="text-[10px] font-bold text-[#1b2a4a] uppercase tracking-wider">
-                NORMATIVA CES / RRA
-              </div>
-              <p className="text-[11px] text-[#605e5c] mt-0.5 leading-tight">
+              <p className="text-[11px] text-[#616161] mt-1 leading-tight">
                 Auditoría heurística y control de horas activo para el ciclo 2026.
               </p>
             </div>
@@ -252,44 +400,95 @@ export const FluentShell: React.FC<FluentShellProps> = ({
         )}
 
         {/* ====================================================================
-            3. MAIN CONTENT WORKSPACE (Canvas #e8eaf0 con Cards Blancas #ffffff)
+            3. WORKSPACE ÁREA: COMMAND BAR + CANVAS + CONTENT
             ==================================================================== */}
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto flex flex-col gap-6">
+        <div className="flex-1 flex flex-col min-w-0">
           
-          {/* Banner Institucional de Bienvenida (Ref: titulacion-istpet fluent-banner-card) */}
-          <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-[4px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-[11px] font-semibold text-[#605e5c] uppercase tracking-wider block mb-0.5">
-                EXPEDIENTE ACADÉMICO // CICLO LECTIVO 2026-I
-              </span>
-              <h1 className="text-xl font-bold text-[#1a1a1a] tracking-tight">
-                {selectedWorkspace ? selectedWorkspace.title : 'Coordinación de Prácticas Preprofesionales'}
-              </h1>
-              <p className="text-xs text-[#605e5c] mt-1">
-                Responsable Académico: Ing. Wilfrido Trujillo, M.Sc. • Régimen Oficial RRA Vigente
-              </p>
+          {/* M365 Command Bar (Barra de herramientas de 44px) */}
+          <div className="m365-command-bar select-none">
+            <div className="flex items-center gap-1">
+              {onOpenCreateWorkspaceModal && (
+                <button
+                  type="button"
+                  onClick={onOpenCreateWorkspaceModal}
+                  className="m365-command-btn m365-command-btn--primary"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Nuevo</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={handleRefresh}
+                className="m365-command-btn"
+                title="Sincronizar datos con el servidor"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-[#0f6cbd]' : ''}`} />
+                <span>Sincronizar</span>
+              </button>
+
+              <button
+                type="button"
+                className="m365-command-btn"
+              >
+                <Filter className="w-3.5 h-3.5" />
+                <span>Filtrar</span>
+              </button>
             </div>
 
-            <div className="flex items-center gap-2 bg-[#f8fafc] border border-[#e2e8f0] px-3 py-1.5 rounded-[4px]">
-              <span className="w-2 h-2 rounded-full bg-[#107c10] animate-pulse" />
-              <span className="text-xs font-semibold text-[#1b2a4a]">
-                SISTEMA OPERATIVO // WAL ACTIVO
-              </span>
+            {/* Breadcrumb Right */}
+            <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#616161]">
+              <span>Gestión Académica</span>
+              <ChevronRight className="w-3 h-3 text-[#999999]" />
+              <span className="font-semibold text-[#242424]">{currentNav.fullName}</span>
             </div>
           </div>
 
-          {/* Renderizado de las Secciones Operativas */}
-          <div className="flex flex-col gap-6">
-            {children}
-          </div>
+          {/* Canvas Scrollable Content */}
+          <main className="flex-1 p-5 md:p-6 overflow-y-auto flex flex-col gap-5">
+            
+            {/* Page Header Institucional M365 */}
+            <div className="bg-white border border-[#e0e0e0] rounded-lg p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[11px] font-semibold text-[#616161] uppercase tracking-wider">
+                    {meta.category}
+                  </span>
+                  <span className="text-[#d1d1d1]">•</span>
+                  <span className="text-[11px] font-semibold text-[#0f6cbd]">
+                    Régimen RRA Activo
+                  </span>
+                </div>
+                <h1 className="text-xl md:text-2xl font-semibold text-[#242424] tracking-tight">
+                  {meta.title}
+                </h1>
+                <p className="text-xs text-[#616161] mt-0.5">
+                  {meta.subtitle}
+                </p>
+              </div>
 
-          {/* Footer Legal Microsoft 365 Style (Ref: titulacion-istpet) */}
-          <footer className="mt-auto pt-6 flex items-center justify-between text-xs text-[#605e5c] border-t border-[#d1d5db]/60">
-            <span>© {new Date().getFullYear()} Ing. Wilfrido Trujillo • Gestión Académica y Eventos</span>
-            <span>Sistema Institucional Soberano • Microsoft Fluent Design 2</span>
-          </footer>
+              <div className="flex items-center gap-2 bg-[#dff6dd] border border-[#a3d9a5] px-3 py-1.5 rounded-full">
+                <span className="w-2 h-2 rounded-full bg-[#107c10] animate-pulse" />
+                <span className="text-xs font-semibold text-[#107c10]">
+                  SISTEMA OPERATIVO // WAL ACTIVO
+                </span>
+              </div>
+            </div>
 
-        </main>
+            {/* Contenido Modular Focalizado (Cero Apilamiento) */}
+            <div className="flex flex-col gap-5">
+              {children}
+            </div>
+
+            {/* Footer Legal M365 */}
+            <footer className="mt-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#616161] border-t border-[#edebe9]">
+              <span>© {new Date().getFullYear()} Ing. Wilfrido Trujillo • Plataforma de Gestión Académica</span>
+              <span>Microsoft 365 Fluent Design System 2 • RRA Soberano</span>
+            </footer>
+
+          </main>
+        </div>
 
       </div>
     </div>

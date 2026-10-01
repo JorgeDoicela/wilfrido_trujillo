@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShieldCheck, LogOut } from 'lucide-react';
-import { useAuth } from '@/modules/auth/context/AuthContext';
+import { useAuth } from '@/shared/hooks/useAuth';
 
 export interface NavbarProps {
   onSimulateStudent?: () => void;

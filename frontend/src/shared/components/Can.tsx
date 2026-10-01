@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { useAuth } from '@/modules/auth/context/AuthContext';
+import { useAuth } from '@/shared/hooks/useAuth';
 import type { PermissionType } from '@/shared/types/auth.types';
 
 interface CanProps {

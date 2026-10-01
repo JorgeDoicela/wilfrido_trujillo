@@ -63,5 +63,6 @@ docs/
 | **04-frontend-aplicacion-web** / `02` | [Flujo Estudiantil](04-frontend-aplicacion-web/02-flujo-estudiantil.md) | Embudo pedagógico: Reproductor de inducción $\to$ Test diagnóstico $\to$ Descargas $\to$ Pre-auditoría de PDFs. |
 | **04-frontend-aplicacion-web** / `03` | [Panel Docente](04-frontend-aplicacion-web/03-panel-docente-administracion.md) | Consola del Ingeniero: métricas, proyección de QR para talleres, bandeja de entregas y modal de dictamen. |
 | **04-frontend-aplicacion-web** / `04` | [Portales Públicos](04-frontend-aplicacion-web/04-portales-publicos.md) | Páginas abiertas sin fricción de login para asistentes a charlas y validador de autenticidad de diplomas. |
+| **04-frontend-aplicacion-web** / `05` | [Sistema de Diseño M365](04-frontend-aplicacion-web/05-sistema-de-diseno-microsoft-365.md) | Especificación canónica Fluent Design System 2 / Fluent UI v9: Suite Bar, App Rail, Command Bar y tokens. |
 | **05-operaciones-y-despliegue** / `01` | [Variables de Entorno](05-operaciones-y-despliegue/01-configuracion-entorno.md) | Tabla completa de parámetros de configuración de backend y frontend. |
 | **05-operaciones-y-despliegue** / `02` | [Ejecución Local](05-operaciones-y-despliegue/02-guia-de-ejecucion-local.md) | Guía de instalación, comandos de desarrollo (`pnpm dev`), cuentas sembradas y verificación en puertos. |

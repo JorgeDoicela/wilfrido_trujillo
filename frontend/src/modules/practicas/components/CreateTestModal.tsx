@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Plus, Trash2, CheckCircle2, HelpCircle, AlertCircle } from 'lucide-react';
-import { testsApi } from '@/modules/practicas/api/tests.api';
+import { testsApi } from '../api/tests.api';
 import {
   Modal,
   ModalHeader,

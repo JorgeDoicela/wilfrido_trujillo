@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { KeyRound, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
-import { workspacesApi } from '@/modules/admin/api/workspaces.api';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/shared/components/ui/Card';
-import { Button } from '@/shared/components/ui/Button';
-import { Input } from '@/shared/components/ui/Input';
+import { workspacesApi } from '@/shared/api/workspaces.api';
 import type { WorkspaceEnrollment, Workspace } from '@/shared/types/workspace.types';
 
 interface JoinWorkspaceCardProps {
@@ -61,54 +58,54 @@ export function JoinWorkspaceCard({ onJoinSuccess }: JoinWorkspaceCardProps) {
   };
 
   return (
-    <Card className="relative overflow-hidden">
-      <CardHeader className="flex items-center gap-2.5 pb-2.5 mb-2.5 border-b border-[#e5e7eb]">
-        <div className="h-8 w-8 rounded-[2px] bg-[#e6f2fb] text-[#0078d4] flex items-center justify-center flex-shrink-0">
-          <KeyRound className="w-4 h-4" />
+    <div className="m365-card p-4 relative overflow-hidden flex flex-col justify-between">
+      <div>
+        <div className="flex items-center gap-2.5 pb-2.5 mb-3 border-b border-[#edebe9]">
+          <div className="h-8 w-8 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center flex-shrink-0">
+            <KeyRound className="w-4 h-4" />
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-[#242424]">Unirse con Código</h4>
+            <p className="text-[11px] text-[#616161]">
+              Clave de acceso institucional (ej. PRAC-2026)
+            </p>
+          </div>
         </div>
-        <div>
-          <CardTitle className="text-xs font-bold text-[#1a1a1a]">Unirse a un Espacio</CardTitle>
-          <CardDescription className="text-[11px] text-[#605e5c]">
-            Ingresa el código proporcionado (ej. PRAC-2026)
-          </CardDescription>
-        </div>
-      </CardHeader>
 
-      <CardContent>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-          <Input
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2.5">
+          <input
+            type="text"
             value={accessCode}
             onChange={(e) => setAccessCode(e.target.value)}
             placeholder="CÓDIGO DE ACCESO"
-            className="uppercase font-mono text-xs tracking-wider"
+            className="m365-input uppercase font-mono text-xs tracking-wider"
           />
-          <Button
+          <button
             type="submit"
-            variant="primary"
-            isLoading={isLoading}
-            className="w-full text-xs py-1.5"
+            disabled={isLoading}
+            className="m365-btn m365-btn-primary w-full text-xs h-8"
           >
-            Validar Código <ArrowRight className="w-3.5 h-3.5 ml-1" />
-          </Button>
+            {isLoading ? 'Verificando...' : 'Validar Código'} <ArrowRight className="w-3.5 h-3.5 ml-1" />
+          </button>
         </form>
+      </div>
 
-        {feedback && (
-          <div
-            className={`mt-2 p-2 rounded-[2px] text-xs flex items-center gap-2 border ${
-              feedback.type === 'success'
-                ? 'bg-[#dff6dd] border-[#107c10]/30 text-[#107c10]'
-                : 'bg-[#fde7e9] border-[#a4262c]/30 text-[#a4262c]'
-            }`}
-          >
-            {feedback.type === 'success' ? (
-              <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
-            ) : (
-              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-            )}
-            <span className="text-[11px]">{feedback.message}</span>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      {feedback && (
+        <div
+          className={`mt-2.5 p-2 rounded-md text-xs flex items-center gap-2 border ${
+            feedback.type === 'success'
+              ? 'bg-[#dff6dd] border-[#a3d9a5] text-[#107c10]'
+              : 'bg-[#fde7e9] border-[#f1aeb5] text-[#a4262c]'
+          }`}
+        >
+          {feedback.type === 'success' ? (
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+          ) : (
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          )}
+          <span className="leading-tight">{feedback.message}</span>
+        </div>
+      )}
+    </div>
   );
 }
