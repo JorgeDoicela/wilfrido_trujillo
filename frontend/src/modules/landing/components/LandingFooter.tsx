@@ -11,7 +11,7 @@ export const LandingFooter: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[#edebe9]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-md bg-[#0f6cbd] text-white flex items-center justify-center font-bold text-xs">
+            <div className="w-8 h-8 rounded-md bg-[#0f6cbd] text-white flex items-center justify-center font-bold text-xs select-none shadow-2xs">
               WT
             </div>
             <div>
@@ -19,26 +19,32 @@ export const LandingFooter: React.FC = () => {
                 Ing. Wilfrido Trujillo
               </span>
               <span className="text-[11px] text-[#616161]">
-                Coordinación Académica, Prácticas y Vinculación con la Sociedad
+                Coordinación Académica de Prácticas, Vinculación y Eventos Oficiales
               </span>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 text-xs">
+          <div className="flex flex-wrap items-center gap-5 text-xs">
             <a href="#pilares" className="hover:text-[#0f6cbd] transition-colors">
               Pilares
+            </a>
+            <a href="#explorador" className="hover:text-[#0f6cbd] transition-colors">
+              Explorador
             </a>
             <a href="#flujo-rra" className="hover:text-[#0f6cbd] transition-colors">
               Flujo RRA
             </a>
-            <a href="#acceso-rapido" className="hover:text-[#0f6cbd] transition-colors">
+            <a href="#servicios" className="hover:text-[#0f6cbd] transition-colors">
               Validar Certificado
             </a>
             <a href="#espacios" className="hover:text-[#0f6cbd] transition-colors">
-              Espacios
+              Espacios Activos
             </a>
-            <a href="#perfil" className="hover:text-[#0f6cbd] transition-colors">
-              Perfil Docente
+            <a href="#normativa" className="hover:text-[#0f6cbd] transition-colors">
+              Marco Ético
+            </a>
+            <a href="#despacho" className="hover:text-[#0f6cbd] transition-colors">
+              Despacho Docente
             </a>
             <button
               type="button"
@@ -53,14 +59,20 @@ export const LandingFooter: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#8a8886]">
           <p>
-            © {new Date().getFullYear()} Ing. Wilfrido Trujillo. Plataforma soberana de gestión académica. Todos los derechos reservados.
+            © {new Date().getFullYear()} Ing. Wilfrido Trujillo · Plataforma Soberana de Gestión Académica · Todos los derechos reservados.
           </p>
 
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1 text-[#107c10]">
+            <span className="flex items-center gap-1.5 text-[#107c10] font-medium">
               <ShieldCheck className="w-3.5 h-3.5" /> Cumplimiento LOPDP Ecuador
             </span>
-            <span>Reglamento de Régimen Académico (RRA)</span>
+            <span className="hidden md:inline text-[#e0e0e0]">|</span>
+            <span className="hidden md:inline">Reglamento de Régimen Académico (CES Art. 89)</span>
+            <span className="hidden md:inline text-[#e0e0e0]">|</span>
+            <span className="flex items-center gap-1.5 text-[#0f6cbd] font-medium">
+              <span className="w-2 h-2 rounded-full bg-[#107c10]" />
+              Servicios Operativos
+            </span>
           </div>
         </div>
       </div>
