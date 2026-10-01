@@ -131,7 +131,13 @@ export const FluentShell: React.FC<FluentShellProps> = ({
           </button>
 
           {/* Institutional Title */}
-          <div className="flex items-center gap-2 pl-1">
+          <div
+            onClick={() => {
+              window.location.hash = '';
+            }}
+            title="Ir a la Portada Institucional"
+            className="flex items-center gap-2 pl-1 cursor-pointer hover:opacity-90 transition-opacity"
+          >
             <span className="text-[13px] font-bold tracking-tight text-white hidden sm:inline">
               Microsoft 365
             </span>

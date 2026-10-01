@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Home,
   FileText,
   Users,
   Award,
@@ -23,11 +24,18 @@ export const M365WaffleMenu: React.FC<M365WaffleMenuProps> = ({
 
   const apps = [
     {
+      id: 'inicio',
+      name: 'Portada Principal',
+      desc: 'Landing del Ing. Wilfrido',
+      icon: Home,
+      color: 'bg-[#0f6cbd] text-white',
+    },
+    {
       id: 'practicas',
       name: 'Prácticas',
       desc: 'Bitácoras y convenios RRA',
       icon: FileText,
-      color: 'bg-[#0f6cbd] text-white',
+      color: 'bg-[#0078d4] text-white',
     },
     {
       id: 'vinculacion',
@@ -85,7 +93,11 @@ export const M365WaffleMenu: React.FC<M365WaffleMenuProps> = ({
                 key={app.id}
                 type="button"
                 onClick={() => {
-                  onSelectNavTab(app.id);
+                  if (app.id === 'inicio') {
+                    window.location.hash = '';
+                  } else {
+                    onSelectNavTab(app.id);
+                  }
                   onClose();
                 }}
                 className="flex flex-col items-start p-2.5 rounded-lg border border-transparent hover:border-[#e0e0e0] hover:bg-[#f5f5f5] transition-all text-left group cursor-pointer"

@@ -23,6 +23,7 @@ import type { ResourceFile } from '@/shared/types/resource.types';
 import type { DocumentSubmission } from '@/shared/types/document.types';
 import type { Certificate } from '@/shared/types/certificate.types';
 import { FluentShell } from '@/shared/components/FluentShell';
+import { LandingPage } from '@/modules/landing/pages/LandingPage';
 
 export default function App() {
   const { setUserDirectlyForDemo } = useAuth();
@@ -39,6 +40,7 @@ export default function App() {
   const [selectedSubmissionForReview, setSelectedSubmissionForReview] = useState<DocumentSubmission | null>(null);
   const [publicEventCode, setPublicEventCode] = useState<string | null>(null);
   const [verifyHash, setVerifyHash] = useState<string | null>(null);
+  const [currentRoute, setCurrentRoute] = useState<'landing' | 'app' | 'eventos' | 'certificados'>('landing');
 
   // Modals state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -346,13 +348,32 @@ export default function App() {
         const code = hash.replace('#/eventos/', '');
         setPublicEventCode(code);
         setVerifyHash(null);
+        setCurrentRoute('eventos');
       } else if (hash.startsWith('#/certificados/validar/')) {
         const h = hash.replace('#/certificados/validar/', '');
         setVerifyHash(h);
         setPublicEventCode(null);
+        setCurrentRoute('certificados');
+      } else if (
+        hash.startsWith('#/app') ||
+        hash.startsWith('#/practicas') ||
+        hash.startsWith('#/vinculacion') ||
+        hash.startsWith('#/certificados') ||
+        hash.startsWith('#/eventos') ||
+        hash.startsWith('#/espacios')
+      ) {
+        setPublicEventCode(null);
+        setVerifyHash(null);
+        setCurrentRoute('app');
+        if (hash.startsWith('#/practicas')) setActiveNavTab('practicas');
+        else if (hash.startsWith('#/vinculacion')) setActiveNavTab('vinculacion');
+        else if (hash.startsWith('#/certificados')) setActiveNavTab('certificados');
+        else if (hash.startsWith('#/eventos')) setActiveNavTab('eventos');
+        else if (hash.startsWith('#/espacios')) setActiveNavTab('espacios');
       } else {
         setPublicEventCode(null);
         setVerifyHash(null);
+        setCurrentRoute('landing');
       }
     };
 
@@ -417,7 +438,7 @@ export default function App() {
     });
   };
 
-  if (publicEventCode) {
+  if (currentRoute === 'eventos' && publicEventCode) {
     return (
       <PublicEventPortal
         accessCode={publicEventCode}
@@ -429,13 +450,58 @@ export default function App() {
     );
   }
 
-  if (verifyHash) {
+  if (currentRoute === 'certificados' && verifyHash) {
     return (
       <VerifyCertificatePortal
         hash={verifyHash}
         onBackToApp={() => {
           setVerifyHash(null);
           window.location.hash = '';
+        }}
+      />
+    );
+  }
+
+  if (currentRoute === 'landing') {
+    return (
+      <LandingPage
+        workspaces={workspaces}
+        onEnterPortal={() => {
+          window.location.hash = '#/app';
+        }}
+        onSelectWorkspace={(ws) => {
+          setSelectedWorkspace(ws);
+          if (ws.type === 'PRACTICAS') setActiveNavTab('practicas');
+          else if (ws.type === 'VINCULACION') setActiveNavTab('vinculacion');
+          else if (ws.type === 'EVENTO') setActiveNavTab('eventos');
+          window.location.hash = '#/app';
+        }}
+        onJoinSpace={async (code) => {
+          try {
+            const res = await workspacesApi.joinByCode(code);
+            if (res.workspace) {
+              setWorkspaces((prev) => [res.workspace, ...prev]);
+              setSelectedWorkspace(res.workspace);
+              if (res.workspace.type === 'PRACTICAS') setActiveNavTab('practicas');
+              else if (res.workspace.type === 'VINCULACION') setActiveNavTab('vinculacion');
+              else if (res.workspace.type === 'EVENTO') setActiveNavTab('eventos');
+              window.location.hash = '#/app';
+            }
+          } catch {
+            const found = workspaces.find((w) => w.accessCode === code);
+            if (found) {
+              setSelectedWorkspace(found);
+              if (found.type === 'PRACTICAS') setActiveNavTab('practicas');
+              else if (found.type === 'VINCULACION') setActiveNavTab('vinculacion');
+              else if (found.type === 'EVENTO') setActiveNavTab('eventos');
+              window.location.hash = '#/app';
+            } else {
+              window.location.hash = '#/app';
+            }
+          }
+        }}
+        onVerifyCertificate={(hash) => {
+          window.location.hash = `#/certificados/validar/${hash}`;
         }}
       />
     );

@@ -74,8 +74,14 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
     * Autenticación y sesión (`AuthContext.tsx`, `useAuth.ts`): reside canónicamente en `src/shared/context/` y `src/shared/hooks/`, eliminando la dependencia invertida desde componentes transversales hacia `modules/auth`.
     * API de Espacios de Trabajo (`workspaces.api.ts`): reside canónicamente en `src/shared/api/`, accesible sin acoplamiento a `modules/admin`.
     * Modales y Tablas Operativas de Prácticas (`CreateTestModal`, `UploadResourceModal`, `ReviewDocumentModal`, `SubmissionsReviewTable`): reubicados con alta cohesión dentro de `src/modules/practicas/components/`, consumiendo sus APIs locales relativas sin depender de `admin`.
+* **Landing Page Institucional Soberana (`src/modules/landing/`):**
+  * Portada pública independiente construida bajo Microsoft 365 Moderno (Fluent UI v9).
+  * Componentes autónomos: `LandingNavbar`, `LandingHero`, `LandingQuickAccess` (doble tarjeta: enrolamiento por código y validador de certificados en vivo), `LandingPillars` (PPP, Vinculación, Eventos), `LandingRraFlow` (4 etapas normativas), `LandingWorkspacesCatalog` (periodos lectivos activos), `LandingProfileSection` (trayectoria y marco LOPDP Ecuador) y `LandingFooter`.
 * **Enrutamiento SPA Sincronizado por Hash:**
-  * Enrutador declarativo en `App.tsx` que escucha `hashchange` para soportar navegación directa a rutas profundas públicas (`#/eventos/:code`, `#/certificados/validar/:hash`) en servidores web estáticos sin reescritura compleja de Nginx.
+  * Ruta raíz (`#/` o vacía): Presenta la Landing Page soberana del Ing. Wilfrido Trujillo.
+  * Ruta operativa (`#/app`, `#/practicas`, `#/vinculacion`, `#/certificados`, `#/eventos`, `#/espacios`): Despliega la Suite M365 `FluentShell` con transición fluida.
+  * Rutas profundas públicas (`#/eventos/:code`, `#/certificados/validar/:hash`): Acceso directo sin fricción de autenticación.
+  * Retorno instantáneo a la Portada Institucional desde el título de la Suite Bar y el menú de aplicaciones Waffle.
 * **Retención de Directorios en Git:**
   * Todo directorio que deba existir en instalaciones limpias cuenta con su respectivo `.gitkeep`.
   * Reglas de `.gitignore` afinadas para retener los `.gitkeep` de carpetas de almacenamiento local (`uploads/`, `backend/uploads/`).
