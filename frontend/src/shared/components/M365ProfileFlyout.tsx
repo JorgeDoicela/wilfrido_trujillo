@@ -72,7 +72,7 @@ export const M365ProfileFlyout: React.FC<M365ProfileFlyoutProps> = ({
               {user?.email || 'alumno@instituto.edu.ec'}
             </span>
             <div className="mt-1 flex items-center gap-1.5">
-              <span className="m365-badge m365-badge--info text-[10px] font-semibold py-0.2 px-2">
+              <span className="text-[10px] font-semibold text-[#0f6cbd]">
                 {user?.roleKey || 'INVITADO'}
               </span>
               <span className="text-[10px] text-[#107c10] font-medium flex items-center gap-0.5">

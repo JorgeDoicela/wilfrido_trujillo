@@ -145,8 +145,8 @@ export function DocumentDropzone({
   if (!testPassed) {
     return (
       <div className="p-8 text-center max-w-2xl mx-auto bg-[#fafafa] border border-[#e0e0e0] rounded-lg">
-        <div className="h-10 w-10 rounded-full bg-[#fff4ce] border border-[#f2c864] text-[#7d5a00] flex items-center justify-center mx-auto mb-2.5">
-          <Lock className="w-5 h-5" />
+        <div className="text-[#7d5a00] flex items-center justify-center mx-auto mb-2">
+          <Lock className="w-7 h-7" />
         </div>
         <h4 className="text-sm font-semibold text-[#242424] mb-1">Bandeja de Entrega Bloqueada</h4>
         <p className="text-xs text-[#616161] max-w-md mx-auto leading-relaxed">
@@ -159,12 +159,10 @@ export function DocumentDropzone({
   return (
     <div className="max-w-2xl mx-auto w-full flex flex-col gap-4">
       <div className="flex items-center gap-2 pb-2.5 border-b border-[#edebe9]">
-        <div className="h-7 w-7 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center flex-shrink-0">
-          <UploadCloud className="w-4 h-4" />
-        </div>
+        <UploadCloud className="w-5 h-5 text-[#0f6cbd] flex-shrink-0" />
         <div>
           <h3 className="text-xs font-semibold text-[#242424]">
-            Zona de Carga Oficial de Evidencias (OneDrive / M365)
+            Zona de Carga Oficial de Evidencias
           </h3>
           <p className="text-[11px] text-[#616161]">
             Sube tus bitácoras de horas, convenios legalizados o informes en formato PDF.
@@ -225,9 +223,7 @@ export function DocumentDropzone({
           <div className="flex flex-col items-center">
             {selectedFile ? (
               <>
-                <div className="h-10 w-10 rounded-full bg-[#dff6dd] text-[#107c10] flex items-center justify-center mb-1.5 shadow-2xs">
-                  <FileText className="w-5 h-5" />
-                </div>
+                <FileText className="w-7 h-7 text-[#107c10] mb-1.5" />
                 <p className="text-xs font-semibold text-[#242424] truncate max-w-sm">
                   {selectedFile.name}
                 </p>
@@ -237,9 +233,7 @@ export function DocumentDropzone({
               </>
             ) : (
               <>
-                <div className="h-10 w-10 rounded-full bg-white border border-[#e0e0e0] text-[#0f6cbd] flex items-center justify-center mb-1.5 shadow-xs">
-                  <UploadCloud className="w-5 h-5" />
-                </div>
+                <UploadCloud className="w-7 h-7 text-[#0f6cbd] mb-1.5" />
                 <p className="text-xs font-semibold text-[#242424]">
                   Arrastra tu archivo PDF aquí o haz clic para examinar
                 </p>

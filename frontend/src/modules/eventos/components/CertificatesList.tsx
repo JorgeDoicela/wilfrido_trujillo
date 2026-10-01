@@ -75,9 +75,9 @@ export function CertificatesList({
               </td>
               <td>
                 <div className="flex items-center gap-1.5 font-mono text-xs">
-                  <code className="bg-[#f0f0f0] px-1.5 py-0.5 rounded-sm text-[#424242]">
+                  <span className="text-xs font-mono font-medium text-[#242424]">
                     {cert.verificationHash.slice(0, 16)}...
-                  </code>
+                  </span>
                   <button
                     type="button"
                     onClick={() => onVerifyHash(cert.verificationHash)}

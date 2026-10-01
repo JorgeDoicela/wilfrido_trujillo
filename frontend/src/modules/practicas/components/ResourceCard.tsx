@@ -100,8 +100,8 @@ export function ResourceCard({
       <div>
         {/* Cabecera */}
         <div className="flex items-start justify-between gap-2 mb-2.5">
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-md bg-[#fafafa] border border-[#e0e0e0] flex items-center justify-center">
+          <div className="flex items-center gap-1.5">
+            <div className="text-[#0f6cbd] flex items-center">
               {badge.icon}
             </div>
             <span className="text-[11px] font-semibold text-[#242424]">

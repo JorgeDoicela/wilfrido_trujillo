@@ -34,10 +34,8 @@ export const FeaturePillars: React.FC = () => {
           >
             <div>
               <div className="flex items-center justify-between mb-2.5">
-                <div className="h-8 w-8 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
-                  <Icon className="w-4 h-4" />
-                </div>
-                <span className="text-[10px] font-mono text-[#616161] bg-[#f0f0f0] px-2 py-0.5 rounded-sm">
+                <Icon className="w-5 h-5 text-[#0f6cbd]" />
+                <span className="text-xs font-mono text-[#616161]">
                   {p.code}
                 </span>
               </div>

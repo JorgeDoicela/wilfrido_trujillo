@@ -510,11 +510,9 @@ export const FluentShell: React.FC<FluentShellProps> = ({
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 bg-[#dff6dd] border border-[#a3d9a5] px-3 py-1.5 rounded-full">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#107c10]">
                 <span className="w-2 h-2 rounded-full bg-[#107c10] animate-pulse" />
-                <span className="text-xs font-semibold text-[#107c10]">
-                  SISTEMA OPERATIVO // WAL ACTIVO
-                </span>
+                <span>SISTEMA OPERATIVO // WAL ACTIVO</span>
               </div>
             </div>
 

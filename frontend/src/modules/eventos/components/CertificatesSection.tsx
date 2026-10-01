@@ -22,15 +22,13 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
       <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-[#edebe9]">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
-              <Award className="w-3.5 h-3.5" />
-            </div>
+            <Award className="w-4 h-4 text-[#0f6cbd]" />
             <h3 className="text-sm font-semibold text-[#242424]">
               Emisión de Certificados PDF con Verificación Criptográfica QR
             </h3>
           </div>
           <p className="text-xs text-[#616161] mt-0.5">
-            Certificados oficiales con firma del Ing. Wilfrido Trujillo y código QR de validación en línea.
+            Certificados oficiales con firma de Wilfrido Trujillo y código QR de validación en línea.
           </p>
         </div>
 

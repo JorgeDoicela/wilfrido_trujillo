@@ -45,12 +45,16 @@ export function WorkspaceCard({ workspace, onEnter }: WorkspaceCardProps) {
     <div className="m365-card m365-card-hover p-4 flex flex-col justify-between group">
       <div>
         <div className="flex items-center justify-between gap-2 mb-2.5">
-          <span className={`m365-badge ${badge.className}`}>
-            {badge.icon} {badge.label}
-          </span>
-          <span className={`m365-badge ${workspace.isActive ? 'm365-badge--success' : 'm365-badge--neutral'}`}>
-            {workspace.isActive ? 'Activo' : 'Archivado'}
-          </span>
+          <div className="flex items-center gap-1.5 text-xs font-medium text-[#616161]">
+            {badge.icon}
+            <span>{badge.label}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs font-medium">
+            <span className={`w-1.5 h-1.5 rounded-full ${workspace.isActive ? 'bg-[#107c10]' : 'bg-[#8a8886]'}`} />
+            <span className={workspace.isActive ? 'text-[#107c10]' : 'text-[#616161]'}>
+              {workspace.isActive ? 'Activo' : 'Archivado'}
+            </span>
+          </div>
         </div>
 
         <h4 className="text-sm font-semibold text-[#242424] tracking-tight mb-1 group-hover:text-[#0f6cbd] transition-colors">
@@ -64,9 +68,9 @@ export function WorkspaceCard({ workspace, onEnter }: WorkspaceCardProps) {
       <div className="pt-2.5 border-t border-[#edebe9] flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
           <span className="text-[11px] text-[#616161]">Código:</span>
-          <code className="text-xs font-mono bg-[#f0f0f0] px-1.5 py-0.5 rounded-sm text-[#424242]">
+          <span className="text-xs font-mono font-semibold text-[#242424]">
             {workspace.accessCode}
-          </code>
+          </span>
           <button
             type="button"
             onClick={copyCode}

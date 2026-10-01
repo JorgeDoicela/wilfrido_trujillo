@@ -24,9 +24,7 @@ export const WorkspaceSelectorSection: React.FC<WorkspaceSelectorSectionProps> =
     <section className="m365-card p-5 flex flex-col gap-4">
       <div className="flex items-center justify-between pb-3 border-b border-[#edebe9]">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
-            <FolderOpen className="w-3.5 h-3.5" />
-          </div>
+          <FolderOpen className="w-4 h-4 text-[#0f6cbd]" />
           <h3 className="text-sm font-semibold text-[#242424]">
             Catálogo de Espacios y Periodos Académicos ({workspaces.length})
           </h3>

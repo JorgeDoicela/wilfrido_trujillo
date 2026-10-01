@@ -132,7 +132,7 @@ export const PracticasOverviewPage: React.FC<PracticasOverviewPageProps> = ({
               Flujo Guiado de Prácticas Preprofesionales
             </h2>
           </div>
-          <span className="text-xs font-medium text-[#616161] bg-[#f0f0f0] px-2.5 py-1 rounded-full border border-[#e0e0e0]">
+          <span className="text-xs font-medium text-[#616161]">
             Régimen RRA CES 2026
           </span>
         </div>
@@ -200,9 +200,7 @@ export const PracticasOverviewPage: React.FC<PracticasOverviewPageProps> = ({
       <section id="induccion-section" className="m365-card p-5 flex flex-col gap-4">
         <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-[#edebe9]">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
-              <Video className="w-3.5 h-3.5" />
-            </div>
+            <Video className="w-4 h-4 text-[#0f6cbd]" />
             <h3 className="text-sm font-semibold text-[#242424]">
               Módulo 01: Inducción Legal con Tracking de Reproducción
             </h3>
@@ -232,9 +230,7 @@ export const PracticasOverviewPage: React.FC<PracticasOverviewPageProps> = ({
       <section id="evaluacion-section" className="m365-card p-5 flex flex-col gap-4">
         <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-[#edebe9]">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
-              <HelpCircle className="w-3.5 h-3.5" />
-            </div>
+            <HelpCircle className="w-4 h-4 text-[#0f6cbd]" />
             <h3 className="text-sm font-semibold text-[#242424]">
               Módulo 02: Evaluación Normativa y Procedimiento RRA
             </h3>
@@ -280,9 +276,7 @@ export const PracticasOverviewPage: React.FC<PracticasOverviewPageProps> = ({
         <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-[#edebe9]">
           <div>
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
-                <FolderArchive className="w-3.5 h-3.5" />
-              </div>
+              <FolderArchive className="w-4 h-4 text-[#0f6cbd]" />
               <h3 className="text-sm font-semibold text-[#242424]">
                 Módulo 03: Plantillas Institucionales y Formatos Oficiales
               </h3>
@@ -330,9 +324,7 @@ export const PracticasOverviewPage: React.FC<PracticasOverviewPageProps> = ({
       <section id="documentos-section" className="m365-card p-5 flex flex-col gap-4">
         <div className="pb-3 border-b border-[#edebe9]">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
-              <FileCheck className="w-3.5 h-3.5" />
-            </div>
+            <FileCheck className="w-4 h-4 text-[#0f6cbd]" />
             <h3 className="text-sm font-semibold text-[#242424]">
               Módulo 04: Bandeja Oficial de Entregas & Auditoría Documental
             </h3>

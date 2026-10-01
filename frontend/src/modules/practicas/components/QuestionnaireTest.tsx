@@ -133,8 +133,8 @@ export function QuestionnaireTest({
   if (!inductionWatched) {
     return (
       <div className="p-8 text-center bg-[#fafafa] rounded-lg border border-[#e0e0e0] max-w-2xl mx-auto">
-        <div className="h-10 w-10 rounded-full bg-[#fff4ce] border border-[#f2c864] text-[#7d5a00] flex items-center justify-center mx-auto mb-3">
-          <Lock className="w-5 h-5" />
+        <div className="text-[#7d5a00] flex items-center justify-center mx-auto mb-2">
+          <Lock className="w-7 h-7" />
         </div>
         <h3 className="text-sm font-semibold text-[#242424] mb-1">Evaluación Normativa Bloqueada</h3>
         <p className="text-xs text-[#616161] max-w-md mx-auto leading-relaxed">
@@ -150,13 +150,11 @@ export function QuestionnaireTest({
       <div className="p-6 max-w-2xl mx-auto bg-white border border-[#e0e0e0] rounded-lg shadow-xs">
         <div className="text-center mb-5">
           <div
-            className={`h-14 w-14 rounded-full flex items-center justify-center mx-auto mb-3 border ${
-              result.passed
-                ? 'bg-[#dff6dd] border-[#a3d9a5] text-[#107c10]'
-                : 'bg-[#fde7e9] border-[#f1aeb5] text-[#a4262c]'
+            className={`flex items-center justify-center mx-auto mb-3 ${
+              result.passed ? 'text-[#107c10]' : 'text-[#a4262c]'
             }`}
           >
-            {result.passed ? <Award className="w-7 h-7" /> : <XCircle className="w-7 h-7" />}
+            {result.passed ? <Award className="w-9 h-9" /> : <XCircle className="w-9 h-9" />}
           </div>
 
           <span
@@ -239,7 +237,7 @@ export function QuestionnaireTest({
         </div>
 
         {timeLeft !== null && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f0f0f0] border border-[#e0e0e0] text-[#242424] text-xs font-medium">
+          <div className="flex items-center gap-1.5 text-[#242424] text-xs font-medium">
             <Clock className="w-3.5 h-3.5 text-[#0f6cbd]" />
             <span>Tiempo: {formatTimer(timeLeft)}</span>
           </div>

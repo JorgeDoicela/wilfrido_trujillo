@@ -21,9 +21,7 @@ export const PbacSimulatorCard: React.FC<PbacSimulatorCardProps> = ({
       <div className="flex items-center justify-between flex-wrap gap-4 pb-3.5 border-b border-[#edebe9] mb-4">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center">
-              <ShieldCheck className="w-3.5 h-3.5" />
-            </div>
+            <ShieldCheck className="w-4 h-4 text-[#0f6cbd]" />
             <h3 className="text-sm font-semibold text-[#242424] tracking-tight">
               Control de Acceso y Permisos (PBAC)
             </h3>
@@ -71,9 +69,9 @@ export const PbacSimulatorCard: React.FC<PbacSimulatorCardProps> = ({
             Rol: <span className="font-semibold text-[#0f6cbd]">{user?.roleKey || 'ANÓNIMO'}</span>
           </p>
           <div className="text-xs text-[#424242] flex items-center justify-between pt-2 border-t border-[#edebe9]">
-            <code className="text-[11px] font-mono bg-white px-1.5 py-0.5 border border-[#d1d1d1] rounded-sm">
+            <span className="text-[11px] font-mono font-semibold text-[#242424]">
               document:review
-            </code>
+            </span>
             {canReview ? (
               <span className="m365-badge m365-badge--success inline-flex items-center gap-1 font-semibold text-[11px]">
                 <CheckCircle2 className="w-3 h-3" /> AUTORIZADO

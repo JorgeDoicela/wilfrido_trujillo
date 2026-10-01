@@ -61,9 +61,7 @@ export function JoinWorkspaceCard({ onJoinSuccess }: JoinWorkspaceCardProps) {
     <div className="m365-card p-4 relative overflow-hidden flex flex-col justify-between">
       <div>
         <div className="flex items-center gap-2.5 pb-2.5 mb-3 border-b border-[#edebe9]">
-          <div className="h-8 w-8 rounded-md bg-[#ebf3fc] text-[#0f6cbd] flex items-center justify-center flex-shrink-0">
-            <KeyRound className="w-4 h-4" />
-          </div>
+          <KeyRound className="w-5 h-5 text-[#0f6cbd] flex-shrink-0" />
           <div>
             <h4 className="text-xs font-semibold text-[#242424]">Unirse con Código</h4>
             <p className="text-[11px] text-[#616161]">

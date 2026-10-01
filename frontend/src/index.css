@@ -214,46 +214,38 @@
     color: var(--text-primary);
   }
 
-  /* Badges Modernos M365 (Pastillas redondeadas limpias) */
+  /* Indicadores de Estado M365 (Sin fondos encapsulados ni píldoras) */
   .m365-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     font-size: 11px;
     font-weight: 600;
-    padding: 2px 8px;
-    border-radius: var(--radius-pill);
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
     line-height: 1.3;
   }
 
   .m365-badge--success {
-    background-color: var(--m365-success-bg);
     color: var(--m365-success);
-    border: 1px solid var(--m365-success-border);
   }
 
   .m365-badge--warning {
-    background-color: var(--m365-warning-bg);
     color: var(--m365-warning);
-    border: 1px solid var(--m365-warning-border);
   }
 
   .m365-badge--danger {
-    background-color: var(--m365-danger-bg);
     color: var(--m365-danger);
-    border: 1px solid var(--m365-danger-border);
   }
 
   .m365-badge--info {
-    background-color: var(--m365-info-bg);
     color: var(--m365-brand);
-    border: 1px solid var(--m365-info-border);
   }
 
   .m365-badge--neutral {
-    background-color: #f0f0f0;
-    color: #424242;
-    border: 1px solid #e0e0e0;
+    color: #616161;
   }
 
   /* Data Grid / Tabla M365 SharePoint/Lists style */

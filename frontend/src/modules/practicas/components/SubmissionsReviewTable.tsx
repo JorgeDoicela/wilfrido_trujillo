@@ -147,9 +147,9 @@ export const SubmissionsReviewTable: React.FC<SubmissionsReviewTableProps> = ({
                 return (
                   <tr key={sub.id}>
                     <td>
-                      <code className="text-xs font-mono bg-[#f0f0f0] px-1.5 py-0.5 rounded-sm text-[#424242]">
+                      <span className="text-xs font-mono font-medium text-[#242424]">
                         EXP-{(idx + 1).toString().padStart(3, '0')}
-                      </code>
+                      </span>
                       {student?.identification && (
                         <span className="block text-[10px] text-[#616161] font-mono mt-0.5">
                           {student.identification}
