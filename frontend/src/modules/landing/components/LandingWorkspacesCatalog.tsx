@@ -18,37 +18,37 @@ export const LandingWorkspacesCatalog: React.FC<LandingWorkspacesCatalogProps> =
     return ws.type === filterType;
   });
 
-  const getTypeBadge = (type: string) => {
+  const getTypeName = (type: string) => {
     switch (type) {
       case 'PRACTICAS':
-        return <span className="m365-badge m365-badge--info">Prácticas Laborales</span>;
+        return 'Prácticas Laborales';
       case 'VINCULACION':
-        return <span className="m365-badge m365-badge--success">Vinculación Social</span>;
+        return 'Vinculación Social';
       case 'EVENTO':
-        return <span className="m365-badge">Conferencia / Taller</span>;
+        return 'Conferencia / Taller';
       default:
-        return <span className="m365-badge">{type}</span>;
+        return type;
     }
   };
 
   return (
-    <section id="espacios" className="py-16 bg-white border-b border-[#e0e0e0]">
+    <section id="espacios" className="py-14 sm:py-20 bg-white border-b border-[#e0e0e0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
           <div>
-            <span className="text-xs font-semibold text-[#0f6cbd] uppercase tracking-wider">
+            <span className="text-xs font-semibold text-[#616161] uppercase tracking-wider block mb-1">
               Periodos y Talleres Activos
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#242424] mt-1">
-              Catálogo Oficial de Espacios Académicos
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#242424]">
+              Catálogo de Espacios Académicos
             </h2>
-            <p className="text-xs sm:text-sm text-[#616161] mt-1">
-              Consulta las aulas de coordinación vigentes para el periodo académico lectivo en curso.
+            <p className="text-xs sm:text-sm text-[#616161] mt-1.5">
+              Aulas de coordinación y periodos lectivos habilitados para gestión de estudiantes.
             </p>
           </div>
 
           {/* Filtros por Categoría */}
-          <div className="flex items-center gap-1.5 p-1 bg-[#f0f0f0] rounded-lg">
+          <div className="flex items-center gap-1 border border-[#d1d1d1] rounded p-1 bg-white">
             {[
               { id: 'all', label: 'Todos' },
               { id: 'PRACTICAS', label: 'Prácticas' },
@@ -59,9 +59,9 @@ export const LandingWorkspacesCatalog: React.FC<LandingWorkspacesCatalogProps> =
                 key={tab.id}
                 type="button"
                 onClick={() => setFilterType(tab.id)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
+                className={`px-3 py-1 rounded text-xs transition-colors cursor-pointer ${
                   filterType === tab.id
-                    ? 'bg-white text-[#0f6cbd] font-semibold shadow-2xs'
+                    ? 'bg-[#0f6cbd] text-white font-semibold'
                     : 'text-[#616161] hover:text-[#242424]'
                 }`}
               >
@@ -73,21 +73,23 @@ export const LandingWorkspacesCatalog: React.FC<LandingWorkspacesCatalogProps> =
 
         {/* Listado de Espacios */}
         {filtered.length === 0 ? (
-          <div className="p-10 text-center text-xs text-[#616161] bg-[#fafafa] rounded-lg border border-[#e0e0e0]">
-            No hay espacios registrados bajo este criterio de filtro.
+          <div className="p-8 text-center text-xs text-[#616161] bg-[#f5f5f5] rounded border border-[#e0e0e0]">
+            No hay espacios registrados bajo este criterio.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filtered.map((ws) => (
               <div
                 key={ws.id}
-                className="m365-card p-5 bg-white border border-[#e0e0e0] flex flex-col justify-between hover:border-[#0f6cbd] transition-all"
+                className="p-5 bg-white border border-[#e0e0e0] rounded-lg flex flex-col justify-between hover:border-[#0f6cbd] transition-colors"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    {getTypeBadge(ws.type)}
-                    <span className="flex items-center gap-1 text-[11px] font-mono text-[#616161] bg-[#f0f0f0] px-2 py-0.5 rounded">
-                      <KeyRound className="w-3 h-3 text-[#0f6cbd]" />
+                  <div className="flex items-center justify-between mb-3 border-b border-[#edebe9] pb-2">
+                    <span className="text-xs font-semibold text-[#0f6cbd]">
+                      {getTypeName(ws.type)}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs font-mono text-[#616161]">
+                      <KeyRound className="w-3 h-3 text-[#616161]" />
                       {ws.accessCode}
                     </span>
                   </div>
@@ -101,15 +103,14 @@ export const LandingWorkspacesCatalog: React.FC<LandingWorkspacesCatalogProps> =
                 </div>
 
                 <div className="mt-5 pt-3 border-t border-[#edebe9] flex items-center justify-between">
-                  <span className="text-[11px] text-[#107c10] font-medium flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-[#107c10]" />
+                  <span className="text-xs text-[#616161]">
                     Habilitado
                   </span>
 
                   <button
                     type="button"
                     onClick={() => onSelectWorkspace(ws)}
-                    className="m365-btn m365-btn-secondary text-xs h-7.5 px-3 gap-1 hover:border-[#0f6cbd] hover:text-[#0f6cbd]"
+                    className="px-3 py-1 rounded border border-[#d1d1d1] text-xs font-semibold text-[#242424] hover:bg-[#f5f5f5] flex items-center gap-1 cursor-pointer"
                   >
                     <span>Ingresar</span>
                     <ArrowRight className="w-3 h-3" />

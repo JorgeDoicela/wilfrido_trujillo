@@ -54,6 +54,8 @@ Este archivo establece las reglas mandatorias e inviolables para cualquier agent
 ## 4. Reglas Mandatorias de Diseño UI/UX (`diseno-wilfrido`)
 
 * **Cero Emojis:** Prohibido el uso de emojis en cualquier capa visual, textos, tooltips, modales o botones.
+* **Cero Cajas o Píldoras con Color de Fondo para Palabras o Íconos:** Prohibido encerrar palabras, frases, categorías o íconos SVG dentro de cuadros, óvalos o píldoras con color de fondo (`bg-[#ebf3fc]`, etc.) como adorno o rótulos sobre títulos. La jerarquía se expresa con tipografía Segoe UI pura, peso y color neutro.
+* **Cero Información Irrelevante o Relleno:** Prohibido texto decorativo o lemas de relleno; toda la información debe ser estrictamente fáctica, operativa y técnica.
 * **Íconos SVG Funcionales Mínimos:** Los íconos vectoriales (`lucide-react`) solo se emplean para acciones que requieran affordance interactivo explícito. Queda prohibida la saturación decorativa.
 * **Cero KPIs Enormes Superiores:** Prohibido ubicar tarjetas de métricas infladas que desplacen el contenido operativo hacia abajo. Priorizar la alta densidad de información, tablas limpias y flujos de acción.
 * **Cero Diseños Genéricos:** La interfaz se construye exclusivamente sobre los Design Tokens (`index.css`) y las primitivas atómicas de `@/shared/components/ui/` (`Button`, `Card`, `Badge`, `Input`, `Modal`), lista para adaptarse al estándar formal que defina el desarrollador.

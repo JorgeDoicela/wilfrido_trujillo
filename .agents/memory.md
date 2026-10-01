@@ -48,6 +48,8 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
     * 100% Microsoft 365 Moderno (Fluent Design System 2 / Fluent UI v9) puro sin mezclas estéticas.
     * Paleta de color oficial: Brand `#0f6cbd`, Hover `#115ea3`, Pressed `#0c3b5e`, Canvas `#f5f5f5`, Superficies `#ffffff`, Bordes `#e0e0e0`, Divisores `#edebe9`, Textos `#242424` / `#616161`, Presencia/Success `#107c10`.
     * Tipografía oficial: Segoe UI / Segoe UI Variable con escala de texto jerárquica estandarizada.
+    * Cero Cajas o Píldoras con Color de Fondo para Palabras o Íconos: Prohibido encerrar palabras, categorías o íconos SVG dentro de cuadros u óvalos con fondos de color (`bg-[#ebf3fc]`, etc.) como adorno sobre títulos o secciones. La jerarquía se expresa con tipografía pura, peso y colores neutros.
+    * Cero Información Irrelevante o Relleno: Todo texto debe ser fáctico, técnico y operativo para la gestión académica; cero lemas publicitarios.
     * Layout Suite: Suite Bar (48px), App Rail (56px), Drawer Contextual (220px), Command Bar (44px).
     * Radios de curvatura contenidos: 4px para controles interactivos y 8px para tarjetas/modales (prohibidos radios superiores a 12px).
     * Cero emojis en toda la interfaz, código y documentación técnica.

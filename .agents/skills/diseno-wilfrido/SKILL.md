@@ -29,12 +29,21 @@ Toda inteligencia artificial o desarrollador que genere código en el frontend d
      * `24px` (`w-6 h-6`): Cabeceras principales o ilustraciones de estado vacío.
    * Prohibido colocar íconos decorativos redundantes junto a cada sustantivo. Los íconos solo se usan cuando aportan affordance de acción o jerarquía de estado.
 
-4. **Cero Bloques Superiores de KPIs Enormes:**
+4. **Cero Cajas o Píldoras con Color de Fondo para Palabras o Íconos (Cero Adornos Innecesarios):**
+   * Queda estrictamente prohibido encerrar palabras, frases, categorías o íconos SVG dentro de cuadros, óvalos o píldoras con fondos de color (como `bg-[#ebf3fc]`, `bg-[#cfe4fa]`, `bg-[#dff6dd]`, etc.) utilizados como adorno o rótulos flotantes sobre títulos.
+   * Es ruido visual innecesario y ajeno a la sobriedad ejecutiva de Microsoft 365.
+   * La jerarquía debe comunicarse exclusivamente mediante tipografía Segoe UI limpia, peso (`font-semibold`), color de texto neutro (`#616161`, `#242424`) o divisores sutiles, jamás mediante cajitas o pastillas coloreadas.
+   * Los estados operativos (ej. Aprobado, Pendiente) en tablas se expresan de manera sobria y compacta, nunca como elementos decorativos en cabeceras o heroes.
+
+5. **Cero Información Irrelevante o Relleno:**
+   * Prohibido redactar textos de relleno, lemas decorativos o metadatos superfluos. Toda la información presentada debe ser fáctica, técnica y operativa para la gestión de prácticas, vinculación o eventos de la carrera.
+
+6. **Cero Bloques Superiores de KPIs Enormes:**
    * Prohibido insertar tarjetas de métricas gigantescas que empujen el contenido operativo fuera del primer pliegue visual (viewport).
    * Microsoft 365 es una suite orientada a tareas: el usuario entra a consultar expedientes, auditar PDFs, evaluar cuestionarios o emitir certificados, no a ver estadísticas vacías.
    * La información de resumen se condensa en badges numéricos dentro de pestañas (`Pendientes (4)`), chips en la Command Bar o columnas de tabla compactas.
 
-5. **Navegación Focalizada por Dominio (Cero Apilamiento de Páginas):**
+7. **Navegación Focalizada por Dominio (Cero Apilamiento de Páginas):**
    * Prohibido apilar verticalmente páginas completas en un scroll infinito (anti-patrón de landing page).
    * La navegación mediante la App Rail y el Drawer contextual renderiza únicamente la vista del módulo activo a pantalla completa (`100% height - 48px Suite Bar - 44px Command Bar`).
 

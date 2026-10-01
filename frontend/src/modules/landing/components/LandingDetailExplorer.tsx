@@ -1,10 +1,4 @@
 import React, { useState } from 'react';
-import {
-  GraduationCap,
-  Users,
-  Building2,
-  ShieldCheck,
-} from 'lucide-react';
 
 export interface LandingDetailExplorerProps {
   onEnterPortal: () => void;
@@ -20,65 +14,63 @@ export const LandingDetailExplorer: React.FC<LandingDetailExplorerProps> = ({
   const roles = [
     {
       id: 'estudiantes',
-      navTitle: 'Para Estudiantes',
-      title: 'Acreditación Soberana y Gestión Transparente',
+      navTitle: 'Estudiantes',
+      title: 'Acreditación y Seguimiento para Estudiantes',
       description:
-        'El estudiante cuenta con un entorno guiado paso a paso para enrolarse mediante código de espacio, cursar la inducción obligatoria, registrar bitácoras diarias y auditar su informe final antes del visado definitivo.',
-      icon: GraduationCap,
+        'Entorno de trabajo para enrolarse mediante código de espacio, cursar la inducción obligatoria, registrar bitácoras diarias y verificar el informe final antes de remitirlo al docente.',
       features: [
         {
           title: 'Enrolamiento Inmediato',
-          description: 'Ingreso directo mediante código alfanumérico sin trámites burocráticos.',
+          description: 'Acceso directo mediante código de asignatura o periodo.',
         },
         {
-          title: 'Inducción Audiovisual Guiada',
-          description: 'Control estricto de reproducción obligatoria para habilitar el registro de horas.',
+          title: 'Inducción Audiovisual',
+          description: 'Visualización certificada de directrices normativas.',
         },
         {
-          title: 'Bitácoras con Cómputo Automático',
-          description: 'Contabilización precisa de hasta 240 horas laborales según el RRA CES.',
+          title: 'Registro de Bitácoras',
+          description: 'Cómputo progresivo de hasta 240 horas de prácticas laborales.',
         },
         {
-          title: 'Pre-Dictamen Heurístico',
-          description: 'Revisión algorítmica de la estructura del PDF antes de enviarlo al docente.',
+          title: 'Pre-Dictamen Estructural',
+          description: 'Verificación del informe en PDF antes del visado definitivo.',
         },
       ],
       interactiveScreen: (
-        <div className="bg-[#f5f5f5] p-5 rounded-lg border border-[#edebe9] text-left select-none">
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#e0e0e0]">
-            <span className="text-xs font-semibold text-[#242424] flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#107c10]" />
-              Panel del Estudiante · Periodo 2026-1
+        <div className="bg-white p-5 rounded-lg border border-[#e0e0e0] text-left select-none">
+          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#edebe9]">
+            <span className="text-xs font-semibold text-[#242424]">
+              Panel Estudiantil · Periodo Lectivo Activo
             </span>
-            <span className="text-[10px] bg-white px-2 py-0.5 rounded border border-[#e0e0e0] font-mono text-[#616161]">
-              ESTADO: EN CURSO
+            <span className="text-xs text-[#616161]">
+              En Curso
             </span>
           </div>
 
           <div className="space-y-2.5">
-            <div className="bg-white p-3 rounded border border-[#e0e0e0]">
+            <div className="p-3 rounded border border-[#e0e0e0]">
               <div className="flex items-center justify-between text-xs mb-1">
                 <span className="font-semibold text-[#242424]">Inducción Audiovisual</span>
-                <span className="text-[#107c10] font-bold">100% Superada</span>
+                <span className="text-[#0f6cbd] font-semibold">Completada (3/3)</span>
               </div>
-              <p className="text-[11px] text-[#616161]">
-                3 de 3 cápsulas completadas sin saltos indebidos.
+              <p className="text-xs text-[#616161]">
+                Cápsulas de inducción aprobadas.
               </p>
             </div>
 
-            <div className="bg-white p-3 rounded border border-[#e0e0e0]">
+            <div className="p-3 rounded border border-[#e0e0e0]">
               <div className="flex items-center justify-between text-xs mb-1">
-                <span className="font-semibold text-[#242424]">Acumulado de Horas</span>
-                <span className="text-[#0f6cbd] font-bold">240 / 240 Horas</span>
+                <span className="font-semibold text-[#242424]">Horas Registradas</span>
+                <span className="text-[#242424] font-semibold">240 / 240 Horas</span>
               </div>
               <div className="w-full bg-[#edebe9] h-1.5 rounded-full overflow-hidden">
                 <div className="bg-[#0f6cbd] h-full rounded-full w-full" />
               </div>
             </div>
 
-            <div className="bg-[#dff6dd] p-3 rounded border border-[#a3d9a5] flex items-center justify-between text-xs">
-              <span className="text-[#107c10] font-semibold">Informe Final:</span>
-              <span className="text-[#107c10] font-bold">Pre-Dictamen Favorable</span>
+            <div className="p-3 rounded border border-[#e0e0e0] flex items-center justify-between text-xs">
+              <span className="text-[#242424]">Informe Final:</span>
+              <span className="text-[#0f6cbd] font-semibold">Estructura Validada</span>
             </div>
           </div>
         </div>
@@ -86,65 +78,59 @@ export const LandingDetailExplorer: React.FC<LandingDetailExplorerProps> = ({
     },
     {
       id: 'docentes',
-      navTitle: 'Para Docentes & Coordinador',
-      title: 'Supervisión Centralizada y Calificación por Rúbricas',
+      navTitle: 'Docentes & Coordinación',
+      title: 'Supervisión y Calificación por Rúbricas',
       description:
-        'El docente tutor y el coordinador de prácticas disponen de una matriz unificada para supervisar cohortes completas, aprobar bitácoras en lote, aplicar rúbricas oficiales y generar actas de acreditación definitivas.',
-      icon: Users,
+        'Control de cohortes asignadas, aprobación de bitácoras de actividades, aplicación de rúbricas oficiales y consolidación de actas para archivo institucional.',
       features: [
         {
           title: 'Matriz de Seguimiento',
-          description: 'Visibilidad completa del estado y progreso de cada estudiante asignado.',
+          description: 'Control consolidado de estudiantes matriculados.',
         },
         {
-          title: 'Rúbricas Ponderadas RRA',
-          description: 'Evaluación objetiva según los criterios normativos del Consejo de Educación Superior.',
+          title: 'Rúbricas Ponderadas',
+          description: 'Evaluación según criterios del Régimen Académico.',
         },
         {
-          title: 'Visado y Observaciones',
-          description: 'Aprobación formal o retroalimentación técnica con trazabilidad de cambios.',
+          title: 'Visado Técnico',
+          description: 'Aprobación formal con registro de observaciones.',
         },
         {
-          title: 'Exportación de Actas',
-          description: 'Generación de informes consolidados listos para auditorías institucionales.',
+          title: 'Actas Oficiales',
+          description: 'Exportación de matrices para acreditación de carrera.',
         },
       ],
       interactiveScreen: (
-        <div className="bg-[#f5f5f5] p-5 rounded-lg border border-[#edebe9] text-left select-none">
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#e0e0e0]">
-            <span className="text-xs font-semibold text-[#242424] flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#0f6cbd]" />
-              Matriz de Supervisión · Despacho Coordinación
+        <div className="bg-white p-5 rounded-lg border border-[#e0e0e0] text-left select-none">
+          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#edebe9]">
+            <span className="text-xs font-semibold text-[#242424]">
+              Matriz de Supervisión · Despacho
             </span>
-            <span className="text-[10px] bg-[#ebf3fc] px-2 py-0.5 rounded border border-[#cfe4fa] font-mono text-[#0f6cbd]">
-              48 ESTUDIANTES
+            <span className="text-xs text-[#616161]">
+              48 Estudiantes
             </span>
           </div>
 
           <div className="space-y-2 text-xs">
-            <div className="bg-white p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
+            <div className="p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
               <div>
-                <span className="font-semibold text-[#242424] block">Prácticas Laborales PPP</span>
-                <span className="text-[11px] text-[#616161]">32 Activas · 16 Finalizadas</span>
+                <span className="font-semibold text-[#242424] block">Prácticas Laborales</span>
+                <span className="text-[#616161]">32 Activas · 16 Finalizadas</span>
               </div>
-              <span className="px-2 py-1 rounded bg-[#dff6dd] text-[#107c10] font-bold text-[10px]">
-                AL DÍA
-              </span>
+              <span className="text-[#0f6cbd] font-semibold">Al Día</span>
             </div>
 
-            <div className="bg-white p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
+            <div className="p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
               <div>
                 <span className="font-semibold text-[#242424]">Informes por Visar</span>
-                <span className="text-[11px] text-[#616161] block">Pre-calificados por el Auditor RRA</span>
+                <span className="text-[#616161] block">Pre-calificados por el Auditor</span>
               </div>
-              <span className="px-2 py-1 rounded bg-[#ebf3fc] text-[#0f6cbd] font-bold text-[10px]">
-                3 PENDIENTES
-              </span>
+              <span className="text-[#242424] font-semibold">3 Pendientes</span>
             </div>
 
-            <div className="bg-white p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
-              <span className="font-medium text-[#242424]">Actas Consolidadas Firmadas</span>
-              <span className="font-semibold text-[#107c10]">100% Legalizadas</span>
+            <div className="p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
+              <span className="text-[#242424]">Actas Consolidadas</span>
+              <span className="font-semibold text-[#0f6cbd]">Legalizadas</span>
             </div>
           </div>
         </div>
@@ -152,58 +138,53 @@ export const LandingDetailExplorer: React.FC<LandingDetailExplorerProps> = ({
     },
     {
       id: 'empresas',
-      navTitle: 'Para Empresas & Tutores',
-      title: 'Homologación de Convenios y Control de Desempeño',
+      navTitle: 'Empresas & Entidades Receptoras',
+      title: 'Convenios y Control de Desempeño Laboral',
       description:
-        'Las instituciones receptoras y tutores empresariales formalizan la aceptación de practicantes, validan la asistencia semanal in situ y emiten la certificación empresarial requerida por la normativa universitaria.',
-      icon: Building2,
+        'Formalización de aceptación de practicantes, supervisión in situ de horas trabajadas y suscripción de certificados de culminación empresarial.',
       features: [
         {
-          title: 'Convenios Registrados',
-          description: 'Validación de convenios marco y cartas de compromiso interinstitucional.',
+          title: 'Convenios Vigentes',
+          description: 'Registro de acuerdos marco interinstitucionales.',
         },
         {
-          title: 'Control de Asistencia',
-          description: 'Validación de horas laboradas y actividades prácticas desarrolladas.',
+          title: 'Asistencia en Sede',
+          description: 'Control de permanencia y puntualidad.',
         },
         {
           title: 'Evaluación Empresarial',
-          description: 'Calificación de competencias técnicas y actitudinales en el entorno real.',
+          description: 'Calificación de competencias aplicadas.',
         },
         {
-          title: 'Certificado de Culminación',
-          description: 'Suscripción de constancias con valor legal para acreditación universitaria.',
+          title: 'Certificación Final',
+          description: 'Constancias de cumplimiento con valor universitario.',
         },
       ],
       interactiveScreen: (
-        <div className="bg-[#f5f5f5] p-5 rounded-lg border border-[#edebe9] text-left select-none">
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#e0e0e0]">
-            <span className="text-xs font-semibold text-[#242424] flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#107c10]" />
-              Validación Empresarial · Entorno Productivo
+        <div className="bg-white p-5 rounded-lg border border-[#e0e0e0] text-left select-none">
+          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#edebe9]">
+            <span className="text-xs font-semibold text-[#242424]">
+              Entidad Receptora · Sector Productivo
             </span>
-            <span className="text-[10px] bg-white px-2 py-0.5 rounded border border-[#e0e0e0] font-mono text-[#616161]">
-              CONVENIO ACTIVO
+            <span className="text-xs text-[#616161]">
+              Convenio Vigente
             </span>
           </div>
 
           <div className="space-y-2.5 text-xs">
-            <div className="bg-white p-3 rounded border border-[#e0e0e0]">
-              <span className="text-[11px] text-[#616161] block">Empresa Colaboradora:</span>
-              <span className="font-semibold text-[#242424]">GAD Municipalidad / Sector Tecnológico</span>
+            <div className="p-3 rounded border border-[#e0e0e0]">
+              <span className="text-[#616161] block">Entidad Colaboradora:</span>
+              <span className="font-semibold text-[#242424]">Institución Pública / Empresa de Software</span>
             </div>
 
-            <div className="bg-white p-3 rounded border border-[#e0e0e0] flex items-center justify-between">
-              <div>
-                <span className="font-semibold text-[#242424] block">Evaluación de Desempeño</span>
-                <span className="text-[11px] text-[#616161]">Rigor técnico, puntualidad y ética</span>
-              </div>
-              <span className="font-bold text-[#107c10] text-sm">9.8 / 10</span>
+            <div className="p-3 rounded border border-[#e0e0e0] flex items-center justify-between">
+              <span className="font-semibold text-[#242424]">Evaluación de Desempeño:</span>
+              <span className="font-semibold text-[#0f6cbd]">9.8 / 10</span>
             </div>
 
-            <div className="bg-[#eff6fc] p-2.5 rounded border border-[#9ec5fe] flex items-center justify-between">
-              <span className="text-[#0078d4] font-medium">Certificado de Finiquito:</span>
-              <span className="font-bold text-[#0078d4]">Firmado en Sede</span>
+            <div className="p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
+              <span className="text-[#242424]">Certificado de Finiquito:</span>
+              <span className="font-semibold text-[#242424]">Suscrito</span>
             </div>
           </div>
         </div>
@@ -211,61 +192,56 @@ export const LandingDetailExplorer: React.FC<LandingDetailExplorerProps> = ({
     },
     {
       id: 'auditoria',
-      navTitle: 'Auditoría Pública & Validación QR',
-      title: 'Transparencia Criptográfica y Consulta Abierta',
+      navTitle: 'Validación Pública & Auditoría',
+      title: 'Verificación Criptográfica y Consulta Abierta',
       description:
-        'Cualquier ciudadano, institución empleadora o comité evaluador del CACES puede comprobar la autenticidad e inmutabilidad de los certificados emitidos sin necesidad de credenciales de acceso.',
-      icon: ShieldCheck,
+        'Comprobación de legitimidad de constancias y certificados emitidos mediante código QR o hash SHA-256 sin requerir inicio de sesión.',
       features: [
         {
           title: 'Algoritmo SHA-256',
-          description: 'Huella criptográfica inalterable generada al momento de la aprobación oficial.',
+          description: 'Huella digital única por cada certificado expedido.',
         },
         {
-          title: 'Código QR Instantáneo',
-          description: 'Escaneo directo desde cualquier teléfono móvil o lector de documentos.',
+          title: 'Lectura QR',
+          description: 'Acceso inmediato desde cualquier lector estándar.',
         },
         {
-          title: 'Consulta Soberana',
-          description: 'Sin intermediarios de terceros: verificación directa contra la base de datos oficial.',
+          title: 'Consulta Directa',
+          description: 'Verificación contra el registro oficial de la carrera.',
         },
         {
-          title: 'Auditoría RRA',
-          description: 'Trazabilidad de fecha, hora, tutor responsable y periodo lectivo exacto.',
+          title: 'Trazabilidad RRA',
+          description: 'Registro de fecha, periodo y tutor responsable.',
         },
       ],
       interactiveScreen: (
-        <div className="bg-[#f5f5f5] p-5 rounded-lg border border-[#edebe9] text-left select-none">
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#e0e0e0]">
-            <span className="text-xs font-semibold text-[#242424] flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#107c10]" />
-              Validador Criptográfico Soberano
+        <div className="bg-white p-5 rounded-lg border border-[#e0e0e0] text-left select-none">
+          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#edebe9]">
+            <span className="text-xs font-semibold text-[#242424]">
+              Verificador Criptográfico
             </span>
-            <span className="text-[10px] bg-[#dff6dd] px-2 py-0.5 rounded border border-[#a3d9a5] font-mono text-[#107c10] font-bold">
-              VERIFICADO
+            <span className="text-xs text-[#0f6cbd] font-semibold">
+              Auténtico
             </span>
           </div>
 
           <div className="space-y-2 text-xs">
-            <div className="bg-white p-2.5 rounded border border-[#e0e0e0]">
-              <span className="text-[10px] text-[#616161] uppercase tracking-wider block font-semibold">
-                Hash Único Criptográfico
+            <div className="p-2.5 rounded border border-[#e0e0e0]">
+              <span className="text-[10px] text-[#616161] uppercase tracking-wider block">
+                Hash SHA-256 Registrado
               </span>
-              <span className="font-mono text-[11px] text-[#0f6cbd] font-bold break-all block mt-0.5">
+              <span className="font-mono text-xs text-[#242424] break-all block mt-0.5">
                 a1b2c3d4e5f6789012345678abcdef9876543210fedcba0987654321
               </span>
             </div>
 
-            <div className="bg-white p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
-              <div>
-                <span className="text-[10px] text-[#616161] block">Documento:</span>
-                <span className="font-semibold text-[#242424]">Certificado de Aprobación de Prácticas</span>
-              </div>
-              <span className="font-bold text-[#107c10]">VÁLIDO</span>
+            <div className="p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
+              <span className="text-[#616161]">Documento:</span>
+              <span className="font-semibold text-[#242424]">Certificado de Prácticas</span>
             </div>
 
-            <div className="bg-white p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
-              <span className="text-[#616161]">Emisión:</span>
+            <div className="p-2.5 rounded border border-[#e0e0e0] flex items-center justify-between">
+              <span className="text-[#616161]">Emisor:</span>
               <span className="font-semibold text-[#242424]">Universidad Nacional de Chimborazo</span>
             </div>
           </div>
@@ -277,51 +253,49 @@ export const LandingDetailExplorer: React.FC<LandingDetailExplorerProps> = ({
   const currentRole = roles[activeTab];
 
   return (
-    <section id="explorador" className="py-16 sm:py-24 bg-white border-b border-[#e0e0e0]">
+    <section id="explorador" className="py-14 sm:py-20 bg-white border-b border-[#e0e0e0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabecera del Explorador */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#0f6cbd] block mb-1">
-            Explorador por Rol y Perspectiva
+        <div className="text-center max-w-3xl mx-auto mb-8">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#616161] block mb-1">
+            Perspectivas de Uso
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#242424]">
-            Un Ecosistema Diseñado a la Medida de Cada Actor Académico
+            Herramientas por Rol Académico
           </h2>
-          <p className="text-sm text-[#616161] mt-2">
-            Descubre las herramientas especializadas implementadas para estudiantes, docentes tutores, empresas aliadas y auditores de acreditación.
+          <p className="text-sm text-[#616161] mt-1.5">
+            Acceso adaptado para estudiantes, docentes tutores, entidades colaboradoras y auditores de acreditación.
           </p>
         </div>
 
-        {/* Pestañas de Selección de Rol */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+        {/* Pestañas de Selección */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
           {roles.map((r, idx) => {
             const isCurrent = idx === activeTab;
-            const TabIcon = r.icon;
             return (
               <button
                 key={r.id}
                 type="button"
                 onClick={() => setActiveTab(idx)}
-                className={`px-4 py-2.5 rounded-lg border text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 cursor-pointer ${
+                className={`px-3.5 py-2 rounded border text-xs font-semibold transition-colors cursor-pointer ${
                   isCurrent
-                    ? 'bg-[#0f6cbd] border-[#0f6cbd] text-white shadow-xs'
-                    : 'bg-white border-[#e0e0e0] text-[#424242] hover:bg-[#f5f5f5] hover:border-[#c7c7c7]'
+                    ? 'bg-[#0f6cbd] border-[#0f6cbd] text-white'
+                    : 'bg-white border-[#d1d1d1] text-[#242424] hover:bg-[#f5f5f5]'
                 }`}
               >
-                <TabIcon className="w-4 h-4 shrink-0" />
                 <span>{r.navTitle}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Contenedor Principal de Detalles del Rol */}
-        <div className="m365-card p-6 sm:p-10 bg-[#fafafa] border border-[#e0e0e0] rounded-xl shadow-xs">
+        {/* Contenedor Principal */}
+        <div className="bg-[#f5f5f5] border border-[#e0e0e0] rounded-lg p-6 sm:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Lado Izquierdo: Descripción y Capacidades */}
             <div className="lg:col-span-7 flex flex-col justify-between">
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[#242424] mb-3">
+                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[#242424] mb-2">
                   {currentRole.title}
                 </h3>
                 <p className="text-sm text-[#616161] leading-relaxed mb-6">
@@ -329,16 +303,16 @@ export const LandingDetailExplorer: React.FC<LandingDetailExplorerProps> = ({
                 </p>
 
                 {/* Sub-grilla de 4 capacidades clave */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                   {currentRole.features.map((feat) => (
                     <div
                       key={feat.title}
-                      className="p-3 bg-white rounded-md border border-[#edebe9] shadow-2xs"
+                      className="p-3 bg-white rounded border border-[#e0e0e0]"
                     >
                       <span className="text-xs font-semibold text-[#242424] block mb-0.5">
                         {feat.title}
                       </span>
-                      <p className="text-[11px] text-[#616161] leading-relaxed">
+                      <p className="text-xs text-[#616161] leading-relaxed">
                         {feat.description}
                       </p>
                     </div>
@@ -346,25 +320,25 @@ export const LandingDetailExplorer: React.FC<LandingDetailExplorerProps> = ({
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-[#edebe9] flex items-center gap-3">
+              <div className="pt-4 border-t border-[#e0e0e0] flex items-center gap-3">
                 <button
                   type="button"
                   onClick={onEnterPortal}
-                  className="px-4 py-2 rounded-md bg-[#0f6cbd] text-white font-semibold text-xs hover:bg-[#115ea3] transition-colors cursor-pointer shadow-2xs"
+                  className="px-4 py-2 rounded bg-[#0f6cbd] text-white font-semibold text-xs hover:bg-[#115ea3] transition-colors cursor-pointer"
                 >
                   Acceder al Módulo
                 </button>
                 <button
                   type="button"
                   onClick={onScrollToValidator}
-                  className="px-4 py-2 rounded-md bg-white border border-[#e0e0e0] text-[#242424] font-semibold text-xs hover:bg-[#f0f0f0] transition-colors cursor-pointer shadow-2xs"
+                  className="px-4 py-2 rounded bg-white border border-[#d1d1d1] text-[#242424] font-semibold text-xs hover:bg-[#f5f5f5] transition-colors cursor-pointer"
                 >
                   Probar Validador
                 </button>
               </div>
             </div>
 
-            {/* Lado Derecho: Simulador / Pantalla Interactiva */}
+            {/* Lado Derecho: Maqueta Limpia */}
             <div className="lg:col-span-5">
               {currentRole.interactiveScreen}
             </div>

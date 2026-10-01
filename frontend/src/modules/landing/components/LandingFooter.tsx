@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUp, ShieldCheck } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 export const LandingFooter: React.FC = () => {
   const scrollToTop = () => {
@@ -62,17 +62,12 @@ export const LandingFooter: React.FC = () => {
             © {new Date().getFullYear()} Ing. Wilfrido Trujillo · Plataforma Soberana de Gestión Académica · Todos los derechos reservados.
           </p>
 
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5 text-[#107c10] font-medium">
-              <ShieldCheck className="w-3.5 h-3.5" /> Cumplimiento LOPDP Ecuador
-            </span>
-            <span className="hidden md:inline text-[#e0e0e0]">|</span>
+          <div className="flex items-center gap-4 text-[#8a8886]">
+            <span>Cumplimiento LOPDP Ecuador</span>
+            <span className="hidden md:inline">|</span>
             <span className="hidden md:inline">Reglamento de Régimen Académico (CES Art. 89)</span>
-            <span className="hidden md:inline text-[#e0e0e0]">|</span>
-            <span className="flex items-center gap-1.5 text-[#0f6cbd] font-medium">
-              <span className="w-2 h-2 rounded-full bg-[#107c10]" />
-              Servicios Operativos
-            </span>
+            <span className="hidden md:inline">|</span>
+            <span>Servicios Operativos</span>
           </div>
         </div>
       </div>
