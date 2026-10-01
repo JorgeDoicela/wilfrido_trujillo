@@ -28,13 +28,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onEnterPortal }) =
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className="flex items-center gap-2.5 outline-none hover:opacity-80 active:scale-95 transition-all duration-200 cursor-pointer"
-          aria-label="Ing. Wilfrido Trujillo - Inicio"
+          aria-label="Wilfrido Trujillo - Inicio"
         >
           <div className="w-8 h-8 rounded-lg bg-[#0f6cbd] text-white flex items-center justify-center font-bold text-xs shadow-xs select-none">
             WT
           </div>
           <span className="text-sm font-semibold tracking-tight text-[#242424]">
-            Ing. Wilfrido Trujillo
+            Wilfrido Trujillo
           </span>
         </a>
       </div>

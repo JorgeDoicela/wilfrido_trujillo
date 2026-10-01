@@ -11,18 +11,18 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ onEnterPortal }) => {
       {/* Eyebrow simple y limpio */}
       <div className="mb-4">
         <span className="text-xs sm:text-sm font-semibold tracking-wider text-[#616161] uppercase">
-          Facultad de Ingeniería · Carrera de Sistemas y Computación
+          Prácticas Preprofesionales · Vinculación · Certificación
         </span>
       </div>
 
       {/* Titular Gigante Impactante estilo Apple / Segoe UI Display */}
       <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight text-[#242424] max-w-4xl leading-[1.04] mb-6">
-        Ing. Wilfrido Trujillo
+        Wilfrido Trujillo
       </h1>
 
       {/* Párrafo Descriptivo Breve y Directo */}
       <p className="text-base sm:text-lg md:text-xl text-[#616161] max-w-2xl font-normal leading-relaxed mb-10">
-        Coordinación académica de Prácticas Preprofesionales, Vinculación con la Sociedad y Acreditación Oficial conforme al Reglamento de Régimen Académico.
+        Gestión y supervisión de prácticas laborales, proyectos de vinculación y certificación oficial con validación criptográfica.
       </p>
 
       {/* Botones de Acción */}
@@ -46,7 +46,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({ onEnterPortal }) => {
           onClick={onEnterPortal}
           className="px-8 py-3.5 rounded-full bg-white border border-[#d1d1d1] text-[#242424] font-medium text-sm sm:text-base hover:bg-[#f5f5f5] active:scale-95 transition-all shadow-xs flex items-center gap-2 cursor-pointer"
         >
-          <span>Acceder a la Suite M365</span>
+          <span>Acceder al Portal</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

@@ -76,19 +76,20 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
     * Autenticación y sesión (`AuthContext.tsx`, `useAuth.ts`): reside canónicamente en `src/shared/context/` y `src/shared/hooks/`, eliminando la dependencia invertida desde componentes transversales hacia `modules/auth`.
     * API de Espacios de Trabajo (`workspaces.api.ts`): reside canónicamente en `src/shared/api/`, accesible sin acoplamiento a `modules/admin`.
     * Modales y Tablas Operativas de Prácticas (`CreateTestModal`, `UploadResourceModal`, `ReviewDocumentModal`, `SubmissionsReviewTable`): reubicados con alta cohesión dentro de `src/modules/practicas/components/`, consumiendo sus APIs locales relativas sin depender de `admin`.
-* **Landing Page Institucional Soberana (`src/modules/landing/`):**
-  * Portada pública ejecutiva que reproduce con fidelidad milimétrica la composición armónica, limpia y espaciosa de `jorge_doicela/frontend/web/src/app/(landing)/page.tsx`, adaptada al estándar de Microsoft 365 (Segoe UI, `#0f6cbd`, fondo `#f5f5f5`, tarjetas `#ffffff` con borde `#e0e0e0` y cero elementos de relleno).
+* **Landing Page Soberana (`src/modules/landing/`):**
+  * Portada pública ejecutiva que reproduce con fidelidad la composición limpia y espaciosa de `jorge_doicela/frontend/web/src/app/(landing)/page.tsx`, adaptada bajo Segoe UI, `#0f6cbd`, fondo `#f5f5f5`, tarjetas `#ffffff` con borde `#e0e0e0` y cero elementos de relleno.
+  * Directriz de Nomenclatura: Eliminados todos los títulos académicos ("Ing.", "Ingeniero", "M.Sc."), así como menciones de la universidad, facultad, carrera o "Suite M365". La plataforma se presenta directamente bajo el nombre soberano de "Wilfrido Trujillo".
   * Estructura centrada en 4 secciones cardinales dentro de `<main className="max-w-5xl ...">`:
-    * `LandingHeader`: Cabecera flotante pura (sin enlaces horizontales de navegación) con logo institucional, `QuitoClockBadge` (reloj de Riobamba UTC-5) y botón de acceso al portal, con ocultamiento dinámico mediante `useLandingHeaderScroll`.
-    * `LandingHero`: Inspirado en `AppleHeroIntro`, con titular monumental en Segoe UI display, párrafo sobrio directo y botones de acción limpios.
-    * `LandingHighlightsCarousel`: Carrusel amplio con visuales en 3 columnas limpias (Prácticas, Vinculación, Certificación Criptográfica) y controles sutiles de avance.
-    * `LandingDetailExplorer`: Inspirado en `AppleDetailExplorer`, con botones de selección vertical para roles (Estudiantes, Tutores, Empresas, Validación Pública) y ventana de especificación clara.
+    * `LandingHeader`: Cabecera flotante pura (sin enlaces horizontales) con logo `WT`, nombre `Wilfrido Trujillo`, `QuitoClockBadge` (reloj de Riobamba UTC-5) y botón `Acceder`, con ocultamiento dinámico mediante `useLandingHeaderScroll`.
+    * `LandingHero`: Titular monumental `Wilfrido Trujillo` en Segoe UI display, párrafo sobrio directo y botones de acción limpios (`Explorar lo más destacado` y `Acceder al Portal`).
+    * `LandingHighlightsCarousel`: Carrusel amplio con visuales en 3 columnas limpias (Prácticas Preprofesionales, Vinculación con la Sociedad, Eventos y Certificación Criptográfica).
+    * `LandingDetailExplorer`: Explorador con botones de selección vertical para roles (Estudiantes, Tutores, Empresas, Validación Pública) y ventana de especificación en 3 columnas.
     * `LandingBentoSection`: Sección de exactamente 2 BentoCards en cuadrícula `grid-cols-1 md:grid-cols-2`:
-      * Tarjeta 1: Canales y enlaces directos (Suite M365, Portal UNACH, SICOA, Validación de Certificados).
-      * Tarjeta 2: Filosofía académica y cita editorial del Ing. Wilfrido Trujillo.
-    * `LandingFooter`: Pie institucional limpio y sobrio en una sola línea (sin listas redundantes de anclas).
+      * Tarjeta 1: Canales y accesos directos (Acceso al Portal, Módulo de Prácticas, Módulo de Vinculación, Validación SHA-256).
+      * Tarjeta 2: Filosofía & Enfoque y cita editorial de Wilfrido Trujillo.
+    * `LandingFooter`: Pie limpio en una sola línea con copyright y áreas de gestión (`Prácticas · Vinculación · Certificación`).
 * **Enrutamiento SPA Sincronizado por Hash:**
-  * Ruta raíz (`#/` o vacía): Presenta la Landing Page soberana del Ing. Wilfrido Trujillo.
+  * Ruta raíz (`#/` o vacía): Presenta la Landing Page soberana de Wilfrido Trujillo.
   * Ruta operativa (`#/app`, `#/practicas`, `#/vinculacion`, `#/certificados`, `#/eventos`, `#/espacios`): Despliega la Suite M365 `FluentShell` con transición fluida.
   * Rutas profundas públicas (`#/eventos/:code`, `#/certificados/validar/:hash`): Acceso directo sin fricción de autenticación.
   * Retorno instantáneo a la Portada Institucional desde el título de la Suite Bar y el menú de aplicaciones Waffle.

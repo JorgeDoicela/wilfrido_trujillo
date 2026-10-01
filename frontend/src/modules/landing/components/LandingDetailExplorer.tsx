@@ -123,7 +123,7 @@ export const LandingDetailExplorer: React.FC = () => {
               Gestión de Convenios y Entidades
             </h4>
             <p className="text-xs sm:text-sm text-[#616161] leading-relaxed">
-              Articulación directa entre la universidad y el sector productivo.
+              Articulación directa con el sector productivo e institucional.
             </p>
           </div>
 
@@ -151,7 +151,7 @@ export const LandingDetailExplorer: React.FC = () => {
                 Certificado Final
               </span>
               <p className="text-xs text-[#616161] leading-relaxed">
-                Constancia empresarial con validez universitaria oficial.
+                Constancia empresarial con validez oficial.
               </p>
             </div>
           </div>
