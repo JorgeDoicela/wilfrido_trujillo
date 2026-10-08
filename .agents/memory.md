@@ -116,8 +116,8 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
 
 * **Módulos ESM en Node.js:**
   * Al compilar bajo `"type": "module"`, las importaciones internas relativas de TypeScript deben incluir la extensión `.js` en el código fuente (ej. `import { User } from './user.entity.js'`).
-* **Driver `better-sqlite3`:**
-  * Requiere compilación nativa según la plataforma host. Se encuentra declarado en `onlyBuiltDependencies` dentro de `package.json` de la raíz.
+* **Driver `better-sqlite3` y `bcrypt` en pnpm v11+:**
+  * Requieren aprobación de compilación nativa según la plataforma host. En pnpm v11+, esto se gestiona mediante la sección `allowBuilds` en `pnpm-workspace.yaml` (aprobado vía `pnpm approve-builds --all`), reemplazando el campo deprecado `pnpm.onlyBuiltDependencies` de `package.json`.
 * **Validación de Archivos con Multer:**
   * Para pre-auditoría en memoria, se utiliza almacenamiento en buffer (`memoryStorage`), evitando la creación y borrado innecesario de archivos temporales en disco.
   * Para entregas oficiales persistidas, se utiliza `diskStorage` con nombres sanitizados basados en marcas temporales unívocas.
