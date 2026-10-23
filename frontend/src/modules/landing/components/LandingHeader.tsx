@@ -1,6 +1,5 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { QuitoClockBadge } from './QuitoClockBadge';
 import { useLandingHeaderScroll } from '../hooks/useLandingHeaderScroll';
 
 export interface LandingHeaderProps {
@@ -19,7 +18,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onEnterPortal }) =
           : '-translate-y-12 sm:-translate-y-14 opacity-0 scale-[0.98] pointer-events-none'
       }`}
     >
-      {/* Controles Izquierda: Logotipo e Identidad (Clic vuelve arriba) */}
+      {/* Controles Izquierda: Identidad en Tipografía Pura */}
       <div className={`flex items-center gap-2.5 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
         <a
           href="#"
@@ -27,28 +26,26 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onEnterPortal }) =
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="flex items-center gap-2.5 outline-none hover:opacity-80 active:scale-95 transition-all duration-200 cursor-pointer"
+          className="flex flex-col text-left outline-none hover:opacity-85 active:scale-95 transition-all duration-200 cursor-pointer"
           aria-label="Wilfrido Trujillo - Inicio"
         >
-          <div className="w-8 h-8 rounded-lg bg-[#0f6cbd] text-white flex items-center justify-center font-bold text-xs shadow-xs select-none">
-            WT
-          </div>
-          <span className="text-sm font-semibold tracking-tight text-[#242424]">
+          <span className="text-sm font-semibold tracking-tight text-white leading-tight">
             Wilfrido Trujillo
+          </span>
+          <span className="text-[10px] text-white/60 font-sans tracking-wide">
+            Plataforma Académica
           </span>
         </a>
       </div>
 
-      {/* Controles Derecha: Reloj de Riobamba y Botón de Acceso */}
-      <div className={`flex items-center gap-3 sm:gap-4 ${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-        <QuitoClockBadge />
-        <div className="hidden sm:block w-px h-4 bg-[#e0e0e0]" aria-hidden="true" />
+      {/* Controles Derecha: Botón de Acceso Limpio */}
+      <div className={`${isVisible ? 'pointer-events-auto' : 'pointer-events-none'}`}>
         <button
           type="button"
           onClick={onEnterPortal}
-          className="px-4 py-2 rounded-full bg-[#0f6cbd] text-white text-xs font-semibold hover:bg-[#115ea3] active:scale-95 transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+          className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/25 border-t-white/50 shadow-xs backdrop-blur-md active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
         >
-          <span>Acceder</span>
+          <span>Acceder al Portal</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>

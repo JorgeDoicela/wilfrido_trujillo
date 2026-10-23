@@ -85,7 +85,7 @@ export function ResourceCard({
     }
     return {
       label: 'Documento',
-      icon: <FileText className="w-4 h-4 text-[#616161]" />,
+      icon: <FileText className="w-4 h-4 text-[#C4C4C4]" />,
     };
   };
 
@@ -93,51 +93,51 @@ export function ResourceCard({
 
   return (
     <div
-      className={`m365-card m365-card-hover p-4 flex flex-col justify-between ${
-        isLocked ? 'bg-[#fafafa] opacity-80' : ''
+      className={`glass-card p-4 flex flex-col justify-between transition-all ${
+        isLocked ? 'opacity-70 bg-white/[0.02]' : 'hover:border-white/30'
       }`}
     >
       <div>
         {/* Cabecera */}
         <div className="flex items-start justify-between gap-2 mb-2.5">
           <div className="flex items-center gap-1.5">
-            <div className="text-[#0f6cbd] flex items-center">
+            <div className="flex items-center">
               {badge.icon}
             </div>
-            <span className="text-[11px] font-semibold text-[#242424]">
+            <span className="text-[11px] font-semibold text-white">
               {badge.label}
             </span>
           </div>
 
           {resource.isLockedUntilTestPass ? (
             isLocked ? (
-              <span className="m365-badge m365-badge--warning text-[10px]">
+              <span className="ui-badge ui-badge-warning text-[10px]">
                 <Lock className="w-3 h-3" /> Bloqueado
               </span>
             ) : (
-              <span className="m365-badge m365-badge--success text-[10px]">
+              <span className="ui-badge ui-badge-success text-[10px]">
                 <CheckCircle2 className="w-3 h-3" /> Habilitado
               </span>
             )
           ) : (
-            <span className="m365-badge m365-badge--neutral text-[10px]">Libre</span>
+            <span className="ui-badge ui-badge-neutral text-[10px]">Libre</span>
           )}
         </div>
 
         {/* Título */}
-        <h4 className="text-xs font-semibold text-[#242424] leading-snug mb-1 line-clamp-2">
+        <h4 className="text-xs font-semibold text-white leading-snug mb-1 line-clamp-2">
           {resource.title}
         </h4>
 
         {/* Descripción */}
-        <p className="text-[11px] text-[#616161] mb-3 leading-relaxed">
+        <p className="text-[11px] text-[#C4C4C4] mb-3 leading-relaxed">
           {isLocked
             ? 'Requiere aprobar la evaluación normativa para habilitar la descarga.'
             : 'Formato institucional listo para descarga y llenado.'}
         </p>
 
         {errorMsg && (
-          <div className="mb-2 p-2 rounded-md bg-[#fde7e9] border border-[#f1aeb5] text-[#a4262c] text-[11px] flex items-center gap-1.5">
+          <div className="mb-2 p-2 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-[11px] flex items-center gap-1.5">
             <AlertCircle className="w-3 h-3 flex-shrink-0" />
             <span>{errorMsg}</span>
           </div>
@@ -145,8 +145,8 @@ export function ResourceCard({
       </div>
 
       {/* Botones */}
-      <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-[#edebe9]">
-        <span className="text-[10px] text-[#616161] font-mono uppercase">
+      <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-white/10">
+        <span className="text-[10px] text-[#C4C4C4] font-mono uppercase">
           {resource.fileType}
         </span>
 
@@ -157,7 +157,7 @@ export function ResourceCard({
               onClick={handleDelete}
               disabled={isDeleting}
               title="Eliminar plantilla"
-              className="p-1 rounded-md text-[#616161] hover:text-[#a4262c] hover:bg-[#f0f0f0] transition-colors cursor-pointer"
+              className="p-1 rounded-lg text-[#C4C4C4] hover:text-rose-400 hover:bg-white/10 transition-colors cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
@@ -167,10 +167,10 @@ export function ResourceCard({
             type="button"
             onClick={handleDownload}
             disabled={isLocked || isDownloading}
-            className={`m365-btn text-xs h-7.5 px-2.5 gap-1 ${
+            className={`ui-btn text-xs h-7.5 px-2.5 gap-1 ${
               isLocked
-                ? 'm365-btn-secondary opacity-60 cursor-not-allowed'
-                : 'm365-btn-primary'
+                ? 'ui-btn-secondary opacity-50 cursor-not-allowed'
+                : 'ui-btn-primary'
             }`}
           >
             {isLocked ? (

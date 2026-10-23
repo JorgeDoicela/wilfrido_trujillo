@@ -30,9 +30,10 @@ Esta skill complementa la skill global `desarrollo-backend` con los estándares 
    * Queda terminantemente prohibido condicionar métodos a roles con cadenas literales.
    * Todos los endpoints protegidos deben utilizar el decorador `@RequirePermissions(...)` especificando permisos del enum `Permission`.
    * Todo controlador protegido debe incluir los guards `@UseGuards(JwtAuthGuard, PermissionsGuard)`.
-4. **Manejo de Errores RFC 7807:**
+4. **Manejo de Errores RFC 7807 y Mensajes al Cliente:**
    * Utilizar las excepciones canónicas de NestJS (`NotFoundException`, `BadRequestException`, `ForbiddenException`, `ConflictException`, `UnauthorizedException`).
    * Nunca atrapar errores con `try-catch` para devolver objetos `{ success: false }` o strings genéricos; permitir que el `HttpExceptionFilter` formatee la respuesta.
+   * Los mensajes de error destinados al cliente deben redactarse en lenguaje de dominio claro para el usuario, sin exponer tecnicismos internos de infraestructura (nombres de tablas, sentencias SQL, detalles criptográficos o trazas de excepción).
 5. **Inversión de Dependencias (DIP):**
    * Los servicios que dependan de motores intercambiables (como el auditor documental) deben inyectar la interfaz abstracta mediante su token:
      ```typescript

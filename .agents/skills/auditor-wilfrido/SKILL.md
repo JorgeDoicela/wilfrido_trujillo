@@ -65,3 +65,12 @@ Para conectar Gemini API o un modelo local mediante Ollama:
    }
    ```
 4. Los módulos dependientes (`SubmissionsService`, controladores) continuarán operando sin modificar una sola línea de código.
+
+---
+
+## 4. Estándar de Comunicación en los Dictámenes hacia el Usuario
+
+* **Cero Emojis:** Queda terminantemente prohibido el uso de emojis en los diagnósticos, advertencias, tablas o modales de dictamen.
+* **Cero Palabras Marketeras o de Grandeza:** Los informes de revisión deben ser estrictamente fácticos, sobrios y ceñidos al marco normativo RRA (ej. *"Falta sección de Objetivos"*, *"Cómputo de horas incompleto"*).
+* **Cero Tecnicismos Internos Innecesarios:** Prohibido exponer al estudiante o docente estructuras internas de código, buffers o regex del backend; comunicar únicamente los requisitos documentales académicos faltantes.
+* **Iconografía SVG Estrictamente Funcional:** En la interfaz del auditor, los íconos se limitan a acciones concretas (descarga de informe, ver detalle, cerrar modal). Prohibida la decoración superflua.

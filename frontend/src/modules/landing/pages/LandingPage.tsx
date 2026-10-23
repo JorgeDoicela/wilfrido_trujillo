@@ -1,9 +1,7 @@
 import React from 'react';
+import { AmbientBackground } from '@/shared/components/AmbientBackground';
 import { LandingHeader } from '../components/LandingHeader';
-import { LandingHero } from '../components/LandingHero';
-import { LandingHighlightsCarousel } from '../components/LandingHighlightsCarousel';
-import { LandingDetailExplorer } from '../components/LandingDetailExplorer';
-import { LandingBentoSection } from '../components/LandingBentoSection';
+import { LandingBentoHub } from '../components/LandingBentoHub';
 import { LandingFooter } from '../components/LandingFooter';
 import type { Workspace } from '@/shared/types/workspace.types';
 
@@ -16,36 +14,33 @@ export interface LandingPageProps {
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
+  workspaces,
   onEnterPortal,
+  onSelectWorkspace,
   onVerifyCertificate,
 }) => {
   return (
-    <div className="relative min-h-screen bg-[#f5f5f5] text-[#242424] flex flex-col items-center justify-between p-4 sm:p-8 md:p-12 overflow-x-hidden font-sans">
-      {/* 1. Cabecera Unificada con Logo, Reloj Riobamba y Acceso al Portal */}
+    <div className="relative min-h-screen text-[#F0F0F3] flex flex-col justify-between p-4 sm:p-6 md:p-8 overflow-x-hidden font-sans selection:bg-white/20 selection:text-white">
+      {/* 0. Fondo de Luz Ambiental y Malla Lumínica */}
+      <AmbientBackground />
+
+      {/* 1. Cabecera Vidriada con Logo, Reloj Riobamba y Acceso */}
       <LandingHeader onEnterPortal={onEnterPortal} />
 
-      {/* 2. Contenido Principal: Idéntica jerarquía y armonía que la landing de referencia */}
+      {/* 2. Tablero Bento de Cristal Puro */}
       <main
         id="main-content"
-        className="w-full max-w-5xl z-10 flex-grow flex flex-col gap-24 sm:gap-32 md:gap-36 justify-center outline-none pt-6 sm:pt-10 pb-12"
+        className="w-full max-w-6xl mx-auto z-10 flex-grow flex flex-col justify-center outline-none pt-24 sm:pt-28 pb-10"
       >
-        {/* Hero Intro de Impacto Tipográfico */}
-        <LandingHero onEnterPortal={onEnterPortal} />
-
-        {/* Carrusel Multitarjeta de Pilares */}
-        <LandingHighlightsCarousel onEnterPortal={onEnterPortal} />
-
-        {/* Explorador Interactivo a Fondo */}
-        <LandingDetailExplorer />
-
-        {/* Sección Bento de 2 Tarjetas: Canales Oficiales y Filosofía Docente */}
-        <LandingBentoSection
+        <LandingBentoHub
+          workspaces={workspaces}
           onEnterPortal={onEnterPortal}
-          onVerifyCertificate={() => onVerifyCertificate('')}
+          onSelectWorkspace={onSelectWorkspace}
+          onVerifyCertificate={onVerifyCertificate}
         />
       </main>
 
-      {/* 3. Footer Institucional */}
+      {/* 3. Footer Vidriado Institucional */}
       <LandingFooter />
     </div>
   );

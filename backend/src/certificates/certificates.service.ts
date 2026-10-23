@@ -1,8 +1,8 @@
 import {
   Injectable,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as fs from 'node:fs';
@@ -30,6 +30,7 @@ export class CertificatesService {
     private readonly certificateRepository: Repository<Certificate>,
     @InjectRepository(Workspace)
     private readonly workspaceRepository: Repository<Workspace>,
+    private readonly configService: ConfigService,
   ) {
     if (!fs.existsSync(this.uploadDir)) {
       fs.mkdirSync(this.uploadDir, { recursive: true });
@@ -188,7 +189,7 @@ export class CertificatesService {
     const filePath = path.join(this.uploadDir, filename);
 
     // URL pública para validación del QR
-    const appUrl = process.env.APP_URL || 'http://localhost:5173';
+    const appUrl = this.configService.get<string>('APP_URL') || 'http://localhost:5173';
     const verifyUrl = `${appUrl}/#/certificados/validar/${cert.verificationHash}`;
 
     // Generar buffer de imagen QR

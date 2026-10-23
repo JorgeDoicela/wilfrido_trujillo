@@ -18,32 +18,45 @@ Toda inteligencia artificial o desarrollador que genere código en el frontend d
    * La interfaz debe ser reconocible de inmediato como una aplicación oficial de Microsoft 365 para entornos corporativos y educativos de alta productividad.
 
 2. **Cero Emojis en Toda la Interfaz:**
-   * Prohibido el uso de emojis en cualquier componente visual (botones, badges, títulos, tooltips, modales, alertas o textos).
-   * La comunicación visual se basa exclusivamente en tipografía formal, iconografía vectorial funcional e indicadores de estado estandarizados de Microsoft 365.
+   * Prohibición absoluta de emojis en cualquier componente visual (botones, badges, títulos, tooltips, modales, alertas, códigos o textos).
+   * La comunicación visual se basa exclusivamente en tipografía formal, contraste y jerarquía de texto.
 
-3. **Iconografía Funcional Mínima (Estilo Fluent System Icons):**
-   * Emplear exclusivamente íconos SVG limpios y lineales (`lucide-react`) con grosor de trazo uniforme (`stroke-width="1.75"` o `stroke-width="2"`).
-   * Dimensiones estándar rigurosas:
-     * `16px` (`w-4 h-4`): Botones, filas de tablas, chips de filtro y badges.
-     * `20px` (`w-5 h-5`): Botones de barra de navegación principal, App Rail y Command Bar.
-     * `24px` (`w-6 h-6`): Cabeceras principales o ilustraciones de estado vacío.
-   * Prohibido colocar íconos decorativos redundantes junto a cada sustantivo. Los íconos solo se usan cuando aportan affordance de acción o jerarquía de estado.
+3. **Cero Palabras Marketeras, de Grandeza o Lenguaje Inflado:**
+   * Prohibido utilizar lenguaje publicitario, rimbombante o de autobombo (*"la solución definitiva"*, *"arquitectura revolucionaria"*, *"impacto vanguardista"*, *"diseño de ensueño"*).
+   * Toda redacción en la interfaz, documentación o microcopy debe ser estrictamente fáctica, técnica, sobria y orientada a la operación real.
 
-4. **Cero Cajas o Píldoras con Color de Fondo para Palabras o Íconos (Cero Adornos Innecesarios):**
-   * Queda estrictamente prohibido encerrar palabras, frases, categorías o íconos SVG dentro de cuadros, óvalos o píldoras con fondos de color (como `bg-[#ebf3fc]`, `bg-[#cfe4fa]`, `bg-[#dff6dd]`, etc.) utilizados como adorno o rótulos flotantes sobre títulos.
-   * Es ruido visual innecesario y ajeno a la sobriedad ejecutiva de Microsoft 365.
-   * La jerarquía debe comunicarse exclusivamente mediante tipografía Segoe UI limpia, peso (`font-semibold`), color de texto neutro (`#616161`, `#242424`) o divisores sutiles, jamás mediante cajitas o pastillas coloreadas.
-   * Los estados operativos (ej. Aprobado, Pendiente) en tablas se expresan de manera sobria y compacta, nunca como elementos decorativos en cabeceras o heroes.
+4. **Cero Exposición de Tecnicismos Internos al Usuario Final:**
+   * Queda estrictamente prohibido explicar o exponer al usuario conceptos de bajo nivel, infraestructura o detalles criptográficos que no le competen ni necesita saber (ej. *"criptografía"*, *"hashes"*, *"SHA-256"*, *"PBAC"*, *"JWT"*, *"TypeORM"*, *"WAL"*).
+   * La interfaz debe comunicarse exclusivamente mediante el lenguaje de negocio y dominio operativo del usuario:
+     * En vez de *"Validación criptográfica SHA-256"*, usar: *"Validación QR"* o *"Certificado oficial verificado"*.
+     * En vez de mostrar hashes crudos o cadenas técnicas en tarjetas o titulares, usar códigos de registro institucional legibles (*"Código: WT-2026-001"*) o simplemente el estado fáctico (*"Acreditado"*).
+     * Los detalles criptográficos y de seguridad pertenecen al backend, a los logs y a las especificaciones de API, jamás a los titulares o textos visibles del usuario.
 
-5. **Cero Información Irrelevante o Relleno:**
+5. **Iconografía SVG Estrictamente Mínima (Solo por Necesidad Funcional):**
+   * Queda prohibida la saturación de íconos vectoriales como adorno o relleno visual junto a cada palabra o sustantivo.
+   * Los íconos SVG (`lucide-react`) se reservan única y exclusivamente para elementos que requieran un affordance interactivo explícito donde el ícono aporta valor ergonómico directo (ej. lupa en campos de búsqueda, botón de cerrar modal `X`, flecha de navegación o icono de descarga).
+   * Si un botón, etiqueta o título ya se comprende con claridad por su texto, no debe llevar ícono decorativo.
+
+6. **Cero Palabras Innecesarias y Cero Redundancia Textual en Frontend y Estilos:**
+   * Queda estrictamente prohibido añadir palabras, frases, micro-rótulos o etiquetas innecesarias donde no se requiera.
+   * Prohibida la duplicación o reiteración de datos dentro de un mismo componente o tarjeta (ej. si una barra o métrica ya indica *"240 horas"*, queda prohibido colocar una pastilla superior que repita *"240 Horas"* y una etiqueta inferior que vuelva a decir *"Cómputo Total: 240 / 240 h"*; si una barra indica *"100% completado"*, no añadir pastillas que repitan *"Completado"* y *"Progreso"*).
+   * En los estilos y maquetación visual, prohibido inventar cajitas, badges o contenedores con palabras accesorias para rellenar espacio. La interfaz debe regirse por la máxima economía verbal: concisa, directa, elegante y sin ruido.
+
+7. **Glassmorphism Estructural Puro y Prohibición Terminante de Rodear Palabras o Íconos:**
+   * **Definición de Glassmorphism Puro:** El efecto de vidrio esmerilado (`backdrop-blur`, translucidez sutil, reflejos de luz y bordes perimetrales limpios de 1px) pertenece **única y exclusivamente a superficies estructurales y contenedores completos** (tarjetas principales, paneles de consola, ventanas modales o barras de navegación).
+   * **Prohibición Total de Cercar Palabras o Íconos:** Queda terminantemente prohibido colocar alrededor de palabras, frases, categorías, micro-rótulos o íconos SVG cualquier cosa que los rodee (cápsulas `rounded-full`, píldoras, óvalos, burbujas, recuadros, bordes perimetrales translúcidos o discos decorativos). Rodear palabras con pastillas o cápsulas NO es glassmorphism puro; es un vicio decorativo y queda estrictamente vetado.
+   * **Tipografía Limpia sin Envoltorios:** Las palabras deben reposar directamente sobre el vidrio sin envoltorios. La jerarquía se expresa únicamente con tipografía pura: tamaño, peso (`font-semibold`), espaciado (`tracking-wider`) y color de texto neutro o blanco de alto contraste (`text-white`, `text-[#C4C4C4]`).
+   * **Íconos Libres de Círculos o Cajas:** Los íconos SVG (cuando sean estrictamente imprescindibles) jamás deben envolverse dentro de círculos, discos de fondo, anillos ni marcos decorativos. Se muestran limpios y directos.
+
+8. **Cero Información Irrelevante o Relleno:**
    * Prohibido redactar textos de relleno, lemas decorativos o metadatos superfluos. Toda la información presentada debe ser fáctica, técnica y operativa para la gestión de prácticas, vinculación o eventos de la carrera.
 
-6. **Cero Bloques Superiores de KPIs Enormes:**
+9. **Cero Bloques Superiores de KPIs Enormes:**
    * Prohibido insertar tarjetas de métricas gigantescas que empujen el contenido operativo fuera del primer pliegue visual (viewport).
    * Microsoft 365 es una suite orientada a tareas: el usuario entra a consultar expedientes, auditar PDFs, evaluar cuestionarios o emitir certificados, no a ver estadísticas vacías.
    * La información de resumen se condensa en badges numéricos dentro de pestañas (`Pendientes (4)`), chips en la Command Bar o columnas de tabla compactas.
 
-7. **Navegación Focalizada por Dominio (Cero Apilamiento de Páginas):**
+10. **Navegación Focalizada por Dominio (Cero Apilamiento de Páginas):**
    * Prohibido apilar verticalmente páginas completas en un scroll infinito (anti-patrón de landing page).
    * La navegación mediante la App Rail y el Drawer contextual renderiza únicamente la vista del módulo activo a pantalla completa (`100% height - 48px Suite Bar - 44px Command Bar`).
 
@@ -92,11 +105,11 @@ Todos los estilos deben utilizar las variables CSS declaradas en `frontend/src/i
 
 ---
 
-## 3. Tipografía Oficial y Escala Jerárquica
+## 3. Tipografía Oficial y Escala Jerárquica: Montserrat
 
-La tipografía obligatoria es la pila corporativa de Microsoft:
+La tipografía única y canónica para todo el sistema es **Montserrat**:
 ```css
-font-family: 'Segoe UI', 'Segoe UI Variable', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 ```
 
 ### Escala de Tamaños y Pesos Fluent 2

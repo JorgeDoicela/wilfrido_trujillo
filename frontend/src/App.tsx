@@ -25,11 +25,44 @@ import type { Certificate } from '@/shared/types/certificate.types';
 import { FluentShell } from '@/shared/components/FluentShell';
 import { LandingPage } from '@/modules/landing/pages/LandingPage';
 
+const DEFAULT_WORKSPACES: Workspace[] = [
+  {
+    id: 'ws-demo-1',
+    title: 'Prácticas Preprofesionales 2026-I',
+    description: 'Coordinación y recepción de bitácoras oficiales para el periodo lectivo 2026.',
+    type: 'PRACTICAS',
+    isActive: true,
+    accessCode: 'PRAC-2026',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'ws-demo-2',
+    title: 'Vinculación Comunitaria: Digitalización Pymes',
+    description: 'Proyecto de servicio a la comunidad para estudiantes de tercer nivel.',
+    type: 'VINCULACION',
+    isActive: true,
+    accessCode: 'VINC-8821',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'ws-demo-3',
+    title: 'Conferencia Magistral: Inteligencia Artificial en Educación Superior',
+    description: 'Ponencia y taller sobre adopción ética de IA generativa y normativa RRA.',
+    type: 'EVENTO',
+    isActive: true,
+    accessCode: 'CONF-2026',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
 export default function App() {
-  const { setUserDirectlyForDemo } = useAuth();
+  const { setUserDirectlyForDemo, login } = useAuth();
   const [activeNavTab, setActiveNavTab] = useState('practicas');
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>(DEFAULT_WORKSPACES);
+  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(DEFAULT_WORKSPACES[0]);
   const [inductionWatched, setInductionWatched] = useState(false);
   const [activeTest, setActiveTest] = useState<Test | null>(null);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
@@ -58,50 +91,17 @@ export default function App() {
   const [isLoadingCertificates, setIsLoadingCertificates] = useState(false);
 
   const fetchWorkspaces = async () => {
+    const token = localStorage.getItem('wt_auth_token');
+    if (!token) return;
     try {
       setIsLoadingWorkspaces(true);
       const data = await workspacesApi.getAll();
-      setWorkspaces(data);
-      if (data.length > 0 && !selectedWorkspace) {
+      if (data && data.length > 0) {
+        setWorkspaces(data);
         setSelectedWorkspace(data[0]);
       }
     } catch {
-      if (workspaces.length === 0) {
-        const defaultWorkspaces: Workspace[] = [
-          {
-            id: 'ws-demo-1',
-            title: 'Prácticas Preprofesionales 2026-I',
-            description: 'Coordinación y recepción de bitácoras oficiales para el periodo lectivo 2026.',
-            type: 'PRACTICAS',
-            isActive: true,
-            accessCode: 'PRAC-2026',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: 'ws-demo-2',
-            title: 'Vinculación Comunitaria: Digitalización Pymes',
-            description: 'Proyecto de servicio a la comunidad para estudiantes de tercer nivel.',
-            type: 'VINCULACION',
-            isActive: true,
-            accessCode: 'VINC-8821',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: 'ws-demo-3',
-            title: 'Conferencia Magistral: Inteligencia Artificial en Educación Superior',
-            description: 'Ponencia y taller sobre adopción ética de IA generativa y normativa RRA.',
-            type: 'EVENTO',
-            isActive: true,
-            accessCode: 'CONF-2026',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        ];
-        setWorkspaces(defaultWorkspaces);
-        setSelectedWorkspace(defaultWorkspaces[0]);
-      }
+      // Si el token es inválido o no responde el backend, se preservan los espacios locales
     } finally {
       setIsLoadingWorkspaces(false);
     }
@@ -383,11 +383,15 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    fetchWorkspaces();
+    const token = localStorage.getItem('wt_auth_token');
+    if (token) {
+      fetchWorkspaces();
+    }
   }, []);
 
   useEffect(() => {
-    if (selectedWorkspace) {
+    const token = localStorage.getItem('wt_auth_token');
+    if (selectedWorkspace && token) {
       fetchTest(selectedWorkspace.id);
       fetchResources(selectedWorkspace.id);
       fetchSubmissions(selectedWorkspace.id);
@@ -395,47 +399,57 @@ export default function App() {
     }
   }, [selectedWorkspace]);
 
-  const simulateStudent = () => {
-    setUserDirectlyForDemo({
-      id: 'student-uuid-demo',
-      email: 'alumno@instituto.edu.ec',
-      identification: '1723456789',
-      fullName: 'Carlos Estudiante',
-      roleKey: 'ESTUDIANTE',
-      permissions: [
-        'workspace:read',
-        'resource:download',
-        'test:take',
-        'document:submit',
-        'certificate:claim',
-      ],
-    });
+  const simulateStudent = async () => {
+    try {
+      await login('0600000002', 'Estudiante123*');
+      await fetchWorkspaces();
+    } catch {
+      setUserDirectlyForDemo({
+        id: 'student-uuid-demo',
+        email: 'estudiante@unach.edu.ec',
+        identification: '0600000002',
+        fullName: 'Juan Pérez (Estudiante)',
+        roleKey: 'ESTUDIANTE',
+        permissions: [
+          'workspace:read',
+          'resource:download',
+          'test:take',
+          'document:submit',
+          'certificate:claim',
+        ],
+      });
+    }
   };
 
-  const simulateIngeniero = () => {
-    setUserDirectlyForDemo({
-      id: 'ingeniero-uuid-demo',
-      email: 'wilfrido@trujillo.com',
-      identification: '1712345678',
-      fullName: 'Wilfrido Trujillo',
-      roleKey: 'INGENIERO',
-      permissions: [
-        'workspace:create',
-        'workspace:update',
-        'workspace:delete',
-        'workspace:read',
-        'resource:manage',
-        'resource:download',
-        'test:manage',
-        'test:take',
-        'document:submit',
-        'document:review',
-        'document:audit_ia',
-        'certificate:manage',
-        'certificate:issue',
-        'certificate:claim',
-      ],
-    });
+  const simulateIngeniero = async () => {
+    try {
+      await login('0600000001', 'Admin123*');
+      await fetchWorkspaces();
+    } catch {
+      setUserDirectlyForDemo({
+        id: 'ingeniero-uuid-demo',
+        email: 'wilfrido.trujillo@unach.edu.ec',
+        identification: '0600000001',
+        fullName: 'Wilfrido Trujillo',
+        roleKey: 'INGENIERO',
+        permissions: [
+          'workspace:create',
+          'workspace:update',
+          'workspace:delete',
+          'workspace:read',
+          'resource:manage',
+          'resource:download',
+          'test:manage',
+          'test:take',
+          'document:submit',
+          'document:review',
+          'document:audit_ia',
+          'certificate:manage',
+          'certificate:issue',
+          'certificate:claim',
+        ],
+      });
+    }
   };
 
   if (currentRoute === 'eventos' && publicEventCode) {

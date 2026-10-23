@@ -13,19 +13,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-xs font-semibold text-slate-300">
+          <label htmlFor={inputId} className="text-xs font-medium text-[#F0F0F3]">
             {label}
           </label>
         )}
         <input
           ref={ref}
           id={inputId}
-          className={`ui-input ${error ? 'border-rose-500/80 focus:border-rose-400 focus:ring-rose-500/30' : ''} ${className}`}
+          className={`ui-input ${error ? 'border-rose-400/80 focus:border-rose-400 focus:ring-rose-500/30' : ''} ${className}`}
           {...props}
         />
-        {error && <span className="text-[11px] font-medium text-rose-400">{error}</span>}
+        {error && <span className="text-[11px] font-medium text-rose-300">{error}</span>}
         {helperText && !error && (
-          <span className="text-[11px] text-slate-500">{helperText}</span>
+          <span className="text-[11px] text-[#C4C4C4]">{helperText}</span>
         )}
       </div>
     );
@@ -47,19 +47,19 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={textareaId} className="text-xs font-semibold text-slate-300">
+          <label htmlFor={textareaId} className="text-xs font-medium text-[#F0F0F3]">
             {label}
           </label>
         )}
         <textarea
           ref={ref}
           id={textareaId}
-          className={`ui-input resize-none ${error ? 'border-rose-500/80 focus:border-rose-400 focus:ring-rose-500/30' : ''} ${className}`}
+          className={`ui-input min-h-[90px] p-3 resize-none ${error ? 'border-rose-400/80 focus:border-rose-400 focus:ring-rose-500/30' : ''} ${className}`}
           {...props}
         />
-        {error && <span className="text-[11px] font-medium text-rose-400">{error}</span>}
+        {error && <span className="text-[11px] font-medium text-rose-300">{error}</span>}
         {helperText && !error && (
-          <span className="text-[11px] text-slate-500">{helperText}</span>
+          <span className="text-[11px] text-[#C4C4C4]">{helperText}</span>
         )}
       </div>
     );
@@ -82,21 +82,21 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={selectId} className="text-xs font-semibold text-slate-300">
+          <label htmlFor={selectId} className="text-xs font-medium text-[#F0F0F3]">
             {label}
           </label>
         )}
         <select
           ref={ref}
           id={selectId}
-          className={`ui-input cursor-pointer ${error ? 'border-rose-500/80 focus:border-rose-400 focus:ring-rose-500/30' : ''} ${className}`}
+          className={`ui-input cursor-pointer [&>option]:bg-[#1C2451] [&>option]:text-[#F0F0F3] ${error ? 'border-rose-400/80 focus:border-rose-400 focus:ring-rose-500/30' : ''} ${className}`}
           {...props}
         >
           {children}
         </select>
-        {error && <span className="text-[11px] font-medium text-rose-400">{error}</span>}
+        {error && <span className="text-[11px] font-medium text-rose-300">{error}</span>}
         {helperText && !error && (
-          <span className="text-[11px] text-slate-500">{helperText}</span>
+          <span className="text-[11px] text-[#C4C4C4]">{helperText}</span>
         )}
       </div>
     );

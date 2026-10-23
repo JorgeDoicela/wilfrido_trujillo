@@ -58,13 +58,13 @@ export function JoinWorkspaceCard({ onJoinSuccess }: JoinWorkspaceCardProps) {
   };
 
   return (
-    <div className="m365-card p-4 relative overflow-hidden flex flex-col justify-between">
+    <div className="glass-card p-4 relative overflow-hidden flex flex-col justify-between">
       <div>
-        <div className="flex items-center gap-2.5 pb-2.5 mb-3 border-b border-[#edebe9]">
-          <KeyRound className="w-5 h-5 text-[#0f6cbd] flex-shrink-0" />
+        <div className="flex items-center gap-2.5 pb-2.5 mb-3 border-b border-white/10">
+          <KeyRound className="w-5 h-5 text-white flex-shrink-0" />
           <div>
-            <h4 className="text-xs font-semibold text-[#242424]">Unirse con Código</h4>
-            <p className="text-[11px] text-[#616161]">
+            <h4 className="text-xs font-semibold text-white">Unirse con Código</h4>
+            <p className="text-[11px] text-[#C4C4C4]">
               Clave de acceso institucional (ej. PRAC-2026)
             </p>
           </div>
@@ -76,12 +76,12 @@ export function JoinWorkspaceCard({ onJoinSuccess }: JoinWorkspaceCardProps) {
             value={accessCode}
             onChange={(e) => setAccessCode(e.target.value)}
             placeholder="CÓDIGO DE ACCESO"
-            className="m365-input uppercase font-mono text-xs tracking-wider"
+            className="ui-input uppercase font-mono text-xs tracking-wider"
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="m365-btn m365-btn-primary w-full text-xs h-8"
+            className="ui-btn ui-btn-primary w-full text-xs h-9"
           >
             {isLoading ? 'Verificando...' : 'Validar Código'} <ArrowRight className="w-3.5 h-3.5 ml-1" />
           </button>
@@ -90,10 +90,10 @@ export function JoinWorkspaceCard({ onJoinSuccess }: JoinWorkspaceCardProps) {
 
       {feedback && (
         <div
-          className={`mt-2.5 p-2 rounded-md text-xs flex items-center gap-2 border ${
+          className={`mt-3 p-2.5 rounded-lg text-xs flex items-center gap-2 border backdrop-blur-md ${
             feedback.type === 'success'
-              ? 'bg-[#dff6dd] border-[#a3d9a5] text-[#107c10]'
-              : 'bg-[#fde7e9] border-[#f1aeb5] text-[#a4262c]'
+              ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
+              : 'bg-rose-500/15 border-rose-500/30 text-rose-300'
           }`}
         >
           {feedback.type === 'success' ? (

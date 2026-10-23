@@ -122,12 +122,12 @@ export function ReviewDocumentModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} maxWidth="xl">
       <ModalHeader onClose={onClose}>
-        <div className="h-9 w-9 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0">
+        <div className="h-9 w-9 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center flex-shrink-0">
           <MessageSquare className="w-5 h-5" />
         </div>
         <div>
           <ModalTitle>Revisión y Dictamen Documental</ModalTitle>
-          <p className="text-xs text-slate-400 font-normal">
+          <p className="text-xs text-[#C4C4C4] font-normal">
             Estudiante: {student ? `${student.fullName} (${student.email})` : 'Inscrito'}
           </p>
         </div>
@@ -136,27 +136,27 @@ export function ReviewDocumentModal({
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <ModalContent className="max-h-[65vh] overflow-y-auto pr-1">
           {errorMessage && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
+            <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           {/* Resumen del Documento */}
-          <div className="bg-slate-950/70 border border-slate-800/80 rounded-2xl p-4">
-            <span className="text-[11px] font-semibold text-slate-400 block mb-1 uppercase tracking-wider">
+          <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-4">
+            <span className="text-[11px] font-semibold text-[#C4C4C4] block mb-1 uppercase tracking-wider">
               Documento Entregado
             </span>
             <p className="text-sm font-bold text-white">{submission.documentTitle}</p>
           </div>
 
           {/* Panel del Agente Auditor Heurístico */}
-          <div className="bg-slate-950/90 border border-purple-500/30 rounded-2xl p-4 space-y-3">
+          <div className="bg-white/[0.04] border border-white/15 rounded-2xl p-4 space-y-3 backdrop-blur-md">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Cpu className="w-4 h-4 text-purple-400" />
+                <Cpu className="w-4 h-4 text-white" />
                 <span className="text-xs font-bold text-white">Auditor Documental Heurístico</span>
-                <Badge variant="purple" size="sm">
+                <Badge variant="neutral" size="sm">
                   Fase 1 (RRA)
                 </Badge>
               </div>
@@ -168,7 +168,7 @@ export function ReviewDocumentModal({
                   size="sm"
                   onClick={handleRunAudit}
                   isLoading={isAuditing}
-                  className="text-[11px] text-purple-400 hover:text-purple-300 p-0 h-auto gap-1"
+                  className="text-[11px] text-white hover:text-white/80 p-0 h-auto gap-1"
                 >
                   <RefreshCw className="w-3 h-3" />
                   <span>Re-analizar</span>
@@ -177,14 +177,14 @@ export function ReviewDocumentModal({
             </div>
 
             {!currentAudit ? (
-              <div className="flex flex-col items-center justify-center p-4 border border-dashed border-slate-800 rounded-xl bg-slate-900/40 text-center gap-2">
-                <FileCheck2 className="w-6 h-6 text-slate-500" />
-                <p className="text-xs text-slate-400">
+              <div className="flex flex-col items-center justify-center p-4 border border-dashed border-white/15 rounded-xl bg-white/[0.02] text-center gap-2">
+                <FileCheck2 className="w-6 h-6 text-[#C4C4C4]" />
+                <p className="text-xs text-[#C4C4C4]">
                   Valida automáticamente legibilidad, páginas mínimas y secciones obligatorias.
                 </p>
                 <Button
                   type="button"
-                  variant="purple"
+                  variant="primary"
                   size="sm"
                   onClick={handleRunAudit}
                   isLoading={isAuditing}
@@ -196,15 +196,15 @@ export function ReviewDocumentModal({
             ) : (
               <div className="space-y-2.5">
                 {/* Score y Semáforo */}
-                <div className="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/80">
+                <div className="flex items-center justify-between bg-white/[0.04] p-2.5 rounded-xl border border-white/10">
                   <div className="flex items-center gap-2">
                     <span
                       className={`inline-block w-2.5 h-2.5 rounded-full ${
                         currentAudit.status === 'passed'
-                          ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50'
+                          ? 'bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]'
                           : currentAudit.status === 'warning'
-                          ? 'bg-amber-400 shadow-sm shadow-amber-400/50'
-                          : 'bg-rose-400 shadow-sm shadow-rose-400/50'
+                          ? 'bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.5)]'
+                          : 'bg-rose-400 shadow-[0_0_8px_rgba(244,63,94,0.5)]'
                       }`}
                     />
                     <span className="text-xs font-semibold text-white">
@@ -220,14 +220,14 @@ export function ReviewDocumentModal({
                     <span className="text-xs font-mono font-bold text-white">
                       {currentAudit.score}/100 pts
                     </span>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[10px] text-[#C4C4C4]">
                       ({currentAudit.numPages} págs • {currentAudit.characterCount} chars)
                     </span>
                   </div>
                 </div>
 
                 {/* Barra de Progreso */}
-                <div className="w-full bg-slate-800/80 h-1.5 rounded-full overflow-hidden">
+                <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
                       currentAudit.score >= 80
@@ -242,8 +242,8 @@ export function ReviewDocumentModal({
 
                 {/* Lista de Observaciones */}
                 {currentAudit.observations.length > 0 && (
-                  <div className="space-y-1 bg-slate-900/40 p-2.5 rounded-xl border border-slate-800/50">
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                  <div className="space-y-1 bg-white/[0.03] p-2.5 rounded-xl border border-white/10">
+                    <div className="flex items-center justify-between text-[11px] text-[#C4C4C4] mb-1">
                       <span>Hallazgos del Análisis:</span>
                       <button
                         type="button"
@@ -255,14 +255,14 @@ export function ReviewDocumentModal({
                             feedbackNotes ? `${feedbackNotes}\n\n${suggestedNotes}` : suggestedNotes,
                           );
                         }}
-                        className="text-purple-400 hover:text-purple-300 transition-colors cursor-pointer text-[10px]"
+                        className="text-white hover:underline transition-colors cursor-pointer text-[10px]"
                       >
                         Copiar al Feedback
                       </button>
                     </div>
                     {currentAudit.observations.map((obs, idx) => (
-                      <p key={idx} className="text-[11px] text-slate-300 flex items-start gap-1.5">
-                        <span className="text-purple-400 mt-0.5">•</span>
+                      <p key={idx} className="text-[11px] text-[#F0F0F3] flex items-start gap-1.5">
+                        <span className="text-white/60 mt-0.5">•</span>
                         <span>{obs}</span>
                       </p>
                     ))}
@@ -274,7 +274,7 @@ export function ReviewDocumentModal({
 
           {/* Selector de Dictamen */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-2">
+            <label className="block text-xs font-semibold text-white mb-2">
               Dictamen de la Coordinación
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -283,12 +283,12 @@ export function ReviewDocumentModal({
                 onClick={() => setStatus('approved')}
                 className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
                   status === 'approved'
-                    ? 'bg-emerald-600/20 border-emerald-500 text-white shadow-md shadow-emerald-500/10'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                    ? 'bg-emerald-500/20 border-emerald-400/50 text-white shadow-lg shadow-emerald-500/10'
+                    : 'bg-white/[0.03] border-white/10 text-[#C4C4C4] hover:text-white hover:bg-white/[0.06]'
                 }`}
               >
                 <CheckCircle2
-                  className={`w-5 h-5 ${status === 'approved' ? 'text-emerald-400' : 'text-slate-500'}`}
+                  className={`w-5 h-5 ${status === 'approved' ? 'text-emerald-400' : 'text-[#C4C4C4]'}`}
                 />
                 <span className="text-xs font-bold">Aprobar Entrega</span>
               </button>
@@ -298,12 +298,12 @@ export function ReviewDocumentModal({
                 onClick={() => setStatus('observed')}
                 className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
                   status === 'observed'
-                    ? 'bg-amber-600/20 border-amber-500 text-white shadow-md shadow-amber-500/10'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                    ? 'bg-amber-500/20 border-amber-400/50 text-white shadow-lg shadow-amber-500/10'
+                    : 'bg-white/[0.03] border-white/10 text-[#C4C4C4] hover:text-white hover:bg-white/[0.06]'
                 }`}
               >
                 <AlertTriangle
-                  className={`w-5 h-5 ${status === 'observed' ? 'text-amber-400' : 'text-slate-500'}`}
+                  className={`w-5 h-5 ${status === 'observed' ? 'text-amber-400' : 'text-[#C4C4C4]'}`}
                 />
                 <span className="text-xs font-bold">Emitir Observaciones</span>
               </button>
@@ -324,7 +324,7 @@ export function ReviewDocumentModal({
           <Button type="button" variant="ghost" size="sm" onClick={onClose}>
             Cancelar
           </Button>
-          <Button type="submit" variant="purple" size="sm" isLoading={isSubmitting}>
+          <Button type="submit" variant="primary" size="sm" isLoading={isSubmitting}>
             Registrar Dictamen
           </Button>
         </ModalFooter>

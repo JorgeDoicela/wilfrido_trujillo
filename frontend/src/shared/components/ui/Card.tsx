@@ -7,7 +7,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Card({ children, hoverable = false, className = '', ...props }: CardProps) {
   return (
     <div
-      className={`m365-card ${hoverable ? 'm365-card-hover' : ''} ${className}`}
+      className={`glass-card ${hoverable ? 'glass-card-hover' : ''} ${className}`}
       {...props}
     >
       {children}
@@ -17,7 +17,7 @@ export function Card({ children, hoverable = false, className = '', ...props }: 
 
 export function CardHeader({ children, className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={`pb-3 border-b border-[#edebe9] mb-3 flex items-center justify-between gap-3 ${className}`} {...props}>
+    <div className={`pb-3 border-b border-white/10 mb-3 flex items-center justify-between gap-3 ${className}`} {...props}>
       {children}
     </div>
   );
@@ -25,7 +25,7 @@ export function CardHeader({ children, className = '', ...props }: React.HTMLAtt
 
 export function CardTitle({ children, className = '', ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3 className={`text-sm font-semibold text-[#242424] tracking-tight ${className}`} {...props}>
+    <h3 className={`text-sm font-semibold text-white tracking-tight ${className}`} {...props}>
       {children}
     </h3>
   );
@@ -33,7 +33,7 @@ export function CardTitle({ children, className = '', ...props }: React.HTMLAttr
 
 export function CardDescription({ children, className = '', ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={`text-xs text-[#616161] leading-relaxed ${className}`} {...props}>
+    <p className={`text-xs text-[#C4C4C4] leading-relaxed ${className}`} {...props}>
       {children}
     </p>
   );
@@ -45,7 +45,7 @@ export function CardContent({ children, className = '', ...props }: React.HTMLAt
 
 export function CardFooter({ children, className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={`pt-3 border-t border-[#edebe9] mt-3 flex items-center justify-end gap-3 ${className}`} {...props}>
+    <div className={`pt-3 border-t border-white/10 mt-3 flex items-center justify-end gap-3 ${className}`} {...props}>
       {children}
     </div>
   );

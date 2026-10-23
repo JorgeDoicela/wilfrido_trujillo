@@ -32,7 +32,7 @@ export function CertificatesList({
 
   if (isLoading) {
     return (
-      <div className="p-8 text-center text-xs text-[#616161]">
+      <div className="p-8 text-center text-xs text-[#C4C4C4]">
         Cargando certificados emitidos...
       </div>
     );
@@ -40,20 +40,20 @@ export function CertificatesList({
 
   if (certificates.length === 0) {
     return (
-      <div className="p-6 text-center text-xs text-[#616161] bg-[#fafafa] rounded-lg border border-[#e0e0e0]">
+      <div className="p-6 text-center text-xs text-[#C4C4C4] bg-white/[0.04] rounded-2xl border border-white/10 backdrop-blur-md">
         No se han emitido certificados oficiales en este espacio de trabajo aún.
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto border border-[#e0e0e0] rounded-lg shadow-2xs bg-white">
-      <table className="m365-table">
+    <div className="overflow-x-auto border border-white/10 rounded-2xl shadow-xl bg-white/[0.03] backdrop-blur-md">
+      <table className="glass-table">
         <thead>
           <tr>
             <th>BENEFICIARIO / CÉDULA</th>
             <th>HORAS ACREDITADAS</th>
-            <th>CÓDIGO DE VERIFICACIÓN SHA-256</th>
+            <th>CÓDIGO DE REGISTRO</th>
             <th>FECHA DE EMISIÓN</th>
             <th>ESTADO</th>
             <th className="text-right">OPERACIÓN</th>
@@ -63,31 +63,31 @@ export function CertificatesList({
           {certificates.map((cert) => (
             <tr key={cert.id}>
               <td>
-                <div className="font-semibold text-[#242424]">{cert.recipientName}</div>
-                <div className="text-[11px] text-[#616161] font-mono">
+                <div className="font-semibold text-white">{cert.recipientName}</div>
+                <div className="text-[11px] text-[#C4C4C4] font-mono">
                   CI: {cert.recipientIdentification} • {cert.recipientEmail}
                 </div>
               </td>
               <td>
-                <span className="font-semibold text-xs text-[#0f6cbd]">
+                <span className="font-semibold text-xs text-white">
                   {cert.hours} Horas
                 </span>
               </td>
               <td>
                 <div className="flex items-center gap-1.5 font-mono text-xs">
-                  <span className="text-xs font-mono font-medium text-[#242424]">
+                  <span className="text-xs font-mono font-medium text-white">
                     {cert.verificationHash.slice(0, 16)}...
                   </span>
                   <button
                     type="button"
                     onClick={() => onVerifyHash(cert.verificationHash)}
-                    className="text-xs text-[#0f6cbd] hover:underline cursor-pointer font-medium"
+                    className="text-xs text-white hover:underline cursor-pointer font-medium"
                   >
                     Verificar
                   </button>
                 </div>
               </td>
-              <td className="text-[11px] text-[#616161] font-mono whitespace-nowrap">
+              <td className="text-[11px] text-[#C4C4C4] font-mono whitespace-nowrap">
                 {cert.issuedAt
                   ? new Date(cert.issuedAt).toLocaleDateString('es-EC', {
                       year: 'numeric',
@@ -97,7 +97,7 @@ export function CertificatesList({
                   : 'Reciente'}
               </td>
               <td>
-                <span className="m365-badge m365-badge--success">
+                <span className="ui-badge ui-badge-success">
                   <ShieldCheck className="w-3 h-3" /> Válido
                 </span>
               </td>
@@ -106,7 +106,7 @@ export function CertificatesList({
                   type="button"
                   onClick={() => handleDownload(cert)}
                   disabled={downloadingId === cert.id}
-                  className="m365-btn m365-btn-secondary text-xs h-7 px-2.5 inline-flex items-center gap-1"
+                  className="ui-btn ui-btn-secondary text-xs h-7 px-2.5 inline-flex items-center gap-1"
                 >
                   <Download className="w-3.5 h-3.5" /> Descargar PDF
                 </button>

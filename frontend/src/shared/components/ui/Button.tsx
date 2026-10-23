@@ -25,9 +25,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const sizeClasses = {
-      sm: 'px-3 py-1.5 text-xs',
-      md: 'px-4 py-2.5 text-xs',
-      lg: 'px-6 py-3 text-sm',
+      sm: 'px-3.5 py-1.5 text-xs font-semibold',
+      md: 'px-5 py-2 text-xs font-semibold',
+      lg: 'px-7 py-2.5 text-sm font-semibold',
     };
 
     const variantClasses = {
@@ -35,7 +35,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       secondary: 'ui-btn-secondary',
       purple: 'ui-btn-purple',
       ghost: 'ui-btn-ghost',
-      danger: 'bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/20',
+      danger: 'bg-rose-500/20 hover:bg-rose-500/35 text-rose-200 border border-rose-500/40 border-t-rose-400/70 shadow-sm backdrop-blur-md',
     };
 
     return (

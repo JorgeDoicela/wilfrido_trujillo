@@ -18,16 +18,16 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
   onVerifyHash,
 }) => {
   return (
-    <section id="certificados-section" className="m365-card p-5 flex flex-col gap-4">
-      <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-[#edebe9]">
+    <section id="certificados-section" className="glass-card p-5 flex flex-col gap-4">
+      <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-white/10">
         <div>
           <div className="flex items-center gap-2">
-            <Award className="w-4 h-4 text-[#0f6cbd]" />
-            <h3 className="text-sm font-semibold text-[#242424]">
-              Emisión de Certificados PDF con Verificación Criptográfica QR
+            <Award className="w-4 h-4 text-white" />
+            <h3 className="text-sm font-semibold text-white">
+              Emisión de Certificados PDF con Verificación QR
             </h3>
           </div>
-          <p className="text-xs text-[#616161] mt-0.5">
+          <p className="text-xs text-[#C4C4C4] mt-0.5">
             Certificados oficiales con firma de Wilfrido Trujillo y código QR de validación en línea.
           </p>
         </div>
@@ -36,7 +36,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({
           <button
             type="button"
             onClick={onOpenIssueModal}
-            className="m365-btn m365-btn-primary text-xs h-7.5 px-2.5"
+            className="ui-btn ui-btn-primary text-xs h-7.5 px-2.5"
           >
             <Plus className="w-3.5 h-3.5" /> Emitir Certificado
           </button>

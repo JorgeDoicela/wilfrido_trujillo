@@ -53,7 +53,7 @@ sequenceDiagram
     JwtService-->>AuthService: accessToken (JWT)
     AuthService-->>Cliente: 200 OK { accessToken, user: { ...identidad, permissions } }
 
-    Note over Cliente: Cliente almacena token en memoria / storage
+    Note over Cliente: Cliente almacena token en localStorage ('wt_auth_token')
 
     Cliente->>ResourceCtrl: PATCH /api/submissions/:id/review [Bearer Token]
     ResourceCtrl->>Guard: Interceptación por PermissionsGuard
@@ -147,3 +147,51 @@ Permite ocultar o mostrar bloques enteros de interfaz de usuario de forma limpia
   </button>
 </Can>
 ```
+
+### 5.3 Persistencia de Sesión y Guardias contra Cascadas 401
+El token JWT firmado se almacena en `localStorage` bajo la clave canónica **`wt_auth_token`**.
+
+Para evitar la emisión de peticiones HTTP con cabeceras `Authorization: Bearer undefined` que disparen errores en cascada `401 Unauthorized` cuando un visitante explora la portada sin haber iniciado sesión, las funciones sincronizadoras en `App.tsx` evalúan previamente la presencia del token:
+
+```typescript
+const fetchWorkspaces = async () => {
+  const token = localStorage.getItem('wt_auth_token');
+  if (!token) return; // Evita error 401 preventivo
+  try {
+    setIsLoadingWorkspaces(true);
+    const data = await workspacesApi.getAll();
+    if (data && data.length > 0) {
+      setWorkspaces(data);
+      setSelectedWorkspace(data[0]);
+    }
+  } catch {
+    // Preservar datos locales en caso de desconexión
+  } finally {
+    setIsLoadingWorkspaces(false);
+  }
+};
+```
+
+### 5.4 Simulación Operativa con Autenticación Real en Demostración
+En los botones de alternancia de rol del simulador (`simulateStudent` y `simulateIngeniero`), el sistema despacha una solicitud real a `POST /api/auth/login`:
+
+```typescript
+const simulateStudent = async () => {
+  try {
+    await login('0600000002', 'Estudiante123*');
+    await fetchWorkspaces();
+  } catch {
+    setUserDirectlyForDemo({ ...fallbackStudentProfile });
+  }
+};
+
+const simulateIngeniero = async () => {
+  try {
+    await login('0600000001', 'Admin123*');
+    await fetchWorkspaces();
+  } catch {
+    setUserDirectlyForDemo({ ...fallbackDocenteProfile });
+  }
+};
+```
+Esto garantiza que los tokens en el cliente sean legítimos y firmados criptográficamente por la instancia en ejecución del backend NestJS.

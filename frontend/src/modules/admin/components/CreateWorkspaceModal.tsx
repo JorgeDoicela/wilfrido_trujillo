@@ -67,7 +67,9 @@ export function CreateWorkspaceModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} maxWidth="lg">
       <ModalHeader onClose={onClose}>
-        <Plus className="w-5 h-5 text-blue-400" />
+        <div className="h-9 w-9 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center flex-shrink-0">
+          <Plus className="w-5 h-5" />
+        </div>
         <ModalTitle>Crear Nuevo Espacio de Trabajo</ModalTitle>
       </ModalHeader>
 

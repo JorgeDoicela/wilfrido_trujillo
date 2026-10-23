@@ -44,10 +44,10 @@ Los scripts se ejecutan desde la raíz del proyecto orquestando ambos paquetes:
 
 ## 4. Verificación del Servidor y Puertos de Escucha
 
-Al ejecutar `pnpm dev`, los servicios se inicializan en los siguientes puertos locales:
+Al ejecutar `pnpm dev`, los servicios se inicializan en los siguientes puertos locales estándar:
 
-* **Frontend (React 19 + Vite):** [http://localhost:5173/](http://localhost:5173/)
-* **Backend (NestJS API REST):** [http://localhost:3000/api](http://localhost:3000/api)
+* **Frontend (React 19 + Vite + Tailwind CSS v4):** [http://localhost:5173/](http://localhost:5173/) *(o puerto alterno [http://localhost:5180/](http://localhost:5180/) si el puerto base se encuentra ocupado)*.
+* **Backend (NestJS 11 API REST):** [http://localhost:3000/api](http://localhost:3000/api) *(o puerto alterno [http://localhost:3010/api](http://localhost:3010/api) según la configuración en `backend/.env`)*.
 
 ---
 

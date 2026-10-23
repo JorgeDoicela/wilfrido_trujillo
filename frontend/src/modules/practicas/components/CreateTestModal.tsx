@@ -151,19 +151,19 @@ export function CreateTestModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} maxWidth="xl">
       <ModalHeader onClose={onClose}>
-        <div className="h-9 w-9 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0">
+        <div className="h-9 w-9 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center flex-shrink-0">
           <HelpCircle className="w-5 h-5" />
         </div>
         <div>
           <ModalTitle>Configurar Examen Dinámico</ModalTitle>
-          <p className="text-xs text-slate-400 font-normal">Espacio: {workspaceTitle}</p>
+          <p className="text-xs text-[#C4C4C4] font-normal">Espacio: {workspaceTitle}</p>
         </div>
       </ModalHeader>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <ModalContent className="max-h-[65vh] overflow-y-auto pr-1">
           {errorMessage && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
+            <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{errorMessage}</span>
             </div>
@@ -208,13 +208,13 @@ export function CreateTestModal({
 
           {/* Preguntas */}
           <div className="space-y-4 pt-2">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div className="flex items-center justify-between border-b border-white/10 pb-2">
               <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
                 Preguntas ({questions.length})
               </h4>
               <Button
                 type="button"
-                variant="purple"
+                variant="primary"
                 size="sm"
                 onClick={handleAddQuestion}
                 className="gap-1.5"
@@ -226,11 +226,11 @@ export function CreateTestModal({
             {questions.map((q, qIdx) => (
               <div
                 key={q.id}
-                className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-4 space-y-3"
+                className="bg-white/[0.04] border border-white/10 rounded-2xl p-4 space-y-3 backdrop-blur-md"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 flex-1">
-                    <span className="h-6 w-6 rounded-md bg-purple-500/20 text-purple-400 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                    <span className="h-6 w-6 rounded-md bg-white/15 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">
                       {qIdx + 1}
                     </span>
                     <input
@@ -244,7 +244,7 @@ export function CreateTestModal({
                   <button
                     type="button"
                     onClick={() => handleRemoveQuestion(qIdx)}
-                    className="text-slate-500 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+                    className="text-[#C4C4C4] hover:text-rose-400 p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
                     title="Eliminar pregunta"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -252,7 +252,7 @@ export function CreateTestModal({
                 </div>
 
                 <div className="space-y-2 pt-1">
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-[#C4C4C4]">
                     Opciones (marca el círculo de la respuesta correcta):
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -261,10 +261,10 @@ export function CreateTestModal({
                       return (
                         <div
                           key={optIdx}
-                          className={`flex items-center gap-2 p-2 rounded-xl border transition-all ${
+                          className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${
                             isCorrect
-                              ? 'bg-purple-500/10 border-purple-500/40 text-purple-200'
-                              : 'bg-slate-900/50 border-slate-800 text-slate-300'
+                              ? 'bg-white/15 border-white/35 text-white ring-1 ring-white/20'
+                              : 'bg-white/[0.03] border-white/10 text-[#F0F0F3]'
                           }`}
                         >
                           <button
@@ -272,8 +272,8 @@ export function CreateTestModal({
                             onClick={() => handleCorrectOptionChange(qIdx, optIdx)}
                             className={`h-5 w-5 rounded-full border flex items-center justify-center transition-colors cursor-pointer flex-shrink-0 ${
                               isCorrect
-                                ? 'bg-purple-600 border-purple-500 text-white'
-                                : 'border-slate-700 hover:border-slate-500'
+                                ? 'bg-white border-white text-[#1C2451]'
+                                : 'border-white/30 hover:border-white/60'
                             }`}
                           >
                             {isCorrect && <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -283,7 +283,7 @@ export function CreateTestModal({
                             value={opt}
                             onChange={(e) => handleOptionChange(qIdx, optIdx, e.target.value)}
                             placeholder={`Opción ${String.fromCharCode(65 + optIdx)}`}
-                            className="bg-transparent text-xs w-full text-white focus:outline-none"
+                            className="bg-transparent text-xs w-full text-white focus:outline-none placeholder:text-[#C4C4C4]/50"
                           />
                         </div>
                       );
@@ -299,7 +299,7 @@ export function CreateTestModal({
           <Button type="button" variant="ghost" size="sm" onClick={onClose}>
             Cancelar
           </Button>
-          <Button type="submit" variant="purple" size="sm" isLoading={isSubmitting}>
+          <Button type="submit" variant="primary" size="sm" isLoading={isSubmitting}>
             Publicar Examen
           </Button>
         </ModalFooter>

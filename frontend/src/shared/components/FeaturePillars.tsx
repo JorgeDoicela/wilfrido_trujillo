@@ -27,11 +27,13 @@ export const FeaturePillars: React.FC = () => {
         return (
           <div
             key={p.title}
-            className="m365-card p-4 flex flex-col gap-2"
+            className="glass-card p-6 rounded-3xl flex flex-col gap-3 hover:border-white/35 transition-all shadow-xl"
           >
-            <Icon className="w-4 h-4 text-[#0f6cbd]" />
-            <h4 className="text-sm font-semibold text-[#242424]">{p.title}</h4>
-            <p className="text-xs text-[#616161] leading-relaxed">{p.description}</p>
+            <div className="w-10 h-10 rounded-2xl bg-white/15 border border-white/25 border-t-white/50 flex items-center justify-center text-white mb-1 backdrop-blur-xl shadow-xs">
+              <Icon className="w-5 h-5 text-white" />
+            </div>
+            <h4 className="text-sm font-semibold text-white tracking-tight">{p.title}</h4>
+            <p className="text-xs text-[#C4C4C4] leading-relaxed">{p.description}</p>
           </div>
         );
       })}

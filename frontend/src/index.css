@@ -1,254 +1,375 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-glass-blue: #1C2451;
+  --color-glass-grey: #F0F0F3;
+  --color-glass-black: #33383D;
+  --color-glass-dark-grey: #C4C4C4;
+  --color-glass-white: #FFFFFF;
+}
+
 @layer base {
   :root {
     /* ==========================================================================
-       MICROSOFT 365 MODERNO // FLUENT DESIGN SYSTEM 2 (FLUENT UI V9)
+       SISTEMA DE DISEÑO GLASSMORPHISM PURO // PALETA OFICIAL CANÓNICA FIGMA
+       Colores base inmutables:
+       - Blue:      #1C2451 (Canvas profundo / tono base)
+       - Grey:      #F0F0F3 (Texto legible / superficies claras)
+       - Black:     #33383D (Carbón / backing de alto contraste)
+       - Dark Grey: #C4C4C4 (Metadatos / bordes secundarios / etiquetas)
+       - White:     #FFFFFF (Titulares / reflejos especulares / bordes de luz)
        ========================================================================== */
-    font-family: 'Segoe UI', 'Segoe UI Variable', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-    /* Microsoft 365 Brand Colors (Fluent UI v9 Official) */
-    --m365-brand: #0f6cbd;
-    --m365-brand-hover: #115ea3;
-    --m365-brand-pressed: #0c3b5e;
-    --m365-brand-subtle: #ebf3fc;
-    --m365-brand-tint: #cfe4fa;
-    --m365-brand-foreground: #0f6cbd;
+    /* Tokens Canónicos */
+    --color-blue: #1C2451;
+    --color-grey: #F0F0F3;
+    --color-black: #33383D;
+    --color-dark-grey: #C4C4C4;
+    --color-white: #FFFFFF;
 
-    /* Suite Bar & Header */
-    --m365-suite-bg: #0f6cbd;
-    --m365-suite-text: #ffffff;
-    --m365-suite-search-bg: rgba(255, 255, 255, 0.16);
-    --m365-suite-search-hover: rgba(255, 255, 255, 0.24);
+    /* Superficies Vidriadas (Pure Glassmorphism) */
+    --bg-canvas: #1C2451;
+    --bg-glass-card: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%);
+    --bg-glass-card-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+    --bg-glass-nav: rgba(28, 36, 81, 0.68);
+    --bg-glass-sidebar: rgba(28, 36, 81, 0.52);
+    --bg-glass-modal: rgba(28, 36, 81, 0.88);
+    --bg-glass-input: rgba(255, 255, 255, 0.08);
 
-    /* Canvas & Surfaces (Microsoft 365 Clean Neutral) */
-    --bg-canvas: #f5f5f5;
-    --bg-surface: #ffffff;
-    --bg-surface-subtle: #fafafa;
-    --bg-surface-hover: #f0f0f0;
-    --bg-surface-pressed: #ebebeb;
+    /* Bordes y Reflejos Especulares (Specular Highlights) */
+    --border-glass-subtle: rgba(255, 255, 255, 0.10);
+    --border-glass-default: rgba(255, 255, 255, 0.18);
+    --border-glass-top: rgba(255, 255, 255, 0.38);
+    --border-glass-highlight: rgba(255, 255, 255, 0.32);
+    --border-glass-focus: rgba(255, 255, 255, 0.60);
 
-    /* Tipografía Corporativa M365 */
-    --text-primary: #242424;
-    --text-secondary: #424242;
-    --text-muted: #616161;
-    --text-disabled: #a19f9d;
-    --text-on-brand: #ffffff;
+    /* Tipografía */
+    --text-primary: #FFFFFF;
+    --text-secondary: #F0F0F3;
+    --text-muted: #C4C4C4;
+    --text-dark: #33383D;
 
-    /* Bordes y Líneas Divisoras */
-    --border-subtle: #edebe9;
-    --border-default: #e0e0e0;
-    --border-strong: #c7c7c7;
-    --border-focus: #0f6cbd;
+    /* Botones y Acciones en Cápsula (Pill Glass Buttons) */
+    --glass-btn-primary-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.10) 100%);
+    --glass-btn-primary-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.40) 0%, rgba(255, 255, 255, 0.16) 100%);
+    --glass-btn-primary-border: rgba(255, 255, 255, 0.45);
+    --glass-btn-primary-border-top: rgba(255, 255, 255, 0.80);
 
-    /* Estados de Notificación y Acreditación */
-    --m365-success: #107c10;
-    --m365-success-bg: #dff6dd;
-    --m365-success-border: #a3d9a5;
-    --m365-warning: #7d5a00;
-    --m365-warning-bg: #fff4ce;
-    --m365-warning-border: #f2c864;
-    --m365-danger: #a4262c;
-    --m365-danger-bg: #fde7e9;
-    --m365-danger-border: #f1aeb5;
-    --m365-info: #0078d4;
-    --m365-info-bg: #eff6fc;
-    --m365-info-border: #9ec5fe;
+    /* Estados Semánticos Vidriados */
+    --state-success: #34d399;
+    --state-success-bg: rgba(52, 211, 153, 0.14);
+    --state-success-border: rgba(52, 211, 153, 0.35);
 
-    /* Radios Modernos Fluent 2 */
-    --radius-xs: 2px;
-    --radius-sm: 4px;
-    --radius-md: 6px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
+    --state-warning: #fbbf24;
+    --state-warning-bg: rgba(251, 191, 36, 0.14);
+    --state-warning-border: rgba(251, 191, 36, 0.35);
+
+    --state-danger: #f87171;
+    --state-danger-bg: rgba(248, 113, 113, 0.14);
+    --state-danger-border: rgba(248, 113, 113, 0.35);
+
+    --state-info: #60a5fa;
+    --state-info-bg: rgba(96, 165, 250, 0.14);
+    --state-info-border: rgba(96, 165, 250, 0.35);
+
+    /* Radios Ergonómicos Glassmorphism Puro */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+    --radius-2xl: 32px;
     --radius-pill: 9999px;
 
-    /* Elevaciones Fluent 2 (Sombras Neutras M365) */
-    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-    --shadow-elevated: 0 4px 12px 0 rgba(0, 0, 0, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.04);
-    --shadow-flyout: 0 8px 24px 0 rgba(0, 0, 0, 0.12), 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+    /* Sombras y Luces Especulares */
+    --shadow-glass: 0 20px 50px -10px rgba(0, 0, 0, 0.50);
+    --shadow-glass-hover: 0 26px 60px -10px rgba(0, 0, 0, 0.60);
+    --shadow-glass-modal: 0 35px 90px rgba(0, 0, 0, 0.75);
+    --shadow-specular: inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
+    --shadow-inner-glow: inset 0 0 16px 0 rgba(255, 255, 255, 0.03);
   }
 
   body {
     min-height: 100vh;
-    background-color: var(--bg-canvas);
-    color: var(--text-primary);
-    font-family: 'Segoe UI', 'Segoe UI Variable', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    background-color: var(--color-blue);
+    color: var(--text-secondary);
+    font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;
     padding: 0;
+    position: relative;
+    overflow-x: hidden;
   }
 
-  /* Scrollbar fina estándar M365 */
+  /* Scrollbar fina de cristal translúcido */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #d1d1d1;
+    background: rgba(255, 255, 255, 0.22);
     border-radius: var(--radius-pill);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #999999;
+    background: rgba(255, 255, 255, 0.38);
   }
 }
 
 @layer components {
   /* ==========================================================================
-     COMPONENTES MODERNOS MICROSOFT 365 (FLUENT UI V9)
+     SUPERFICIES Y TARJETAS GLASSMORPHISM PURO
      ========================================================================== */
 
-  /* Tarjeta M365: Blanco puro, 8px de radio, borde 1px sutil, sombra suave */
-  .m365-card {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-    transition: box-shadow 150ms cubic-bezier(0.1, 0.9, 0.2, 1),
-                border-color 150ms cubic-bezier(0.1, 0.9, 0.2, 1);
+  .glass-card,
+  .m365-card,
+  .ui-card {
+    background: var(--bg-glass-card);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid var(--border-glass-default);
+    border-top: 1px solid var(--border-glass-top);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-glass), var(--shadow-specular), var(--shadow-inner-glow);
+    color: var(--text-secondary);
+    transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    z-index: 1;
   }
 
+  .glass-card-hover:hover,
+  .glass-card:hover,
   .m365-card-hover:hover {
-    box-shadow: var(--shadow-elevated);
-    border-color: #c7c7c7;
+    background: var(--bg-glass-card-hover);
+    border-color: var(--border-glass-highlight);
+    border-top-color: rgba(255, 255, 255, 0.65);
+    box-shadow: var(--shadow-glass-hover), inset 0 1px 1px 0 rgba(255, 255, 255, 0.70), inset 0 0 20px 0 rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
   }
 
-  /* Command Bar Oficial M365 (Barra de Acciones Horizontal) */
-  .m365-command-bar {
+  /* Cabecera / Suite Bar Vidriada */
+  .glass-suite-bar {
+    background: var(--bg-glass-nav);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border-bottom: 1px solid var(--border-glass-default);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  /* Barra Lateral / Sidebar Vidriada Flotante */
+  .glass-sidebar {
+    background: var(--bg-glass-sidebar);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border-right: 1px solid var(--border-glass-subtle);
+    box-shadow: 4px 0 24px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  /* Barra de Comandos Horizontal Vidriada */
+  .m365-command-bar,
+  .glass-command-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 44px;
-    background-color: var(--bg-surface);
-    border-bottom: 1px solid var(--border-subtle);
-    padding: 0 16px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-bottom: 1px solid var(--border-glass-subtle);
+    padding: 0 20px;
+    z-index: 10;
   }
 
-  .m365-command-btn {
+  .m365-command-btn,
+  .glass-command-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     height: 32px;
-    padding: 0 10px;
+    padding: 0 14px;
     font-size: 13px;
     font-weight: 500;
     color: var(--text-secondary);
-    border-radius: var(--radius-sm);
-    transition: all 120ms ease;
+    border-radius: var(--radius-pill);
+    transition: all 150ms ease;
     cursor: pointer;
-    border: none;
+    border: 1px solid transparent;
     background: transparent;
     user-select: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
-  .m365-command-btn:hover {
-    background-color: var(--bg-surface-hover);
+  .m365-command-btn:hover,
+  .glass-command-btn:hover {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: var(--border-glass-default);
+    border-top-color: rgba(255, 255, 255, 0.40);
     color: var(--text-primary);
   }
 
-  .m365-command-btn--primary {
-    background-color: var(--m365-brand);
-    color: #ffffff;
+  .m365-command-btn--primary,
+  .glass-command-btn--primary {
+    background: var(--glass-btn-primary-bg);
+    border: 1px solid var(--glass-btn-primary-border);
+    border-top: 1px solid var(--glass-btn-primary-border-top);
+    color: var(--text-primary);
     font-weight: 600;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.6), 0 4px 14px rgba(0, 0, 0, 0.3);
   }
 
-  .m365-command-btn--primary:hover {
-    background-color: var(--m365-brand-hover);
-    color: #ffffff;
+  .m365-command-btn--primary:hover,
+  .glass-command-btn--primary:hover {
+    background: var(--glass-btn-primary-hover);
+    border-color: rgba(255, 255, 255, 0.70);
+    border-top-color: rgba(255, 255, 255, 1);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.25);
   }
 
-  /* Botones Fluent UI v9 */
+  /* ==========================================================================
+     BOTONES GLASSMORPHISM EN CÁPSULA (PILL BUTTONS)
+     ========================================================================== */
+
+  .ui-btn,
   .m365-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    height: 32px;
-    padding: 0 12px;
+    gap: 8px;
     font-size: 13px;
-    font-weight: 500;
-    border-radius: var(--radius-sm);
-    transition: all 120ms cubic-bezier(0.1, 0.9, 0.2, 1);
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+    transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
-    border: 1px solid transparent;
     user-select: none;
     line-height: 1;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
 
-  .m365-btn-primary {
-    background-color: var(--m365-brand);
-    color: #ffffff;
-    border-color: var(--m365-brand);
+  .ui-btn-primary,
+  .m365-btn-primary,
+  .fluent-btn-action {
+    background: var(--glass-btn-primary-bg);
+    border: 1px solid var(--glass-btn-primary-border);
+    border-top: 1px solid var(--glass-btn-primary-border-top);
+    color: var(--text-primary);
     font-weight: 600;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.70), 0 8px 24px 0 rgba(0, 0, 0, 0.35);
   }
-  .m365-btn-primary:hover:not(:disabled) {
-    background-color: var(--m365-brand-hover);
-    border-color: var(--m365-brand-hover);
+
+  .ui-btn-primary:hover:not(:disabled),
+  .m365-btn-primary:hover:not(:disabled),
+  .fluent-btn-action:hover:not(:disabled) {
+    background: var(--glass-btn-primary-hover);
+    border-color: rgba(255, 255, 255, 0.70);
+    border-top-color: rgba(255, 255, 255, 1);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.90), 0 0 24px rgba(255, 255, 255, 0.28), 0 12px 30px rgba(0, 0, 0, 0.45);
+    transform: translateY(-1px);
   }
+
+  .ui-btn-primary:active:not(:disabled),
   .m365-btn-primary:active:not(:disabled) {
-    background-color: var(--m365-brand-pressed);
-    border-color: var(--m365-brand-pressed);
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   }
 
+  .ui-btn-secondary,
   .m365-btn-secondary {
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
-    border-color: var(--border-default);
-  }
-  .m365-btn-secondary:hover:not(:disabled) {
-    background-color: var(--bg-surface-hover);
-    border-color: var(--border-strong);
-  }
-
-  .m365-btn-subtle {
-    background-color: transparent;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-glass-default);
+    border-top: 1px solid var(--border-glass-highlight);
     color: var(--text-secondary);
-    border-color: transparent;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.2);
   }
+
+  .ui-btn-secondary:hover:not(:disabled),
+  .m365-btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--border-glass-highlight);
+    border-top-color: rgba(255, 255, 255, 0.60);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.45), 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .ui-btn-ghost,
+  .m365-btn-subtle {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+  }
+
+  .ui-btn-ghost:hover:not(:disabled),
   .m365-btn-subtle:hover:not(:disabled) {
-    background-color: var(--bg-surface-hover);
+    background: rgba(255, 255, 255, 0.10);
+    border-color: var(--border-glass-subtle);
+    border-top-color: rgba(255, 255, 255, 0.30);
     color: var(--text-primary);
   }
 
-  /* Indicadores de Estado M365 (Sin fondos encapsulados ni píldoras) */
-  .m365-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 0;
-    background: transparent !important;
-    border: none !important;
-    border-radius: 0 !important;
-    line-height: 1.3;
+  .ui-btn-purple {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.32) 0%, rgba(139, 92, 246, 0.12) 100%);
+    border: 1px solid rgba(192, 132, 252, 0.45);
+    border-top: 1px solid rgba(216, 180, 254, 0.75);
+    color: #f3e8ff;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4), 0 6px 20px rgba(168, 85, 247, 0.25);
+  }
+  .ui-btn-purple:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.45) 0%, rgba(139, 92, 246, 0.20) 100%);
+    border-color: rgba(192, 132, 252, 0.70);
+    border-top-color: rgba(255, 255, 255, 0.90);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.6), 0 0 24px rgba(168, 85, 247, 0.35);
+    transform: translateY(-1px);
   }
 
-  .m365-badge--success {
-    color: var(--m365-success);
+  /* ==========================================================================
+     CAMPOS DE ENTRADA VIDRIADOS (GLASS INPUTS)
+     ========================================================================== */
+
+  .m365-input,
+  .ui-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--bg-glass-input);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--border-glass-default);
+    border-top: 1px solid var(--border-glass-top);
+    border-radius: var(--radius-md);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+    transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .m365-badge--warning {
-    color: var(--m365-warning);
+  .m365-input::placeholder,
+  .ui-input::placeholder {
+    color: var(--text-muted);
   }
 
-  .m365-badge--danger {
-    color: var(--m365-danger);
+  .m365-input:focus,
+  .ui-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--border-glass-focus);
+    border-top-color: rgba(255, 255, 255, 0.85);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.22);
   }
 
-  .m365-badge--info {
-    color: var(--m365-brand);
-  }
+  /* ==========================================================================
+     TABLAS VIDRIADAS (GLASS TABLES)
+     ========================================================================== */
 
-  .m365-badge--neutral {
-    color: #616161;
-  }
-
-  /* Data Grid / Tabla M365 SharePoint/Lists style */
+  .glass-table,
   .m365-table,
   .fluent-table {
     width: 100%;
@@ -259,167 +380,152 @@
 
   .m365-table thead th,
   .fluent-table thead th {
-    background-color: #fafafa;
-    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
     font-weight: 600;
-    font-size: 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     text-align: left;
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border-default);
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-glass-default);
     white-space: nowrap;
     user-select: none;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 
   .m365-table tbody td,
   .fluent-table tbody td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border-subtle);
-    color: var(--text-primary);
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-glass-subtle);
+    color: var(--text-secondary);
     vertical-align: middle;
-    background-color: var(--bg-surface);
+    background: transparent;
+    transition: background 150ms ease;
   }
 
   .m365-table tbody tr:hover td,
   .fluent-table tbody tr:hover td {
-    background-color: #f7f9fa;
-  }
-
-  /* Input M365 */
-  .m365-input,
-  .ui-input {
-    width: 100%;
-    height: 32px;
-    padding: 0 10px;
-    font-size: 13px;
+    background: rgba(255, 255, 255, 0.08);
     color: var(--text-primary);
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-sm);
-    transition: all 120ms ease;
   }
 
-  .m365-input:focus,
-  .ui-input:focus {
-    outline: none;
-    border-color: var(--m365-brand);
-    box-shadow: 0 0 0 1px var(--m365-brand);
+  /* ==========================================================================
+     BADGES E INDICADORES DE ESTADO (GLASS PILL BADGES)
+     ========================================================================== */
+
+  .m365-badge,
+  .fluent-badge,
+  .ui-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 12px;
+    border-radius: var(--radius-pill);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    line-height: 1.4;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
   }
 
-  /* Stepper M365 */
+  .m365-badge--success,
+  .fluent-badge--success,
+  .ui-badge-success {
+    background: var(--state-success-bg);
+    color: var(--state-success);
+    border: 1px solid var(--state-success-border);
+    border-top-color: rgba(52, 211, 153, 0.65);
+  }
+
+  .m365-badge--warning,
+  .fluent-badge--warning,
+  .ui-badge-warning {
+    background: var(--state-warning-bg);
+    color: var(--state-warning);
+    border: 1px solid var(--state-warning-border);
+    border-top-color: rgba(251, 191, 36, 0.65);
+  }
+
+  .m365-badge--danger,
+  .fluent-badge--error,
+  .ui-badge-danger {
+    background: var(--state-danger-bg);
+    color: var(--state-danger);
+    border: 1px solid var(--state-danger-border);
+    border-top-color: rgba(248, 113, 113, 0.65);
+  }
+
+  .m365-badge--info,
+  .fluent-badge--info,
+  .ui-badge-info {
+    background: var(--state-info-bg);
+    color: var(--state-info);
+    border: 1px solid var(--state-info-border);
+    border-top-color: rgba(96, 165, 250, 0.65);
+  }
+
+  .m365-badge--neutral,
+  .fluent-badge--neutral {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    border: 1px solid var(--border-glass-subtle);
+    border-top-color: rgba(255, 255, 255, 0.25);
+  }
+
+  /* ==========================================================================
+     STEPPER VIDRIADO
+     ========================================================================== */
+
   .m365-step-node {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: var(--radius-pill);
     font-size: 11px;
     font-weight: 700;
-    transition: all 150ms ease;
+    transition: all 180ms ease;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 
   .m365-step-node--completed {
-    background-color: var(--m365-brand);
-    color: #ffffff;
+    background: var(--state-success-bg);
+    color: var(--state-success);
+    border: 1px solid var(--state-success-border);
+    border-top-color: rgba(52, 211, 153, 0.7);
   }
 
   .m365-step-node--active {
-    background-color: #ffffff;
-    border: 2px solid var(--m365-brand);
-    color: var(--m365-brand);
+    background: var(--glass-btn-primary-bg);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    color: var(--text-primary);
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.8);
   }
 
   .m365-step-node--pending {
-    background-color: #f0f0f0;
+    background: rgba(255, 255, 255, 0.05);
     color: var(--text-muted);
-    border: 1px solid var(--border-default);
+    border: 1px solid var(--border-glass-subtle);
   }
 
-  /* Retrocompatibilidad limpia para clases heredadas */
-  .fluent-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: var(--radius-pill);
-    line-height: 1.3;
-  }
-  .fluent-badge--success {
-    background-color: var(--m365-success-bg);
-    color: var(--m365-success);
-    border: 1px solid var(--m365-success-border);
-  }
-  .fluent-badge--warning {
-    background-color: var(--m365-warning-bg);
-    color: var(--m365-warning);
-    border: 1px solid var(--m365-warning-border);
-  }
-  .fluent-badge--error {
-    background-color: var(--m365-danger-bg);
-    color: var(--m365-danger);
-    border: 1px solid var(--m365-danger-border);
-  }
-  .fluent-badge--info {
-    background-color: var(--m365-info-bg);
-    color: var(--m365-brand);
-    border: 1px solid var(--m365-info-border);
-  }
-  .fluent-badge--neutral {
-    background-color: #f0f0f0;
-    color: #424242;
-    border: 1px solid #e0e0e0;
-  }
+  /* ==========================================================================
+     PANELES DESPLEGABLES / MODALES VIDRIADOS (GLASS FLYOUTS & MODALS)
+     ========================================================================== */
 
-  .fluent-btn-action,
-  .ui-btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    height: 32px;
-    padding: 0 12px;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    background-color: var(--m365-brand);
-    color: #ffffff;
-    border: 1px solid var(--m365-brand);
-    cursor: pointer;
-    transition: all 120ms ease;
-  }
-  .fluent-btn-action:hover,
-  .ui-btn-primary:hover:not(:disabled) {
-    background-color: var(--m365-brand-hover);
-    border-color: var(--m365-brand-hover);
-  }
-
-  .ui-card {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-  }
-
-  .ui-btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    height: 32px;
-    padding: 0 12px;
-    font-size: 13px;
-    font-weight: 500;
-    border-radius: var(--radius-sm);
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
-    border: 1px solid var(--border-default);
-    cursor: pointer;
-    transition: all 120ms ease;
-  }
-  .ui-btn-secondary:hover:not(:disabled) {
-    background-color: var(--bg-surface-hover);
-    border-color: var(--border-strong);
+  .glass-dropdown,
+  .glass-modal {
+    background: var(--bg-glass-modal);
+    backdrop-filter: blur(36px) saturate(190%);
+    -webkit-backdrop-filter: blur(36px) saturate(190%);
+    border: 1px solid var(--border-glass-highlight);
+    border-top: 1px solid rgba(255, 255, 255, 0.50);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-glass-modal), var(--shadow-specular);
+    color: var(--text-secondary);
   }
 }

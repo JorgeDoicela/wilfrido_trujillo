@@ -13,6 +13,12 @@ async function bootstrap() {
   const corsOriginsRaw = configService.get<string>('CORS_ORIGIN', 'http://localhost:5173');
   const corsOrigins = corsOriginsRaw.split(',').map((origin) => origin.trim());
 
+  // Garantizar que el origen del frontend (APP_URL) esté permitido en CORS
+  const appUrl = configService.get<string>('APP_URL');
+  if (appUrl && !corsOrigins.includes(appUrl)) {
+    corsOrigins.push(appUrl);
+  }
+
   // CORS restrictivo y seguro
   app.enableCors({
     origin: corsOrigins,

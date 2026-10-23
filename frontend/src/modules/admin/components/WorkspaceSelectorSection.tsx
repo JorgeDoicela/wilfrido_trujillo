@@ -21,11 +21,11 @@ export const WorkspaceSelectorSection: React.FC<WorkspaceSelectorSectionProps> =
   onJoinSuccess,
 }) => {
   return (
-    <section className="m365-card p-5 flex flex-col gap-4">
-      <div className="flex items-center justify-between pb-3 border-b border-[#edebe9]">
+    <section className="glass-card p-5 flex flex-col gap-4">
+      <div className="flex items-center justify-between pb-3 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <FolderOpen className="w-4 h-4 text-[#0f6cbd]" />
-          <h3 className="text-sm font-semibold text-[#242424]">
+          <FolderOpen className="w-4 h-4 text-white" />
+          <h3 className="text-sm font-semibold text-white tracking-tight">
             Catálogo de Espacios y Periodos Académicos ({workspaces.length})
           </h3>
         </div>
@@ -34,7 +34,7 @@ export const WorkspaceSelectorSection: React.FC<WorkspaceSelectorSectionProps> =
           <button
             type="button"
             onClick={onOpenCreateModal}
-            className="m365-btn m365-btn-primary text-xs h-7.5 px-2.5"
+            className="ui-btn ui-btn-primary text-xs h-8 px-3"
           >
             <Plus className="w-3.5 h-3.5" /> Nuevo Espacio
           </button>
@@ -50,11 +50,11 @@ export const WorkspaceSelectorSection: React.FC<WorkspaceSelectorSectionProps> =
         {/* Listado de Espacios */}
         <div className="lg:col-span-2 flex flex-col gap-3">
           {isLoading ? (
-            <div className="p-8 text-center text-xs text-[#616161]">
+            <div className="p-8 text-center text-xs text-[#C4C4C4]">
               Cargando espacios de trabajo oficiales...
             </div>
           ) : workspaces.length === 0 ? (
-            <div className="p-6 text-center text-xs text-[#616161] bg-[#fafafa] rounded-lg border border-[#e0e0e0]">
+            <div className="p-6 text-center text-xs text-[#C4C4C4] bg-white/[0.04] rounded-xl border border-white/10 backdrop-blur-md">
               No hay espacios registrados actualmente.
             </div>
           ) : (

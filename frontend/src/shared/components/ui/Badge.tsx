@@ -19,8 +19,8 @@ export function Badge({
     warning: 'ui-badge-warning',
     danger: 'ui-badge-danger',
     info: 'ui-badge-info',
-    purple: 'bg-purple-500/10 border border-purple-500/30 text-purple-300',
-    neutral: 'bg-slate-800 border border-slate-700 text-slate-300',
+    purple: 'bg-purple-500/15 border border-purple-500/30 text-purple-200',
+    neutral: 'bg-white/[0.06] border border-white/15 text-[#C4C4C4]',
   };
 
   const sizeClasses = {
