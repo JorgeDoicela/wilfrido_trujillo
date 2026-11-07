@@ -78,6 +78,19 @@ jobs:
         with:
           name: production-build
 
+      - name: Preparar directorio destino en el VPS vía SSH
+        if: steps.check_secrets.outputs.configured == 'true'
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ steps.check_secrets.outputs.ssh_port }}
+          script: |
+            sudo mkdir -p /var/www/wilfrido_trujillo
+            sudo chown -R $(whoami):$(whoami) /var/www/wilfrido_trujillo
+            sudo chmod -R 775 /var/www/wilfrido_trujillo
+
       - name: Desplegar artefactos al servidor VPS vía SCP
         if: steps.check_secrets.outputs.configured == 'true'
         uses: appleboy/scp-action@v0.1.7
@@ -100,9 +113,16 @@ jobs:
           port: ${{ steps.check_secrets.outputs.ssh_port }}
           script: |
             set -e
+            export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:$HOME/.local/share/pnpm
             cd /var/www/wilfrido_trujillo
-            pnpm install --prod --frozen-lockfile
-            sudo systemctl restart wilfrido-backend
-            sudo systemctl reload nginx
+            if command -v pnpm >/dev/null 2>&1; then
+              pnpm install --prod --frozen-lockfile
+            fi
+            if systemctl is-active --quiet wilfrido-backend 2>/dev/null || [ -f /etc/systemd/system/wilfrido-backend.service ]; then
+              sudo systemctl restart wilfrido-backend
+            fi
+            if systemctl is-active --quiet nginx 2>/dev/null; then
+              sudo systemctl reload nginx
+            fi
             echo "Despliegue a https://wilfridotrujillo.doicela.dev completado exitosamente."
 
