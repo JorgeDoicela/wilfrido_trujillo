@@ -1,8 +1,8 @@
 # Guía Maestra de Implementación Paso a Paso: wilfrido_trujillo
 
-> **INSTRUCCIÓN OBLIGATORIA PARA EL AGENTE DE IA:**  
-> Este documento rige la ejecución del proyecto. **Debes trabajar de forma estrictamente secuencial, paso a paso.**  
-> * Queda terminantemente prohibido adelantarse o ejecutar múltiples pasos en un solo turno.  
+> **INSTRUCCIÓN OBLIGATORIA PARA EL AGENTE DE IA:**
+> Este documento rige la ejecución del proyecto. **Debes trabajar de forma estrictamente secuencial, paso a paso.**
+> * Queda terminantemente prohibido adelantarse o ejecutar múltiples pasos en un solo turno.
 > * Al finalizar cada paso, debes ejecutar los comandos de verificación indicados, reportar los resultados al desarrollador y **DETENERTE INMEDIATAMENTE** a esperar su aprobación explícita (*"OK"*, *"Aprobado"* o *"Pasa al siguiente"*) antes de tocar cualquier archivo del paso posterior.
 
 ---

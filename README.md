@@ -41,7 +41,8 @@ docs/
 │
 ├── 05-operaciones-y-despliegue/                               # Configuración e infraestructura
 │   ├── 01-configuracion-entorno.md                            # Matriz de variables backend y frontend
-│   └── 02-guia-de-ejecucion-local.md                          # Prerrequisitos, scripts y usuarios iniciales
+│   ├── 02-guia-de-ejecucion-local.md                          # Prerrequisitos, scripts y usuarios iniciales
+│   └── 03-guia-de-despliegue-produccion.md                    # Despliegue en VPS Linux, Nginx, Systemd, SSL y backups
 │
 └── GUIA_IMPLEMENTACION.md                                     # Guía maestra de implementación secuencial
 ```
@@ -71,6 +72,7 @@ docs/
 | **04-frontend-aplicacion-web** / `06` | [Sistema de Diseño Glassmorphism](docs/04-frontend-aplicacion-web/06-sistema-de-diseno-glassmorphism.md) | Estándar visual canónico: 5 tonos Figma, tipografía Montserrat, tablero Bento y orbes lumínicos ambientales. |
 | **05-operaciones-y-despliegue** / `01` | [Variables de Entorno](docs/05-operaciones-y-despliegue/01-configuracion-entorno.md) | Tabla completa de parámetros de configuración de backend y frontend. |
 | **05-operaciones-y-despliegue** / `02` | [Ejecución Local](docs/05-operaciones-y-despliegue/02-guia-de-ejecucion-local.md) | Guía de instalación, comandos de desarrollo (`pnpm dev`), cuentas sembradas y verificación en puertos. |
+| **05-operaciones-y-despliegue** / `03` | [Despliegue en Producción](docs/05-operaciones-y-despliegue/03-guia-de-despliegue-produccion.md) | Guía técnica completa para VPS Ubuntu/Debian: Nginx proxy inverso, systemd, SSL Certbot, SQLite WAL y política de respaldos. |
 
 ---
 
