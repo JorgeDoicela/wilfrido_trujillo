@@ -124,7 +124,7 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Suite de pruebas unitarias ampliada (7 pruebas aprobadas en `vitest` cubriendo auditor documental, autenticación y PBAC).
   * 0 errores y 0 advertencias en análisis estático global (`oxlint` en backend y frontend).
   * Subdominio oficial de producción: `wilfridotrujillo.doicela.dev` configurado con proxy Cloudflare y Nginx.
-  * Flujo CI/CD automatizado en GitHub Actions (`.github/workflows/deploy.yml` y `ci.yml`) con compilación remota y transferencia vía SCP/SSH hacia servidor Debian.
+  * Flujo CI/CD automatizado en GitHub Actions (`.github/workflows/deploy.yml` y `ci.yml`) con compilación remota y transferencia vía SCP/SSH hacia servidor Debian 100% validado y en verde (preparación autónoma de permisos en `/var/www/wilfrido_trujillo`, transferencia SCP y reinicio defensivo de servicios).
 
 ---
 
