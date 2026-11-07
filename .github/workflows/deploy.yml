@@ -47,6 +47,7 @@ jobs:
             backend/dist/
             frontend/dist/
             backend/package.json
+            frontend/package.json
             package.json
             pnpm-lock.yaml
             pnpm-workspace.yaml
@@ -99,7 +100,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ steps.check_secrets.outputs.ssh_port }}
-          source: "backend/dist/,frontend/dist/,backend/package.json,package.json,pnpm-lock.yaml,pnpm-workspace.yaml"
+          source: "backend/dist/,frontend/dist/,backend/package.json,frontend/package.json,package.json,pnpm-lock.yaml,pnpm-workspace.yaml"
           target: "/var/www/wilfrido_trujillo/"
           overwrite: true
 
@@ -114,6 +115,7 @@ jobs:
           script: |
             set -e
             export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:$HOME/.local/share/pnpm
+            export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
             cd /var/www/wilfrido_trujillo
 
             # 1. Instalar dependencias de producción
@@ -121,7 +123,27 @@ jobs:
               pnpm install --prod --frozen-lockfile
             fi
 
-            # 2. Asegurar certificado SSL en el VPS para modo Full de Cloudflare (Puerto 443)
+            # 2. Asegurar directorios persistentes del backend y archivo .env limpio
+            mkdir -p /var/www/wilfrido_trujillo/backend/data
+            mkdir -p /var/www/wilfrido_trujillo/backend/uploads
+
+            if [ ! -f /var/www/wilfrido_trujillo/backend/.env ] || ! grep -q "^JWT_SECRET=" /var/www/wilfrido_trujillo/backend/.env || grep -q "200~" /var/www/wilfrido_trujillo/backend/.env; then
+              GENERATED_SECRET=$(openssl rand -hex 32)
+              cat << EOF > /var/www/wilfrido_trujillo/backend/.env
+            PORT=3010
+            NODE_ENV=production
+            JWT_SECRET=${GENERATED_SECRET}
+            JWT_EXPIRES_IN=7d
+            DATABASE_PATH=./data/wilfrido.sqlite
+            DB_SYNCHRONIZE=true
+            UPLOAD_LOCATION=./uploads
+            MAX_FILE_SIZE_MB=25
+            APP_URL=https://wilfridotrujillo.doicela.dev
+            CORS_ORIGIN=https://wilfridotrujillo.doicela.dev
+            EOF
+            fi
+
+            # 3. Asegurar certificado SSL en el VPS para modo Full de Cloudflare (Puerto 443)
             if [ ! -f /etc/ssl/certs/nginx-selfsigned.crt ]; then
               sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
                 -keyout /etc/ssl/private/nginx-selfsigned.key \
@@ -129,7 +151,7 @@ jobs:
                 -subj "/CN=wilfridotrujillo.doicela.dev"
             fi
 
-            # 3. Escribir configuración de Nginx (Puertos 80 y 443 SSL)
+            # 4. Escribir configuración de Nginx (Puertos 80 y 443 SSL)
             cat << 'EOF' | sudo tee /etc/nginx/sites-available/wilfridotrujillo.doicela.dev >/dev/null
             server {
                 listen 80;
@@ -174,7 +196,7 @@ jobs:
             sudo nginx -t
             sudo systemctl reload nginx
 
-            # 4. Escribir servicio Systemd limpio (corrigiendo error previo de nano)
+            # 5. Escribir servicio Systemd limpio
             CURRENT_USER=$(whoami)
             cat << EOF | sudo tee /etc/systemd/system/wilfrido-backend.service >/dev/null
             [Unit]
@@ -198,5 +220,10 @@ jobs:
             sudo systemctl daemon-reload
             sudo systemctl enable wilfrido-backend
             sudo systemctl restart wilfrido-backend
-            echo "Despliegue a https://wilfridotrujillo.doicela.dev completado exitosamente."
+            sleep 3
+            if ! curl -s http://127.0.0.1:3010/api/workspaces >/dev/null; then
+              sudo journalctl -u wilfrido-backend -n 40 --no-pager
+              exit 1
+            fi
+            echo "Despliegue a https://wilfridotrujillo.doicela.dev completado y verificado exitosamente."
 

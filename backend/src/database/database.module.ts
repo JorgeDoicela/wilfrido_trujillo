@@ -1,3 +1,5 @@
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { Module, Logger } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
@@ -31,13 +33,17 @@ export const ENTITIES = [
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const databasePath = configService.get<string>('DATABASE_PATH', './data/wilfrido.sqlite');
-        const isDevelopment = configService.get<string>('NODE_ENV') !== 'production';
+        const dbDir = path.dirname(path.resolve(databasePath));
+        if (!fs.existsSync(dbDir)) {
+          fs.mkdirSync(dbDir, { recursive: true });
+        }
+        const shouldSynchronize = configService.get<string>('DB_SYNCHRONIZE', 'true') !== 'false';
 
         return {
           type: 'better-sqlite3',
           database: databasePath,
           entities: ENTITIES,
-          synchronize: isDevelopment,
+          synchronize: shouldSynchronize,
           prepareDatabase: (db: { pragma: (stmt: string) => unknown }) => {
             const journalMode = db.pragma('journal_mode = WAL');
             db.pragma('foreign_keys = ON');
