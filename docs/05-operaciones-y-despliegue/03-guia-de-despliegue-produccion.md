@@ -123,6 +123,7 @@ JWT_EXPIRES_IN=7d
 
 # Persistencia SQLite
 DATABASE_PATH=./data/wilfrido.sqlite
+DB_SYNCHRONIZE=true
 
 # Almacenamiento Local de Documentos
 UPLOAD_LOCATION=./uploads
@@ -237,16 +238,17 @@ server {
 
 # Servidor Seguro HTTPS (TLS 1.2 / 1.3)
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
     server_name wilfridotrujillo.doicela.dev;
 
     # Ocultar versión del servidor (Anti-fingerprinting)
     server_tokens off;
 
-    # Certificados SSL (gestionados por Certbot o Cloudflare Origin CA)
-    # ssl_certificate /etc/letsencrypt/live/wilfridotrujillo.doicela.dev/fullchain.pem;
-    # ssl_certificate_key /etc/letsencrypt/live/wilfridotrujillo.doicela.dev/privkey.pem;
+    # Certificados SSL de Origen (Cloudflare Full / Let's Encrypt)
+    ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+    ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
 
     # Parámetros estrictos de seguridad criptográfica TLS
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -348,29 +350,35 @@ sudo systemctl reload nginx
 
 ---
 
-## 7. Emisión de Certificado SSL/TLS con Let's Encrypt
+## 7. Configuración de TLS de Extremo a Extremo (Cloudflare + Nginx)
 
-Ejecute Certbot para vincular automáticamente el certificado TLS:
+El subdominio `wilfridotrujillo.doicela.dev` opera con proxy de Cloudflare activo (`Proxied`) en modo de cifrado **Full** (o **Full Strict** con Origin CA), garantizando tráfico HTTPS cifrado desde el navegador hasta Cloudflare y desde Cloudflare hacia el puerto `443` del VPS:
 
-```bash
-sudo certbot --nginx -d wilfridotrujillo.doicela.dev
-```
-
-Valide la renovación automática mediante una simulación:
-```bash
-sudo certbot renew --dry-run
-```
+1. **En Cloudflare DNS:**
+   * Registro `A`: Nombre `wilfridotrujillo`, apuntando a la IPv4 pública del VPS con estado `Proxied`.
+2. **En el Servidor Debian (Certificado TLS de Origen):**
+   ```bash
+   sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+     -keyout /etc/ssl/private/nginx-selfsigned.key \
+     -out /etc/ssl/certs/nginx-selfsigned.crt \
+     -subj "/CN=wilfridotrujillo.doicela.dev"
+   sudo chmod 600 /etc/ssl/private/nginx-selfsigned.key
+   ```
 
 ---
 
-## 8. Endurecimiento del Cortafuegos (UFW)
+## 8. Reglas de Red y Cortafuegos (AWS Security Group & UFW)
 
-Configure las reglas básicas de firewall permitiendo únicamente tráfico seguro:
+Tanto en el firewall de red del proveedor Cloud (AWS Security Group / Lightsail Networking) como en el firewall de host (`ufw`), deben habilitarse exclusivamente los tres puertos operativos:
+
+* `22/tcp` (SSH — Administración y despliegue desde GitHub Actions)
+* `80/tcp` (HTTP — Redirección 301 hacia HTTPS)
+* `443/tcp` (HTTPS — Tráfico productivo TLS 1.2/1.3)
 
 ```bash
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow ssh
+sudo ufw allow 22/tcp
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw enable
@@ -423,46 +431,32 @@ find "$BACKUP_DIR" -type f -mtime +30 -name "wilfrido_*" -delete
 
 Haga el script ejecutable:
 ```bash
-sudo chmod +x /usr/local/bin/backup-wilfrido.sh
+sudo chmod 750 /usr/local/bin/backup-wilfrido.sh
 ```
 
 ### 9.2 Programación en Crontab
-Configure una tarea diaria a las 02:00 AM:
+Configure una tarea diaria a las 02:00 AM con registro de salida en `/var/log/wilfrido-backup.log`:
 
-```bash
-sudo crontab -e
-```
-
-Añada la línea:
 ```cron
-0 2 * * * /usr/local/bin/backup-wilfrido.sh > /dev/null 2>&1
+# Respaldo diario en caliente de SQLite WAL y evidencias PDF a las 02:00 AM
+0 2 * * * /usr/local/bin/backup-wilfrido.sh >> /var/log/wilfrido-backup.log 2>&1
 ```
 
 ---
 
-## 10. Procedimiento de Actualización Continua (Deploy Script)
+## 10. Pipeline CI/CD Automatizado con GitHub Actions
 
-Para desplegar nuevas versiones publicadas en la rama `main` sin fricción operativa, utilice el siguiente procedimiento estandarizado:
+El proyecto cuenta con integración y despliegue continuo en `.github/workflows/ci.yml` y `.github/workflows/deploy.yml`:
 
-```bash
-#!/bin/bash
-cd /var/www/wilfrido_trujillo
+1. **Compilación Remota en GitHub (`build-and-test`):**
+   * Ejecuta análisis estático (`pnpm -r run lint` con Oxlint), suite de pruebas unitarias (`pnpm --filter backend run test` con Vitest) y compilación de producción (`pnpm -r run build`) en los servidores de GitHub Actions, evitando consumir memoria RAM de compilación en el VPS Debian.
+2. **Aprovisionamiento y Despliegue vía SCP/SSH (`deploy`):**
+   * Transfiere únicamente los artefactos compilados (`backend/dist/`, `frontend/dist/`, manifiestos `package.json` y `pnpm-lock.yaml`) hacia `/var/www/wilfrido_trujillo/`.
+   * Sincroniza dependencias de producción (`pnpm install --prod --frozen-lockfile`), aplica la configuración endurecida de Nginx y Systemd, reinicia `wilfrido-backend` y verifica que el puerto local `3010` responda antes de concluir la ejecución.
 
-echo "1. Obteniendo últimos cambios de main..."
-git pull origin main
-
-echo "2. Instalando dependencias..."
-pnpm install --frozen-lockfile
-
-echo "3. Compilando monorepo..."
-pnpm -r run build
-
-echo "4. Reiniciando servicio backend..."
-sudo systemctl restart wilfrido-backend
-
-echo "5. Recargando Nginx..."
-sudo systemctl reload nginx
-
-echo "Despliegue finalizado con éxito."
-```
+### Secretos de Repositorio Requeridos en GitHub Actions
+* `VPS_HOST`: Dirección IPv4 pública del servidor Debian.
+* `VPS_USERNAME`: Usuario SSH del servidor (ej. `admin`).
+* `VPS_SSH_KEY`: Clave privada SSH en formato PEM/OpenSSH.
+* `VPS_SSH_PORT`: Puerto SSH del servidor (`22` por defecto).
 

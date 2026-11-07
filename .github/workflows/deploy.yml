@@ -113,21 +113,19 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ steps.check_secrets.outputs.ssh_port }}
           script: |
-            set -e
-            export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:$HOME/.local/share/pnpm
+            set -euo pipefail
+            export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:$HOME/.local/share/pnpm"
             export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
             cd /var/www/wilfrido_trujillo
 
             # 1. Instalar dependencias de producción
-            if command -v pnpm >/dev/null 2>&1; then
-              pnpm install --prod --frozen-lockfile
-            fi
+            pnpm install --prod --frozen-lockfile
 
-            # 2. Asegurar directorios persistentes del backend y archivo .env limpio
+            # 2. Asegurar directorios persistentes del backend y archivo .env con permisos restrictivos
             mkdir -p /var/www/wilfrido_trujillo/backend/data
             mkdir -p /var/www/wilfrido_trujillo/backend/uploads
 
-            if [ ! -f /var/www/wilfrido_trujillo/backend/.env ] || ! grep -q "^JWT_SECRET=" /var/www/wilfrido_trujillo/backend/.env || grep -q "200~" /var/www/wilfrido_trujillo/backend/.env; then
+            if [ ! -f /var/www/wilfrido_trujillo/backend/.env ] || ! grep -q "^JWT_SECRET=" /var/www/wilfrido_trujillo/backend/.env; then
               GENERATED_SECRET=$(openssl rand -hex 32)
               cat << EOF > /var/www/wilfrido_trujillo/backend/.env
             PORT=3010
@@ -142,20 +140,33 @@ jobs:
             CORS_ORIGIN=https://wilfridotrujillo.doicela.dev
             EOF
             fi
+            chmod 600 /var/www/wilfrido_trujillo/backend/.env
 
-            # 3. Asegurar certificado SSL en el VPS para modo Full de Cloudflare (Puerto 443)
+            # 3. Asegurar certificado TLS en el VPS para modo Full de Cloudflare (Puerto 443)
             if [ ! -f /etc/ssl/certs/nginx-selfsigned.crt ]; then
               sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
                 -keyout /etc/ssl/private/nginx-selfsigned.key \
                 -out /etc/ssl/certs/nginx-selfsigned.crt \
                 -subj "/CN=wilfridotrujillo.doicela.dev"
             fi
+            sudo chmod 600 /etc/ssl/private/nginx-selfsigned.key
 
-            # 4. Escribir configuración de Nginx (Puertos 80 y 443 SSL)
+            # 4. Escribir configuración endurecida de Nginx (Puertos 80 y 443 TLS 1.2/1.3)
             cat << 'EOF' | sudo tee /etc/nginx/sites-available/wilfridotrujillo.doicela.dev >/dev/null
+            limit_req_zone $binary_remote_addr zone=api_general:10m rate=30r/s;
+            limit_req_zone $binary_remote_addr zone=auth_limit:10m rate=5r/m;
+
             server {
                 listen 80;
+                listen [::]:80;
+                server_name wilfridotrujillo.doicela.dev;
+                server_tokens off;
+                return 301 https://$host$request_uri;
+            }
+
+            server {
                 listen 443 ssl;
+                listen [::]:443 ssl;
                 http2 on;
                 server_name wilfridotrujillo.doicela.dev;
 
@@ -164,16 +175,58 @@ jobs:
                 ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
                 ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
 
+                ssl_protocols TLSv1.2 TLSv1.3;
+                ssl_prefer_server_ciphers on;
+                ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384';
+                ssl_session_timeout 1d;
+                ssl_session_cache shared:SSL:10m;
+                ssl_session_tickets off;
+
+                add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+                add_header X-Frame-Options "SAMEORIGIN" always;
+                add_header X-Content-Type-Options "nosniff" always;
+                add_header X-XSS-Protection "1; mode=block" always;
+                add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+                add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
+
+                client_max_body_size 25M;
+
                 root /var/www/wilfrido_trujillo/frontend/dist;
                 index index.html;
 
-                client_max_body_size 25M;
+                gzip on;
+                gzip_vary on;
+                gzip_min_length 1024;
+                gzip_proxied expired no-cache no-store private auth;
+                gzip_types text/plain text/css text/xml text/javascript application/javascript application/json application/xml font/woff2 font/woff;
+
+                location ~ /\. {
+                    deny all;
+                    access_log off;
+                    log_not_found off;
+                }
 
                 location / {
                     try_files $uri $uri/ /index.html;
                 }
 
+                location /assets/ {
+                    expires 1y;
+                    add_header Cache-Control "public, immutable";
+                }
+
+                location = /api/auth/login {
+                    limit_req zone=auth_limit burst=3 nodelay;
+                    proxy_pass http://127.0.0.1:3010/api/auth/login;
+                    proxy_http_version 1.1;
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto $scheme;
+                }
+
                 location /api/ {
+                    limit_req zone=api_general burst=20 nodelay;
                     proxy_pass http://127.0.0.1:3010/api/;
                     proxy_http_version 1.1;
                     proxy_set_header Upgrade $http_upgrade;
@@ -183,10 +236,17 @@ jobs:
                     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                     proxy_set_header X-Forwarded-Proto $scheme;
                     proxy_cache_bypass $http_upgrade;
+                    proxy_read_timeout 60s;
+                    proxy_connect_timeout 60s;
                 }
 
-                location ~ /\. {
-                    deny all;
+                location /uploads/ {
+                    alias /var/www/wilfrido_trujillo/backend/uploads/;
+                    expires 7d;
+                    add_header Cache-Control "public";
+                    location ~ \.(php|pl|py|jsp|sh|cgi|exe|bat)$ {
+                        deny all;
+                    }
                 }
             }
             EOF
@@ -196,21 +256,25 @@ jobs:
             sudo nginx -t
             sudo systemctl reload nginx
 
-            # 5. Escribir servicio Systemd limpio
+            # 5. Escribir unidad de servicio Systemd endurecida
             CURRENT_USER=$(whoami)
             cat << EOF | sudo tee /etc/systemd/system/wilfrido-backend.service >/dev/null
             [Unit]
-            Description=Plataforma Wilfrido Trujillo - Backend NestJS
+            Description=Backend API REST - Plataforma Wilfrido Trujillo
             After=network.target
 
             [Service]
             Type=simple
             User=${CURRENT_USER}
             WorkingDirectory=/var/www/wilfrido_trujillo/backend
+            Environment=NODE_ENV=production
             ExecStart=/usr/bin/node dist/main.js
             Restart=always
             RestartSec=5
-            Environment=NODE_ENV=production
+            StandardOutput=journal
+            StandardError=journal
+            SyslogIdentifier=wilfrido-backend
+            NoNewPrivileges=true
             LimitNOFILE=65535
 
             [Install]
