@@ -18,7 +18,7 @@ Archivo de referencia: `backend/.env.example`
 | `UPLOAD_LOCATION` | `string` | `'./uploads'` | No | Directorio base para el almacenamiento en disco de evidencias, certificados y plantillas. |
 | `MAX_FILE_SIZE_MB` | `number` | `25` | No | Límite máximo de tamaño en megabytes para archivos subidos mediante Multer. |
 | `APP_URL` | `string` | `'http://localhost:5180'` | No | URL base del cliente web. Utilizada por NestJS para construir los hipervínculos de validación en códigos QR de certificados PDF. |
-| `CORS_ORIGIN` | `string` | `'http://localhost:5180,https://wilfridotrujillo.com'` | No | Lista separada por comas de orígenes HTTP autorizados para interactuar con la API mediante CORS. Si `APP_URL` no está en la lista, el sistema lo incorpora defensivamente en tiempo de arranque. |
+| `CORS_ORIGIN` | `string` | `'http://localhost:5180,https://wilfridotrujillo.doicela.dev'` | No | Lista separada por comas de orígenes HTTP autorizados para interactuar con la API mediante CORS. Si `APP_URL` no está en la lista, el sistema lo incorpora defensivamente en tiempo de arranque. |
 
 ---
 

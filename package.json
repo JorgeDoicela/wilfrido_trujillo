@@ -2,6 +2,7 @@
   "name": "wilfrido-trujillo",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@10.33.0",
   "description": "Plataforma de gestión académica y eventos para el Ing. Wilfrido Trujillo",
   "scripts": {
     "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"pnpm --filter backend start:dev\" \"pnpm --filter frontend dev\"",

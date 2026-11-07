@@ -114,3 +114,4 @@ describe('AuthService (Seguridad y PBAC)', () => {
     ).rejects.toThrow(UnauthorizedException);
   });
 });
+

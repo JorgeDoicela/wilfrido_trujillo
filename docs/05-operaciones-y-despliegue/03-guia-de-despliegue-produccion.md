@@ -129,10 +129,10 @@ UPLOAD_LOCATION=./uploads
 MAX_FILE_SIZE_MB=25
 
 # Integración Institucional y Códigos QR
-APP_URL=https://wilfridotrujillo.com
+APP_URL=https://wilfridotrujillo.doicela.dev
 
 # CORS Restrictivo
-CORS_ORIGIN=https://wilfridotrujillo.com,https://www.wilfridotrujillo.com
+CORS_ORIGIN=https://wilfridotrujillo.doicela.dev
 ```
 
 ### 4.2 Frontend (`frontend/.env`)
@@ -215,7 +215,7 @@ sudo systemctl status wilfrido-backend
 
 Nginx actúa como punto único de entrada, sirviendo los archivos estáticos de React 19 de forma directa y redirigiendo las peticiones a la API NestJS mediante proxy inverso.
 
-Cree el archivo de configuración en `/etc/nginx/sites-available/wilfridotrujillo.com`:
+Cree el archivo de configuración en `/etc/nginx/sites-available/wilfridotrujillo.doicela.dev`:
 
 ```nginx
 # ==============================================================================
@@ -230,7 +230,7 @@ limit_req_zone $binary_remote_addr zone=auth_limit:10m rate=5r/m;
 server {
     listen 80;
     listen [::]:80;
-    server_name wilfridotrujillo.com www.wilfridotrujillo.com;
+    server_name wilfridotrujillo.doicela.dev;
     server_tokens off;
     return 301 https://$host$request_uri;
 }
@@ -239,14 +239,14 @@ server {
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name wilfridotrujillo.com www.wilfridotrujillo.com;
+    server_name wilfridotrujillo.doicela.dev;
 
     # Ocultar versión del servidor (Anti-fingerprinting)
     server_tokens off;
 
-    # Certificados SSL (gestionados por Certbot)
-    # ssl_certificate /etc/letsencrypt/live/wilfridotrujillo.com/fullchain.pem;
-    # ssl_certificate_key /etc/letsencrypt/live/wilfridotrujillo.com/privkey.pem;
+    # Certificados SSL (gestionados por Certbot o Cloudflare Origin CA)
+    # ssl_certificate /etc/letsencrypt/live/wilfridotrujillo.doicela.dev/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/wilfridotrujillo.doicela.dev/privkey.pem;
 
     # Parámetros estrictos de seguridad criptográfica TLS
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -341,7 +341,7 @@ server {
 
 ### 6.1 Habilitación del Sitio y Validación de Sintaxis
 ```bash
-sudo ln -sf /etc/nginx/sites-available/wilfridotrujillo.com /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/wilfridotrujillo.doicela.dev /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -350,10 +350,10 @@ sudo systemctl reload nginx
 
 ## 7. Emisión de Certificado SSL/TLS con Let's Encrypt
 
-Ejecute Certbot para obtener y vincular automáticamente los certificados TLS:
+Ejecute Certbot para vincular automáticamente el certificado TLS:
 
 ```bash
-sudo certbot --nginx -d wilfridotrujillo.com -d www.wilfridotrujillo.com
+sudo certbot --nginx -d wilfridotrujillo.doicela.dev
 ```
 
 Valide la renovación automática mediante una simulación:
