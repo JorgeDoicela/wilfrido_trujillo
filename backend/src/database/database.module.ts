@@ -12,6 +12,7 @@ import { TestAttempt } from '../tests/entities/test-attempt.entity.js';
 import { DocumentSubmission } from '../submissions/entities/document-submission.entity.js';
 import { Certificate } from '../certificates/entities/certificate.entity.js';
 import { EventFeedback } from '../events/entities/event-feedback.entity.js';
+import { DatabaseCorpusSeederService } from './database-corpus-seeder.service.js';
 
 const logger = new Logger('DatabaseModule');
 
@@ -55,7 +56,9 @@ export const ENTITIES = [
         };
       },
     }),
+    TypeOrmModule.forFeature(ENTITIES),
   ],
+  providers: [DatabaseCorpusSeederService],
   exports: [TypeOrmModule],
 })
 export class DatabaseModule {}

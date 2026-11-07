@@ -36,7 +36,7 @@ export class WorkspacesService implements OnApplicationBootstrap {
           description: 'Espacio oficial para seguimiento, inducción obligatoria, bitácoras semanales e informe final de prácticas.',
           type: WorkspaceType.PRACTICAS,
           accessCode: 'PRAC-2026',
-          inductionVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          inductionVideoUrl: 'https://www.youtube.com/watch?v=8aGhZQkoFbQ',
           isActive: true,
         },
         {
@@ -44,7 +44,7 @@ export class WorkspacesService implements OnApplicationBootstrap {
           description: 'Gestión y control de proyectos comunitarios, bitácoras de campo y acreditación de horas de servicio.',
           type: WorkspaceType.VINCULACION,
           accessCode: 'VINC-2026',
-          inductionVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          inductionVideoUrl: 'https://www.youtube.com/watch?v=8aGhZQkoFbQ',
           isActive: true,
         },
         {

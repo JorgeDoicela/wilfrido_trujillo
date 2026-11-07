@@ -116,6 +116,20 @@ jobs:
             set -euo pipefail
             export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:$HOME/.local/share/pnpm"
             export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+
+            # 0. Asegurar archivo Swap de 2 GB para proteger instancias con 1 GB de RAM frente a OOM Killer
+            if ! sudo swapon --show | grep -q '/swapfile'; then
+              if [ ! -f /swapfile ]; then
+                sudo fallocate -l 2G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=2048
+                sudo chmod 600 /swapfile
+                sudo mkswap /swapfile
+              fi
+              sudo swapon /swapfile
+              if ! grep -q '^/swapfile ' /etc/fstab; then
+                echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab >/dev/null
+              fi
+            fi
+
             cd /var/www/wilfrido_trujillo
 
             # 1. Instalar dependencias de producción
@@ -285,9 +299,22 @@ jobs:
             sudo systemctl enable wilfrido-backend
             sudo systemctl restart wilfrido-backend
             sleep 3
-            if ! curl -s http://127.0.0.1:3010/api/workspaces >/dev/null; then
-              sudo journalctl -u wilfrido-backend -n 40 --no-pager
+            PID_INITIAL=$(systemctl show -p MainPID --value wilfrido-backend)
+            if [ -z "$PID_INITIAL" ] || [ "$PID_INITIAL" -le 0 ]; then
+              sudo journalctl -u wilfrido-backend -n 50 --no-pager
               exit 1
             fi
+            sleep 6
+            PID_AFTER=$(systemctl show -p MainPID --value wilfrido-backend)
+            if [ "$PID_INITIAL" != "$PID_AFTER" ]; then
+              echo "Error: se detectó cambio de PID ($PID_INITIAL -> $PID_AFTER), posible crash loop."
+              sudo journalctl -u wilfrido-backend -n 50 --no-pager
+              exit 1
+            fi
+            if ! curl -s http://127.0.0.1:3010/api/events/public/CONF-IA >/dev/null; then
+              sudo journalctl -u wilfrido-backend -n 50 --no-pager
+              exit 1
+            fi
+            echo "Servicio wilfrido-backend estable con MainPID fijo: $PID_AFTER"
             echo "Despliegue a https://wilfridotrujillo.doicela.dev completado y verificado exitosamente."
 

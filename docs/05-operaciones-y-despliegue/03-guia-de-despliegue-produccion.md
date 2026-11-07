@@ -451,8 +451,17 @@ El proyecto cuenta con integración y despliegue continuo en `.github/workflows/
 1. **Compilación Remota en GitHub (`build-and-test`):**
    * Ejecuta análisis estático (`pnpm -r run lint` con Oxlint), suite de pruebas unitarias (`pnpm --filter backend run test` con Vitest) y compilación de producción (`pnpm -r run build`) en los servidores de GitHub Actions, evitando consumir memoria RAM de compilación en el VPS Debian.
 2. **Aprovisionamiento y Despliegue vía SCP/SSH (`deploy`):**
+   * Garantiza de forma idempotente la activación de un archivo Swap de 2 GB (`/swapfile`) registrado en `/etc/fstab` para proteger instancias VPS de 1 GB de RAM frente a picos de memoria.
    * Transfiere únicamente los artefactos compilados (`backend/dist/`, `frontend/dist/`, manifiestos `package.json` y `pnpm-lock.yaml`) hacia `/var/www/wilfrido_trujillo/`.
-   * Sincroniza dependencias de producción (`pnpm install --prod --frozen-lockfile`), aplica la configuración endurecida de Nginx y Systemd, reinicia `wilfrido-backend` y verifica que el puerto local `3010` responda antes de concluir la ejecución.
+   * Sincroniza dependencias de producción (`pnpm install --prod --frozen-lockfile`), aplica la configuración endurecida de Nginx y Systemd, reinicia `wilfrido-backend`, audita que el `MainPID` permanezca fijo e invariable tras el intervalo de reinicio de Systemd (`RestartSec=5`) y verifica que el puerto local `3010` responda con `200 OK` antes de concluir la ejecución.
+
+### 10.1 Corpus Académico Inicial (`DatabaseCorpusSeederService`)
+Al iniciar el servicio por primera vez (o sobre cualquier base de datos existente de manera 100% idempotente), `DatabaseCorpusSeederService` aprovisiona un corpus completo para demostración, auditoría y operación inmediata:
+* **Estudiantes Sembrados (Contraseña `Estudiante123*`):** `0600000002`, `0604128934` (Camila Cevallos), `0605219483` (Mateo Hidalgo), `0603891042` (Valeria Moreno) y `0604782319` (Andrés Paredes).
+* **Evaluaciones Normativas (`Test`):** Bancos de 5 preguntas técnicas RRA para `PRAC-2026` y `VINC-2026`.
+* **Plantillas y Guías Descargables (`ResourceFile`):** 6 documentos PDF reales generados en `./uploads/resources/` para `PRAC-2026`, `VINC-2026` y `CONF-IA`.
+* **Expedientes Auditados (`DocumentSubmission`):** 4 entregas con PDFs reales en `./uploads/documents/` y dictámenes del Auditor Heurístico RRA cubriendo los 3 estados del semáforo (`passed` con 96/100 y 92/100, `warning` con 68/100 y `rejected` con 28/100).
+* **Certificados Verificables (`Certificate`):** Códigos públicos `WT-2026-CONF-8A4F`, `WT-2026-PRAC-9B2C` y `WT-2026-VINC-3D7E` listos para validación inmediata en `/#/certificados/validar/:hash`.
 
 ### Secretos de Repositorio Requeridos en GitHub Actions
 * `VPS_HOST`: Dirección IPv4 pública del servidor Debian.

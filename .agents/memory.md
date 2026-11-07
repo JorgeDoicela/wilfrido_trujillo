@@ -108,7 +108,9 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
 * **Estado Operativo:**
   * Pasos 1 al 17 de la Guía de Implementación completados al 100% y verificados.
   * Backend y frontend compilan con código de salida 0 mediante `pnpm -r run build`.
-  * Seeding automático de arranque (`onApplicationBootstrap`): cuentas maestras (`0600000001` - Wilfrido Trujillo y `0600000002` - Estudiante) y espacios iniciales (`PRAC-2026`, `VINC-2026`, `CONF-IA`).
+  * Seeding automático e idempotente de arranque (`onApplicationBootstrap`):
+    * Cuentas maestras (`0600000001` - Wilfrido Trujillo y `0600000002` - Juan Pérez Estudiante) y espacios iniciales (`PRAC-2026`, `VINC-2026`, `CONF-IA`).
+    * Corpus académico integral (`DatabaseCorpusSeederService`): 4 estudiantes adicionales (`0604128934`, `0605219483`, `0603891042`, `0604782319`), 2 bancos de preguntas normativos RRA (`Test`), 7 matrículas con historial de intentos (`WorkspaceEnrollment` + `TestAttempt`), 6 recursos y plantillas PDF reales en `./uploads/resources/`, 4 expedientes PDF auditados en `./uploads/documents/` cubriendo los tres estados del semáforo heurístico (`passed`, `warning`, `rejected`), 4 evaluaciones de retroalimentación en `CONF-IA` y 3 certificados verificables (`WT-2026-CONF-8A4F`, `WT-2026-PRAC-9B2C`, `WT-2026-VINC-3D7E`).
   * Dosier de documentación técnica modular Docs-as-Code publicado en `docs/` con 21 documentos organizados del `01-` al `05-` (incluyendo la guía técnica de despliegue en servidor VPS Linux, Nginx, Systemd, SSL y respaldos SQLite WAL).
 * **Ruta de Escalabilidad (Fase 2 del Auditor):**
   * La arquitectura está lista para incorporar un adaptador de IA generativa (`AiDocumentAuditorService` mediante Gemini API u Ollama local) sustituyendo o enriqueciendo el proveedor `DOCUMENT_AUDITOR` sin modificar los controladores ni la capa de persistencia.
@@ -124,7 +126,7 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Suite de pruebas unitarias ampliada (7 pruebas aprobadas en `vitest` cubriendo auditor documental, autenticación y PBAC).
   * 0 errores y 0 advertencias en análisis estático global (`oxlint` en backend y frontend).
   * Subdominio oficial de producción: `wilfridotrujillo.doicela.dev` en línea con cifrado extremo a extremo (Cloudflare modo Full + Nginx puertos 80/443 SSL) y servicio `wilfrido-backend.service` bajo Systemd.
-  * Flujo CI/CD 100% automatizado desde GitHub Actions (`.github/workflows/deploy.yml` y `ci.yml`): compila en servidores de GitHub, transfiere artefactos por SCP, aprovisiona automáticamente Nginx, Systemd, directorios persistentes (`data/`, `uploads/`) y verifica en vivo la respuesta HTTP del backend en `http://127.0.0.1:3010/api/workspaces`.
+  * Flujo CI/CD 100% automatizado desde GitHub Actions (`.github/workflows/deploy.yml` y `ci.yml`): compila en servidores de GitHub, transfiere artefactos por SCP, aprovisiona de forma idempotente un archivo Swap de 2 GB (`/swapfile` persistido en `/etc/fstab`), configura Nginx y Systemd, crea directorios persistentes (`data/`, `uploads/`) y verifica en vivo tanto la estabilidad del `MainPID` de `wilfrido-backend` durante 6 segundos (cero crash loops) como la respuesta HTTP en `http://127.0.0.1:3010/api/events/public/CONF-IA`.
 
 ---
 
