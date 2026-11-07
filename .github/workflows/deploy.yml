@@ -62,12 +62,14 @@ jobs:
       - name: Validar disponibilidad de credenciales VPS
         id: check_secrets
         run: |
-          if [ -z "${{ secrets.VPS_HOST }}" ] || [ -z "${{ secrets.VPS_SSH_KEY }}" ]; then
+          if [ -z "${{ secrets.VPS_HOST }}" ] || [ -z "${{ secrets.VPS_USERNAME }}" ] || [ -z "${{ secrets.VPS_SSH_KEY }}" ]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Secretos VPS_HOST o VPS_SSH_KEY no detectados en GitHub Secrets. Se omite el envío por SSH."
+            echo "::warning::Secretos VPS (VPS_HOST, VPS_USERNAME o VPS_SSH_KEY) no detectados en GitHub Secrets. Se omite el despliegue por SSH hasta configurar el servidor."
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
-            echo "Credenciales VPS detectadas. Procediendo con el despliegue..."
+            SSH_PORT="${{ secrets.VPS_SSH_PORT }}"
+            echo "ssh_port=${SSH_PORT:-22}" >> "$GITHUB_OUTPUT"
+            echo "Credenciales completas detectadas. Procediendo con el despliegue por SSH..."
           fi
 
       - name: Descargar artefactos compilados desde GitHub
@@ -83,7 +85,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_SSH_PORT || 22 }}
+          port: ${{ steps.check_secrets.outputs.ssh_port }}
           source: "backend/dist/,frontend/dist/,backend/package.json,package.json,pnpm-lock.yaml,pnpm-workspace.yaml"
           target: "/var/www/wilfrido_trujillo/"
           overwrite: true
@@ -95,7 +97,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_SSH_PORT || 22 }}
+          port: ${{ steps.check_secrets.outputs.ssh_port }}
           script: |
             set -e
             cd /var/www/wilfrido_trujillo
