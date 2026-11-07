@@ -115,6 +115,12 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
 * **Deuda Técnica Identificada:**
   * Ninguna deuda técnica crítica. No existen castings forzados a `any`, no hay `try-catch` vacíos y el modelo relacional opera con claves foráneas activas.
 
+* **Endurecimiento de Seguridad y Cero Advertencias (Auditoría de Producción):**
+  * Servidor web Nginx con `server_tokens off`, cabeceras de seguridad estrictas (HSTS, X-Frame-Options, X-Content-Type-Options, Permissions-Policy), bloqueo de archivos ocultos y rate limiting en `limit_req_zone` para `/api/auth/login` (5 peticiones por minuto contra fuerza bruta).
+  * Express despojado de `X-Powered-By` en `main.ts` y pragma `synchronous = NORMAL` en `DatabaseModule` para ACID de alta concurrencia en SQLite WAL.
+  * Multer con creación defensiva de directorios y validación estricta de rutas.
+  * 0 errores y 0 advertencias en análisis estático global (`oxlint` en backend y frontend).
+
 ---
 
 ## 4. Lecciones Aprendidas y Directrices de Depuración

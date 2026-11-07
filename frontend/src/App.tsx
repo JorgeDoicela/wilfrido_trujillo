@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/shared/hooks/useAuth';
 import { WorkspaceSelectorSection } from '@/modules/admin/components/WorkspaceSelectorSection';
 import { PracticasOverviewPage } from '@/modules/practicas/pages/PracticasOverviewPage';
 import { CertificatesSection } from '@/modules/eventos/components/CertificatesSection';
@@ -385,17 +385,23 @@ export default function App() {
   useEffect(() => {
     const token = localStorage.getItem('wt_auth_token');
     if (token) {
-      fetchWorkspaces();
+      const timer = setTimeout(() => {
+        void fetchWorkspaces();
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('wt_auth_token');
     if (selectedWorkspace && token) {
-      fetchTest(selectedWorkspace.id);
-      fetchResources(selectedWorkspace.id);
-      fetchSubmissions(selectedWorkspace.id);
-      fetchCertificates(selectedWorkspace.id);
+      const timer = setTimeout(() => {
+        void fetchTest(selectedWorkspace.id);
+        void fetchResources(selectedWorkspace.id);
+        void fetchSubmissions(selectedWorkspace.id);
+        void fetchCertificates(selectedWorkspace.id);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [selectedWorkspace]);
 

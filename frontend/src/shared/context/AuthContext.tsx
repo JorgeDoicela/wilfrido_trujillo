@@ -1,25 +1,8 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { api } from '@/shared/lib/api';
 import type { User, AuthResponse } from '@/shared/types/auth.types';
-
-export interface AuthContextType {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (identificationOrEmail: string, password: string) => Promise<User>;
-  register: (data: {
-    email: string;
-    identification: string;
-    fullName: string;
-    password: string;
-    roleKey?: string;
-  }) => Promise<User>;
-  logout: () => void;
-  setUserDirectlyForDemo: (mockUser: User | null) => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { AuthContext } from './auth-context';
+export type { AuthContextType } from './auth-context';
 
 const TOKEN_KEY = 'wt_auth_token';
 
@@ -107,12 +90,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth debe ser utilizado dentro de un AuthProvider');
-  }
-  return context;
 }

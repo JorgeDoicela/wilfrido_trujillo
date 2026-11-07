@@ -15,7 +15,7 @@ import { DocumentDropzone } from '../components/DocumentDropzone';
 import { MySubmissionsList } from '../components/MySubmissionsList';
 import { SubmissionsReviewTable } from '../components/SubmissionsReviewTable';
 import { Can } from '@/shared/components/Can';
-import { useAuth } from '@/shared/context/AuthContext';
+import { useAuth } from '@/shared/hooks/useAuth';
 import type { Workspace } from '@/shared/types/workspace.types';
 import type { Test, TestResult } from '@/shared/types/test.types';
 import type { ResourceFile } from '@/shared/types/resource.types';

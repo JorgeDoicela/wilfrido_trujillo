@@ -16,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { Response as ExpressResponse } from 'express';
 import { SubmissionsService } from './submissions.service.js';
@@ -38,7 +39,13 @@ interface AuthenticatedRequest extends Express.Request {
 }
 
 const storage = diskStorage({
-  destination: path.resolve(process.cwd(), 'uploads', 'documents'),
+  destination: (_req, _file, cb) => {
+    const uploadPath = path.resolve(process.cwd(), 'uploads', 'documents');
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
+  },
   filename: (_req, file, cb) => {
     const ext = path.extname(file.originalname);
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;

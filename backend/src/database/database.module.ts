@@ -41,8 +41,9 @@ export const ENTITIES = [
           prepareDatabase: (db: { pragma: (stmt: string) => unknown }) => {
             const journalMode = db.pragma('journal_mode = WAL');
             db.pragma('foreign_keys = ON');
+            db.pragma('synchronous = NORMAL');
             logger.log(
-              `SQLite inicializado en ${databasePath} | journal_mode: ${JSON.stringify(journalMode)} | foreign_keys: ON`,
+              `SQLite inicializado en ${databasePath} | journal_mode: ${JSON.stringify(journalMode)} | foreign_keys: ON | synchronous: NORMAL`,
             );
           },
         };

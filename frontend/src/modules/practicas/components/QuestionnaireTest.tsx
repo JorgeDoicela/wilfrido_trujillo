@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Clock,
   XCircle,
@@ -81,12 +81,19 @@ export function QuestionnaireTest({
     }
   };
 
+  const handleSubmitRef = useRef(handleSubmitTest);
+  useEffect(() => {
+    handleSubmitRef.current = handleSubmitTest;
+  });
+
   useEffect(() => {
     if (timeLeft === null || result !== null) return;
 
     if (timeLeft <= 0) {
-      handleSubmitTest();
-      return;
+      const timeoutId = setTimeout(() => {
+        void handleSubmitRef.current();
+      }, 0);
+      return () => clearTimeout(timeoutId);
     }
 
     const timer = setInterval(() => {

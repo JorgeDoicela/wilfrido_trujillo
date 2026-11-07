@@ -218,61 +218,98 @@ Nginx actúa como punto único de entrada, sirviendo los archivos estáticos de 
 Cree el archivo de configuración en `/etc/nginx/sites-available/wilfridotrujillo.com`:
 
 ```nginx
-# Redirección HTTP a HTTPS
+# ==============================================================================
+# CONFIGURACIÓN NGINX PRODUCCIÓN — WILFRIDO TRUJILLO
+# ==============================================================================
+
+# Zonas de limitación de tasa (Mitigación de ataques de denegación y fuerza bruta)
+limit_req_zone $binary_remote_addr zone=api_general:10m rate=30r/s;
+limit_req_zone $binary_remote_addr zone=auth_limit:10m rate=5r/m;
+
+# Redirección global HTTP a HTTPS
 server {
     listen 80;
     listen [::]:80;
     server_name wilfridotrujillo.com www.wilfridotrujillo.com;
+    server_tokens off;
     return 301 https://$host$request_uri;
 }
 
+# Servidor Seguro HTTPS (TLS 1.2 / 1.3)
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
     server_name wilfridotrujillo.com www.wilfridotrujillo.com;
 
+    # Ocultar versión del servidor (Anti-fingerprinting)
+    server_tokens off;
+
     # Certificados SSL (gestionados por Certbot)
     # ssl_certificate /etc/letsencrypt/live/wilfridotrujillo.com/fullchain.pem;
     # ssl_certificate_key /etc/letsencrypt/live/wilfridotrujillo.com/privkey.pem;
 
-    # Parámetros de seguridad TLS
+    # Parámetros estrictos de seguridad criptográfica TLS
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_prefer_server_ciphers on;
-    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384';
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_tickets off;
 
-    # Cabeceras de seguridad
+    # Cabeceras de seguridad HTTP endurecidas (A+ SSL Labs / SecurityHeaders)
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
 
-    # Límite máximo para subida de documentos (bitácoras y certificados)
-    client_max_body_size 30M;
+    # Límite máximo para subida de documentos (bitácoras y evidencias)
+    client_max_body_size 25M;
 
     # Raíz del Frontend compilado (React 19 + Vite)
     root /var/www/wilfrido_trujillo/frontend/dist;
     index index.html;
 
-    # Compresión Gzip para alto rendimiento
+    # Compresión Gzip para alto rendimiento en transferencias
     gzip on;
     gzip_vary on;
     gzip_min_length 1024;
     gzip_proxied expired no-cache no-store private auth;
-    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/json application/xml;
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/json application/xml font/woff2 font/woff;
 
-    # Enrutamiento SPA con soporte para Hash Routing (#/)
+    # Bloqueo de acceso a archivos y carpetas ocultas (.git, .env, .sqlite)
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # Enrutamiento SPA con soporte para Hash Routing (#/) y rutas directas
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # Caché estática agresiva para assets versionados por Vite
+    # Caché estática agresiva para assets versionados por Vite (Inmutables)
     location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
 
-    # Proxy Inverso para la API REST de NestJS
+    # Proxy Inverso para el endpoint sensible de autenticación (Anti-bruteforce)
+    location = /api/auth/login {
+        limit_req zone=auth_limit burst=3 nodelay;
+        proxy_pass http://127.0.0.1:3010/api/auth/login;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Proxy Inverso general para la API REST de NestJS
     location /api/ {
+        limit_req zone=api_general burst=20 nodelay;
         proxy_pass http://127.0.0.1:3010/api/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -288,11 +325,16 @@ server {
         proxy_connect_timeout 60s;
     }
 
-    # Descarga directa y protegida de uploads
+    # Servir archivos estáticos subidos de forma segura
     location /uploads/ {
         alias /var/www/wilfrido_trujillo/backend/uploads/;
         expires 7d;
         add_header Cache-Control "public";
+        
+        # Prohibir ejecución de scripts en la carpeta de evidencias
+        location ~ \.(php|pl|py|jsp|sh|cgi|exe|bat)$ {
+            deny all;
+        }
     }
 }
 ```

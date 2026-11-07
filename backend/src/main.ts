@@ -34,6 +34,12 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
+  // Deshabilitar cabecera descriptiva X-Powered-By por seguridad
+  const expressApp = app.getHttpAdapter().getInstance();
+  if (expressApp && typeof expressApp.disable === 'function') {
+    expressApp.disable('x-powered-by');
+  }
+
   // Prefijo global de API REST
   app.setGlobalPrefix('api');
 

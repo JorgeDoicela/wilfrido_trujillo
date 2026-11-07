@@ -69,7 +69,7 @@ export class TestsService {
     }
 
     // Para el estudiante se sanea el payload ocultando correctOptionIndex
-    const sanitizedQuestions = test.questions.map(({ correctOptionIndex, ...q }) => q);
+    const sanitizedQuestions = test.questions.map(({ correctOptionIndex: _unused, ...q }) => q);
 
     return {
       id: test.id,
