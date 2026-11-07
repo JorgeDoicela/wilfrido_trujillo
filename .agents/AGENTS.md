@@ -70,7 +70,7 @@ Este archivo establece las reglas mandatorias e inviolables para cualquier agent
 
 * **Commits Semánticos en Español:**
   * Formato: `tipo: descripción concisa` (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`).
-  * Push directo a `master -> origin/master` tras validar que `pnpm -r run build` finalice con código de salida 0.
+  * Push directo a `main -> origin/main` tras validar que `pnpm -r run build` finalice con código de salida 0.
 * **Integridad de Directorios:**
   * Todo directorio que deba preservarse en instalaciones limpias debe incluir su archivo `.gitkeep`.
   * Las reglas de `.gitignore` deben configurarse para ignorar archivos temporales o PDFs subidos en tiempo de ejecución, preservando los `.gitkeep` (`!uploads/**/.gitkeep`).

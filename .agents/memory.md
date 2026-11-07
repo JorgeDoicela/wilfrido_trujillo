@@ -67,7 +67,7 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Cero lenguaje inflado o comercial.
 * **Commits Semánticos en Español:**
   * Formato: `tipo: descripción concisa en minúsculas` (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`).
-  * Rama principal: `master` sincronizada contra `origin/master`.
+  * Rama principal: `main` sincronizada contra `origin/main` (estándar Git moderno adoptado; antigua rama `master` deprecada y eliminada del remoto).
 * **Estructura Modular por Dominios en Frontend:**
   * Todo recurso perteneciente a un dominio funcional reside dentro de su carpeta en `frontend/src/modules/` (`auth`, `admin`, `practicas`, `vinculacion`, `eventos`).
   * **Aislamiento Estricto Verificado:** Prohibidas las importaciones cruzadas directas entre módulos hermanos.
