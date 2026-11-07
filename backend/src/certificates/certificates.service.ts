@@ -157,7 +157,7 @@ export class CertificatesService {
       throw new NotFoundException(`Certificado con ID "${id}" no encontrado.`);
     }
 
-    let filePath = cert.pdfPath ? path.resolve(this.uploadDir, cert.pdfPath) : '';
+    let filePath = cert.pdfPath ? path.resolve(this.uploadDir, path.basename(cert.pdfPath)) : '';
 
     if (!filePath || !fs.existsSync(filePath)) {
       filePath = await this.generatePdf(

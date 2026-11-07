@@ -119,6 +119,9 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Servidor web Nginx con `server_tokens off`, cabeceras de seguridad estrictas (HSTS, X-Frame-Options, X-Content-Type-Options, Permissions-Policy), bloqueo de archivos ocultos y rate limiting en `limit_req_zone` para `/api/auth/login` (5 peticiones por minuto contra fuerza bruta).
   * Express despojado de `X-Powered-By` en `main.ts` y pragma `synchronous = NORMAL` en `DatabaseModule` para ACID de alta concurrencia en SQLite WAL.
   * Multer con creación defensiva de directorios y validación estricta de rutas.
+  * Blindaje contra Path Traversal en descargas de archivos (`path.basename` en certificados, plantillas y bitácoras).
+  * Mitigación de escalada de privilegios en `/api/auth/register` (asignación soberana de rol `ESTUDIANTE`) y mitigación de Timing Attack en login con dummy hash.
+  * Suite de pruebas unitarias ampliada (7 pruebas aprobadas en `vitest` cubriendo auditor documental, autenticación y PBAC).
   * 0 errores y 0 advertencias en análisis estático global (`oxlint` en backend y frontend).
 
 ---

@@ -2,8 +2,6 @@ import {
   IsEmail,
   IsString,
   MinLength,
-  IsOptional,
-  IsArray,
 } from 'class-validator';
 
 export class RegisterDto {
@@ -21,15 +19,6 @@ export class RegisterDto {
   @IsString({ message: 'La contraseña es requerida.' })
   @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres.' })
   password!: string;
-
-  @IsOptional()
-  @IsString()
-  roleKey?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  permissions?: string[];
 }
 
 export class LoginDto {

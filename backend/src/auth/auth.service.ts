@@ -94,7 +94,8 @@ export class AuthService implements OnApplicationBootstrap {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(registerDto.password, salt);
 
-    // Permisos por defecto: si es ESTUDIANTE, capacidades de estudiante; si se pasan explícitos, se usan
+    // En registro público (OWASP Broken Access Control), todo usuario nuevo
+    // se registra de forma obligatoria y soberana como ESTUDIANTE.
     const defaultStudentPermissions: Permission[] = [
       Permission.WORKSPACE_READ,
       Permission.RESOURCE_DOWNLOAD,
@@ -103,19 +104,12 @@ export class AuthService implements OnApplicationBootstrap {
       Permission.CERTIFICATE_CLAIM,
     ];
 
-    const permissions =
-      registerDto.permissions && registerDto.permissions.length > 0
-        ? registerDto.permissions
-        : (registerDto.roleKey === 'INGENIERO' || registerDto.roleKey === 'SUPERADMIN')
-          ? Object.values(Permission)
-          : defaultStudentPermissions;
-
     const user = this.userRepository.create({
       email: registerDto.email.toLowerCase().trim(),
       identification: registerDto.identification.trim(),
       fullName: registerDto.fullName.trim(),
-      roleKey: registerDto.roleKey || 'ESTUDIANTE',
-      permissionsJson: permissions,
+      roleKey: 'ESTUDIANTE',
+      permissionsJson: defaultStudentPermissions,
       passwordHash,
     });
 
@@ -134,13 +128,13 @@ export class AuthService implements OnApplicationBootstrap {
       ],
     });
 
-    if (!user) {
-      throw new UnauthorizedException('Credenciales inválidas. Verifique su usuario o contraseña.');
-    }
+    // Mitigación de enumeración de usuarios por análisis de tiempo (OWASP Timing Attack Defense)
+    const dummyHash = '$2b$10$e8wWwN1qG5QzZ5Z5Z5Z5Zu1234567890123456789012345678901';
+    const isPasswordValid = user
+      ? await bcrypt.compare(loginDto.password, user.passwordHash)
+      : await bcrypt.compare(loginDto.password, dummyHash);
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.passwordHash);
-
-    if (!isPasswordValid) {
+    if (!user || !isPasswordValid) {
       throw new UnauthorizedException('Credenciales inválidas. Verifique su usuario o contraseña.');
     }
 

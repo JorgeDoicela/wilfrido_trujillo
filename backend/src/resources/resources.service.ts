@@ -123,8 +123,9 @@ export class ResourcesService {
       }
     }
 
-    // Resolver ruta local en el disco
-    let filePath = path.join(this.uploadDir, resource.fileUrl);
+    // Resolver ruta local segura en el disco evitando path traversal
+    const safeBaseFilename = path.basename(resource.fileUrl);
+    let filePath = path.join(this.uploadDir, safeBaseFilename);
 
     // Si el archivo físico aún no existe (ej. semilla o demo), generar un documento de plantilla oficial
     if (!fs.existsSync(filePath)) {
@@ -137,11 +138,11 @@ export class ResourcesService {
     else if (ext === '.docx') mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     else if (ext === '.xlsx') mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
-    const safeFilename = `${resource.title.replace(/[^a-zA-Z0-9_-]/g, '_')}${ext || '.pdf'}`;
+    const downloadFilename = `${resource.title.replace(/[^a-zA-Z0-9_-]/g, '_')}${ext || '.pdf'}`;
 
     return {
       filePath,
-      filename: safeFilename,
+      filename: downloadFilename,
       mimeType,
     };
   }

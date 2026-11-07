@@ -199,7 +199,9 @@ export class SubmissionsService {
       throw new ForbiddenException('No tienes permisos para auditar este documento.');
     }
 
-    let filePath = path.join(this.uploadDir, submission.fileUrl);
+    // Resolver ruta local segura en el disco evitando path traversal
+    const safeFilename = path.basename(submission.fileUrl);
+    let filePath = path.join(this.uploadDir, safeFilename);
     if (!fs.existsSync(filePath)) {
       filePath = this.generateSampleEvidenceFile(submission);
     }
@@ -252,7 +254,9 @@ export class SubmissionsService {
       throw new ForbiddenException('No tienes autorización para acceder o descargar esta entrega.');
     }
 
-    let filePath = path.join(this.uploadDir, submission.fileUrl);
+    // Resolver ruta local segura en el disco evitando path traversal
+    const safeFilename = path.basename(submission.fileUrl);
+    let filePath = path.join(this.uploadDir, safeFilename);
 
     // Si el archivo físico no existe (ej. semilla o demo), generar un documento de evidencia
     if (!fs.existsSync(filePath)) {
