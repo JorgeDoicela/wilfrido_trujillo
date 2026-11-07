@@ -123,8 +123,8 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Mitigación de escalada de privilegios en `/api/auth/register` (asignación soberana de rol `ESTUDIANTE`) y mitigación de Timing Attack en login con dummy hash.
   * Suite de pruebas unitarias ampliada (7 pruebas aprobadas en `vitest` cubriendo auditor documental, autenticación y PBAC).
   * 0 errores y 0 advertencias en análisis estático global (`oxlint` en backend y frontend).
-  * Subdominio oficial de producción: `wilfridotrujillo.doicela.dev` configurado con proxy Cloudflare y Nginx.
-  * Flujo CI/CD automatizado en GitHub Actions (`.github/workflows/deploy.yml` y `ci.yml`) con compilación remota y transferencia vía SCP/SSH hacia servidor Debian 100% validado y en verde (preparación autónoma de permisos en `/var/www/wilfrido_trujillo`, transferencia SCP y reinicio defensivo de servicios).
+  * Subdominio oficial de producción: `wilfridotrujillo.doicela.dev` en línea con cifrado extremo a extremo (Cloudflare modo Full + Nginx puertos 80/443 SSL) y servicio `wilfrido-backend.service` bajo Systemd.
+  * Flujo CI/CD 100% automatizado desde GitHub Actions (`.github/workflows/deploy.yml` y `ci.yml`): compila en servidores de GitHub, transfiere artefactos por SCP, aprovisiona automáticamente Nginx, Systemd, directorios persistentes (`data/`, `uploads/`) y verifica en vivo la respuesta HTTP del backend en `http://127.0.0.1:3010/api/workspaces`.
 
 ---
 
