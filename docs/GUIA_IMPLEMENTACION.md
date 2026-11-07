@@ -112,7 +112,7 @@
      }
      ```
 * **Criterio de Verificación:**
-  * Al probar el script, el backend escucha en `http://localhost:3000` y el frontend en `http://localhost:5173`.
+  * Al probar el script, el backend escucha en `http://localhost:3010` y el frontend en `http://localhost:5180`.
 * **CHECKPOINT:** Detenerse y pedir revisión del usuario.
 
 ---

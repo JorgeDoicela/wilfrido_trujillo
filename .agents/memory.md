@@ -96,6 +96,11 @@ Este documento preserva las decisiones arquitectónicas, convenciones operaciona
   * Todo directorio que deba existir en instalaciones limpias cuenta con su respectivo `.gitkeep`.
   * Reglas de `.gitignore` afinadas para retener los `.gitkeep` de carpetas de almacenamiento local (`uploads/`, `backend/uploads/`).
 
+* **Asignación de Puertos y Aislamiento de Red:**
+  * Backend NestJS: Puerto `3010` (`http://localhost:3010/api`).
+  * Frontend Vite: Puerto `5180` (`http://localhost:5180/`) con `strictPort: true`.
+  * Secreto JWT criptográfico de 256 bits (`JWT_SECRET`) generado en `.env`, con validación defensiva en `main.ts` que bloquea el arranque en producción si se detectan contraseñas por defecto o menores a 32 caracteres.
+
 ---
 
 ## 3. Estado Actual del Sistema y Deuda Técnica

@@ -46,8 +46,8 @@ Los scripts se ejecutan desde la raíz del proyecto orquestando ambos paquetes:
 
 Al ejecutar `pnpm dev`, los servicios se inicializan en los siguientes puertos locales estándar:
 
-* **Frontend (React 19 + Vite + Tailwind CSS v4):** [http://localhost:5173/](http://localhost:5173/) *(o puerto alterno [http://localhost:5180/](http://localhost:5180/) si el puerto base se encuentra ocupado)*.
-* **Backend (NestJS 11 API REST):** [http://localhost:3000/api](http://localhost:3000/api) *(o puerto alterno [http://localhost:3010/api](http://localhost:3010/api) según la configuración en `backend/.env`)*.
+* **Frontend (React 19 + Vite + Tailwind CSS v4):** [http://localhost:5180/](http://localhost:5180/).
+* **Backend (NestJS 11 API REST):** [http://localhost:3010/api](http://localhost:3010/api).
 
 ---
 

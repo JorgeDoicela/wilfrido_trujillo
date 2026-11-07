@@ -189,7 +189,7 @@ export class CertificatesService {
     const filePath = path.join(this.uploadDir, filename);
 
     // URL pública para validación del QR
-    const appUrl = this.configService.get<string>('APP_URL') || 'http://localhost:5173';
+    const appUrl = this.configService.get<string>('APP_URL') || 'http://localhost:5180';
     const verifyUrl = `${appUrl}/#/certificados/validar/${cert.verificationHash}`;
 
     // Generar buffer de imagen QR

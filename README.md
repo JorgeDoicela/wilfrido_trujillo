@@ -324,5 +324,5 @@ pnpm -r run lint
 pnpm --filter backend run test
 ```
 
-* **Frontend:** [http://localhost:5173/](http://localhost:5173/) *(o puerto 5180 si está ocupado)*
-* **Backend:** [http://localhost:3000/api](http://localhost:3000/api) *(o puerto 3010)*
+* **Frontend:** [http://localhost:5180/](http://localhost:5180/)
+* **Backend:** [http://localhost:3010/api](http://localhost:3010/api)
