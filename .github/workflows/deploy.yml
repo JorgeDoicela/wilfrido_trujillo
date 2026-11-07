@@ -59,12 +59,25 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
+      - name: Validar disponibilidad de credenciales VPS
+        id: check_secrets
+        run: |
+          if [ -z "${{ secrets.VPS_HOST }}" ] || [ -z "${{ secrets.VPS_SSH_KEY }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Secretos VPS_HOST o VPS_SSH_KEY no detectados en GitHub Secrets. Se omite el envío por SSH."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Credenciales VPS detectadas. Procediendo con el despliegue..."
+          fi
+
       - name: Descargar artefactos compilados desde GitHub
+        if: steps.check_secrets.outputs.configured == 'true'
         uses: actions/download-artifact@v4
         with:
           name: production-build
 
       - name: Desplegar artefactos al servidor VPS vía SCP
+        if: steps.check_secrets.outputs.configured == 'true'
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -76,6 +89,7 @@ jobs:
           overwrite: true
 
       - name: Reiniciar servicios en el VPS vía SSH
+        if: steps.check_secrets.outputs.configured == 'true'
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -89,3 +103,4 @@ jobs:
             sudo systemctl restart wilfrido-backend
             sudo systemctl reload nginx
             echo "Despliegue a https://wilfridotrujillo.doicela.dev completado exitosamente."
+
